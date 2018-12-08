@@ -10,28 +10,25 @@ namespace StudioIntegrationPackage
         private readonly Guid _sourceControlId;
         private readonly Guid _sourceControlServiceId;
 
-        public SourceControlRegistrationAttribute(
-            [NotNull] string packageId, 
-            [NotNull] string sourceControlId, 
-            [NotNull] string sourceControlServiceId)
+        public SourceControlRegistrationAttribute()
         {
-            _packageId = Guid.Parse(packageId);
-            _sourceControlId = Guid.Parse(sourceControlId);
-            _sourceControlServiceId = Guid.Parse(sourceControlServiceId);
+            _packageId = Guid.Parse(Constants.PackageGuid);
+            _sourceControlId = Guid.Parse(Constants.SourceControlGuid);
+            _sourceControlServiceId = Guid.Parse(Constants.SourceControlServiceGuid);
         }
 
         public override void Register([NotNull] RegistrationContext context)
         {
-            using (var sccProviders = context.CreateKey("SourceControlProviders"))
+            using (var providersKey = context.CreateKey("SourceControlProviders"))
             {
-                using (var sccProviderKey = sccProviders.CreateSubkey(_sourceControlId.ToString("B")))
+                using (var myProviderKey = providersKey.CreateSubkey(_sourceControlId.ToString("B")))
                 {
-                    sccProviderKey.SetValue("", "Default name without resources");
-                    sccProviderKey.SetValue("Service", _sourceControlServiceId.ToString("B"));
-                    using (var sccProviderNameKey = sccProviderKey.CreateSubkey("Name"))
+                    myProviderKey.SetValue("", Constants.SourceControlProviderName);
+                    myProviderKey.SetValue("Service", _sourceControlServiceId.ToString("B"));
+                    using (var myProviderNameKey = myProviderKey.CreateSubkey("Name"))
                     {
-                        sccProviderNameKey.SetValue("", "some resource key");
-                        sccProviderNameKey.SetValue("Package", _packageId.ToString("B"));
+                        //myProviderNameKey.SetValue("", "some key");
+                        myProviderNameKey.SetValue("Package", _packageId.ToString("B"));
                     }
                 }
             }

@@ -113,6 +113,15 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SccProviderOptions.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SccProviderOptionsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SccProviderOptionsControl.Designer.cs">
+      <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SccProviderService.cs" />
     <Compile Include="SourceControlRegistrationAttribute.cs" />
     <Compile Include="StudioIntegrationPackage.cs" />
@@ -123,6 +132,11 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SccProviderOptionsControl.resx">
+      <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
