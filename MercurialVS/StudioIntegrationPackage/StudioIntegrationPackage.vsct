@@ -20,6 +20,8 @@
       <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowToolWindowCommandId" priority="0x0100" type="Button">
         <Parent guid="guidStudioIntegrationPackageCmdSet" id="MercurialVSMenuGroup" />
         <Icon guid="ImageCatalogGuid" id="GoToNext"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Invoke ShowToolWindowCommand</ButtonText>

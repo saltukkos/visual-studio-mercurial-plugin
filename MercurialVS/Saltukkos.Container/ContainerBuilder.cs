@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Autofac;
+using Autofac.Features.ResolveAnything;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 using IContainer = Saltukkos.Container.Meta.IContainer;
@@ -20,6 +22,8 @@ namespace Saltukkos.Container
         public ContainerBuilder()
         {
             _containerBuilder = new Autofac.ContainerBuilder();
+            _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+
             foreach (var packageComponent in FindInheritors(typeof(IPackageComponent)))
             {
                 _containerBuilder
@@ -37,16 +41,18 @@ namespace Saltukkos.Container
         {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
-                .SelectMany(x => x?.GetTypes())
-                .Where(baseTypes.IsAssignableFrom);
+                .Where(x => x?.FullName.StartsWith("Saltukkos") == true)
+                .SelectMany(x => x.GetTypes())
+                .Where(baseTypes.IsAssignableFrom)
+                .Where(type => type?.GetCustomAttribute<ComponentAttribute>() != null);
         }
 
         public void RegisterGlobalComponent<T>([NotNull] T instance) where T : class
         {
             _containerBuilder
                 .RegisterInstance(instance)
-                .AsImplementedInterfaces()
-                .ExternallyOwned();
+                .As<T>()
+                ?.ExternallyOwned();
         }
 
         [NotNull]

@@ -7,7 +7,7 @@ namespace Saltukkos.Utils
     {
         [ContractAnnotation("value : null => halt")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Null<T>([CanBeNull] T value, [NotNull] string variableName)
+        public static void Null<T>([CanBeNull, NoEnumeration] T value, [NotNull, InvokerParameterName] string variableName)
         {
             if (value == null)
             {

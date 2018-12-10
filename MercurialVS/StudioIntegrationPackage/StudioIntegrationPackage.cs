@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Saltukkos.Container;
+using Saltukkos.Container.Meta;
+using Saltukkos.Utils;
+using IContainer = Saltukkos.Container.Meta.IContainer;
 
 namespace StudioIntegrationPackage
 {
@@ -18,26 +23,29 @@ namespace StudioIntegrationPackage
     [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
     [Guid(Constants.PackageGuid)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class StudioIntegrationPackage : Package
+    public sealed class StudioIntegrationPackage : Package, IToolWindowContainer
     {
         protected override void Initialize()
         {
             base.Initialize();
 
-            ((IServiceContainer) this).AddService(typeof(SccProviderService), new SccProviderService(), true);
+            var container = BuildContainer();
+            container.Resolve<IReadOnlyCollection<IPackageComponent>>();
+
+            ((IServiceContainer) this).AddService(typeof(SccProviderService), new SccProviderService(container), true);
 
             var registerScciProvider = GetService<IVsRegisterScciProvider>();
             registerScciProvider.RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
+        }
 
-            var menuCommandService = GetService<IMenuCommandService>();
-            var menuCommand =
-                new MenuCommand((sender, args) =>
-                    {
-                        ((IVsWindowFrame) MainToolWindow.CreatedInstance?.Frame)?.Show();
-                    },
-                    new CommandID(Guid.Parse(Constants.CommandSetGuid), Constants.ShowToolWindowCommandId));
-
-            menuCommandService.AddCommand(menuCommand);
+        [NotNull]
+        private IContainer BuildContainer()
+        {
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
+            containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
+            var container = containerBuilder.Build();
+            return container;
         }
 
         [NotNull]
@@ -45,11 +53,7 @@ namespace StudioIntegrationPackage
         private T GetService<T>()
         {
             var service = (T) GetService(typeof(T));
-            if (service == null)
-            {
-                throw new InvalidEnumArgumentException($@"No such service {typeof(T)}");
-            }
-
+            ThrowIf.Null(service, nameof(service));
             return service;
         }
     }

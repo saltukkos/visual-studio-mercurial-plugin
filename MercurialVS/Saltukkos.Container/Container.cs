@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Autofac;
 using JetBrains.Annotations;
+using Saltukkos.Container.Meta;
 using AutofacContainer = Autofac.IContainer;
 using IContainer = Saltukkos.Container.Meta.IContainer;
 
@@ -53,6 +54,7 @@ namespace Saltukkos.Container
                         .SingleInstance();
                 }
             });
+            _sourceControlLifetimeScope.Resolve<IReadOnlyCollection<ISourceControlComponent>>();
         }
 
         public void EndSourceControlLifetime()

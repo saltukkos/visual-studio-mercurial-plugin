@@ -10,12 +10,8 @@ namespace StudioIntegrationPackage
     [Guid(Constants.ToolWindowPaneGuid)]
     public class MainToolWindow : ToolWindowPane
     {
-        [CanBeNull]
-        public static MainToolWindow CreatedInstance { get; private set; }
-
         public MainToolWindow()
         {
-            CreatedInstance = this;
             Caption = "Main tool window";
             SetDefaultColors();
             VSColorTheme.ThemeChanged += OnVsColorThemeChanged;
