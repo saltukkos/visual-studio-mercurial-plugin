@@ -136,8 +136,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SccProviderOptionsControl.resx">
+      <MergeWithCTO>true</MergeWithCTO>
       <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="StudioIntegrationPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -15,28 +14,29 @@ namespace StudioIntegrationPackage
     [ProvideService(typeof(SccProviderService))]
     [ProvideOptionPage(typeof(SccProviderOptions), "Source Control", Constants.SourceControlProviderName, 0, 0, true)]
     //TODO ProvideOptionsPageVisibility
-    //TODO menus, commands
     [ProvideToolWindow(typeof(MainToolWindow))]
     [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
     [Guid(Constants.PackageGuid)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class StudioIntegrationPackage : Package
     {
         protected override void Initialize()
         {
             base.Initialize();
 
-            ((IServiceContainer)this).AddService(typeof(SccProviderService), new SccProviderService(), true);
+            ((IServiceContainer) this).AddService(typeof(SccProviderService), new SccProviderService(), true);
 
             var registerScciProvider = GetService<IVsRegisterScciProvider>();
             registerScciProvider.RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
 
-            var menuCommandService = (OleMenuCommandService)GetService<IMenuCommandService>();
+            var menuCommandService = GetService<IMenuCommandService>();
             var menuCommand =
-                new OleMenuCommand((sender, args) => MessageBox.Show("dsd"), new CommandID(Guid.NewGuid(), 1))
-                {
-                    Text = "Sample text"
-                };
-            var oleCommandTarget = menuCommandService.ParentTarget;
+                new MenuCommand((sender, args) =>
+                    {
+                        ((IVsWindowFrame) MainToolWindow.CreatedInstance?.Frame)?.Show();
+                    },
+                    new CommandID(Guid.Parse(Constants.CommandSetGuid), Constants.ShowToolWindowCommandId));
+
             menuCommandService.AddCommand(menuCommand);
         }
 
@@ -44,7 +44,7 @@ namespace StudioIntegrationPackage
         [MustUseReturnValue]
         private T GetService<T>()
         {
-            var service = (T)GetService(typeof(T));
+            var service = (T) GetService(typeof(T));
             if (service == null)
             {
                 throw new InvalidEnumArgumentException($@"No such service {typeof(T)}");

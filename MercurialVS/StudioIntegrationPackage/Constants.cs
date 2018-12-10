@@ -20,6 +20,11 @@ namespace StudioIntegrationPackage
         public const string OptionsPageGuid = "47AD10C4-93EA-4257-AFF9-7461D5BD5A3A";
 
         [NotNull]
+        public const string CommandSetGuid = "3D262A98-C1C0-429D-A418-2A3DBC3425EA";
+
+        [NotNull]
         public const string SourceControlProviderName = "MercurialVS";
+
+        public const int ShowToolWindowCommandId = 0x0100;
     }
 }

@@ -10,6 +10,17 @@ namespace StudioIntegrationPackage
     [Guid(Constants.ToolWindowPaneGuid)]
     public class MainToolWindow : ToolWindowPane
     {
+        [CanBeNull]
+        public static MainToolWindow CreatedInstance { get; private set; }
+
+        public MainToolWindow()
+        {
+            CreatedInstance = this;
+            Caption = "Main tool window";
+            SetDefaultColors();
+            VSColorTheme.ThemeChanged += OnVsColorThemeChanged;
+        }
+
         [NotNull]
         private readonly UserControl _control = new SccProviderOptionsControl();
 
@@ -21,15 +32,6 @@ namespace StudioIntegrationPackage
                 _control.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        public MainToolWindow()
-        {
-            Caption = "Ololo!";
-
-            SetDefaultColors();
-
-            VSColorTheme.ThemeChanged += OnVsColorThemeChanged;
         }
 
         private void OnVsColorThemeChanged(ThemeChangedEventArgs e)
