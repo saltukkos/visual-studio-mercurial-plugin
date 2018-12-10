@@ -5,6 +5,12 @@ VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioIntegrationPackage", "StudioIntegrationPackage\StudioIntegrationPackage.csproj", "{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Container", "Saltukkos.Container\Saltukkos.Container.csproj", "{D7CB4981-7C97-4751-978D-51D2262E6BEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Utils", "Saltukkos.Utils\Saltukkos.Utils.csproj", "{6A881ABC-E0F9-4600-93B2-513C64165116}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Container.Meta", "Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj", "{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7CB4981-7C97-4751-978D-51D2262E6BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7CB4981-7C97-4751-978D-51D2262E6BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7CB4981-7C97-4751-978D-51D2262E6BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7CB4981-7C97-4751-978D-51D2262E6BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A881ABC-E0F9-4600-93B2-513C64165116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A881ABC-E0F9-4600-93B2-513C64165116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A881ABC-E0F9-4600-93B2-513C64165116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A881ABC-E0F9-4600-93B2-513C64165116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

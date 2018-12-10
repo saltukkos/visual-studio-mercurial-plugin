@@ -9,7 +9,6 @@
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW"/>
       </Group>
     </Groups>
-
     <Buttons>
       <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
           The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
@@ -28,7 +27,6 @@
       </Button>
     </Buttons>
   </Commands>
-
   <Symbols>
     <GuidSymbol name="guidStudioIntegrationPackage" value="{FCA36CF1-C45C-4C36-A5D1-A74B0011B175}" />
     <GuidSymbol name="guidStudioIntegrationPackageCmdSet" value="{3D262A98-C1C0-429D-A418-2A3DBC3425EA}">

@@ -9,7 +9,7 @@ namespace StudioIntegrationPackage
     [Guid(Constants.OptionsPageGuid)]
     public sealed class SccProviderOptions : DialogPage
     {
-        private SccProviderOptionsControl _page = null;
+        private SccProviderOptionsControl _page;
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         protected override IWin32Window Window
