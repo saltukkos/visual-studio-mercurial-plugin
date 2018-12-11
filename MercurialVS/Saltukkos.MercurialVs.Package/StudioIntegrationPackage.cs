@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -10,14 +11,13 @@ using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.StudioIntegration;
 using Saltukkos.Utils;
 using Constants = Saltukkos.MercurialVS.StudioIntegration.Constants;
-using IContainer = Saltukkos.Container.Meta.IContainer;
 
 namespace Saltukkos.MercurialVS.Package
 {
     [SourceControlRegistration]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(Constants.SourceControlGuid)]
-    [ProvideService(typeof(SccProviderService))]
+    [ProvideService(typeof(IMercurialSccProviderService))]
     [ProvideOptionPage(typeof(SccProviderOptions), "Source Control", Constants.SourceControlProviderName, 0, 0, true)]
     [ProvideToolsOptionsPageVisibility]
     [ProvideToolWindow(typeof(MainToolWindow))]
@@ -31,13 +31,13 @@ namespace Saltukkos.MercurialVS.Package
             base.Initialize();
             var container = BuildContainer();
             container.Resolve<IReadOnlyCollection<IPackageComponent>>();
-            ((IServiceContainer) this).AddService(typeof(SccProviderService), new SccProviderService(container), true);
-            var registerScciProvider = GetService<IVsRegisterScciProvider>();
-            registerScciProvider.RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
+
+            AddService(container.Resolve<IMercurialSccProviderService>());
+            GetService<IVsRegisterScciProvider>().RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
         }
 
         [NotNull]
-        private IContainer BuildContainer()
+        private Container.Container BuildContainer()
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
@@ -53,6 +53,12 @@ namespace Saltukkos.MercurialVS.Package
             var service = (T) GetService(typeof(T));
             ThrowIf.Null(service, nameof(service));
             return service;
+        }
+
+        private void AddService<T>([NotNull] T service)
+        {
+            IServiceContainer container = this;
+            container.AddService(typeof(T), service, true);
         }
     }
 }

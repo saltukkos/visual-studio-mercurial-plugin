@@ -1,71 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using Autofac;
+﻿using Autofac;
 using JetBrains.Annotations;
-using Saltukkos.Container.Meta;
 using AutofacContainer = Autofac.IContainer;
-using IContainer = Saltukkos.Container.Meta.IContainer;
 
 namespace Saltukkos.Container
 {
-    internal sealed class Container : IContainer
+    public sealed class Container
     {
-        [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyList<Type> _sourceControlComponents;
-
         [NotNull]
         private readonly AutofacContainer _container;
 
-        [NotNull]
-        private readonly ILifetimeScope _packageLifetimeScope;
-
-        [CanBeNull]
-        private ILifetimeScope _sourceControlLifetimeScope;
-
-        public Container(
-            [ItemNotNull] [NotNull] IReadOnlyList<Type> sourceControlComponents,
-            [NotNull] AutofacContainer container)
+        public Container([NotNull] AutofacContainer container)
         {
-            _sourceControlComponents = sourceControlComponents;
             _container = container;
-            _packageLifetimeScope = container.Resolve<ILifetimeScope>();
         }
 
+        [NotNull]
         public T Resolve<T>()
         {
             return _container.Resolve<T>();
-        }
-
-        public void StartSourceControlLifetime()
-        {
-            if (_sourceControlLifetimeScope != null)
-            {
-                throw new InvalidOperationException("Source control scope is already created");
-            }
-
-            _sourceControlLifetimeScope = _packageLifetimeScope.BeginLifetimeScope(builder =>
-            {
-                foreach (var sourceControlComponent in _sourceControlComponents)
-                {
-                    builder
-                        .RegisterType(sourceControlComponent)
-                        .AsImplementedInterfaces()
-                        .SingleInstance();
-                }
-            });
-            _sourceControlLifetimeScope.Resolve<IReadOnlyCollection<ISourceControlComponent>>();
-        }
-
-        public void EndSourceControlLifetime()
-        {
-            if (_sourceControlLifetimeScope == null)
-            {
-                throw new InvalidOperationException("Source control scope was not started");
-            }
-
-            _sourceControlLifetimeScope.Dispose();
-            _sourceControlLifetimeScope = null;
         }
     }
 }

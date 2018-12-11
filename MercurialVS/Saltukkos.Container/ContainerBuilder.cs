@@ -3,26 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using Autofac.Features.ResolveAnything;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
-using IContainer = Saltukkos.Container.Meta.IContainer;
 
 namespace Saltukkos.Container
 {
     public class ContainerBuilder
     {
-        [NotNull]
-        private readonly Autofac.ContainerBuilder _containerBuilder;
+        private const string MyAssembliesPrefix = "Saltukkos.";
 
         [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyList<Type> _sourceControlComponents;
+        private readonly Autofac.ContainerBuilder _containerBuilder;
 
         public ContainerBuilder()
         {
             _containerBuilder = new Autofac.ContainerBuilder();
-            _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
             foreach (var packageComponent in FindInheritors(typeof(IPackageComponent)))
             {
@@ -32,7 +27,13 @@ namespace Saltukkos.Container
                     .SingleInstance();
             }
 
-            _sourceControlComponents = FindInheritors(typeof(ISourceControlComponent)).ToList();
+            var sourceControlComponents = FindInheritors(typeof(ISourceControlComponent)).ToList();
+            _containerBuilder
+                .Register(context => new SourceControlLifetimeManager(
+                    context.Resolve<ILifetimeScope>(),
+                    sourceControlComponents))
+                .AsImplementedInterfaces()
+                .SingleInstance();
         }
 
         [NotNull]
@@ -41,7 +42,7 @@ namespace Saltukkos.Container
         {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(x => x?.FullName.StartsWith("Saltukkos") == true)
+                .Where(x => x?.FullName.StartsWith(MyAssembliesPrefix) == true)
                 .SelectMany(x => x.GetTypes())
                 .Where(baseTypes.IsAssignableFrom)
                 .Where(type => type?.GetCustomAttribute<ComponentAttribute>() != null);
@@ -56,9 +57,9 @@ namespace Saltukkos.Container
         }
 
         [NotNull]
-        public IContainer Build()
+        public Container Build()
         {
-            return new Container(_sourceControlComponents, _containerBuilder.Build());
+            return new Container(_containerBuilder.Build());
         }
     }
 }
