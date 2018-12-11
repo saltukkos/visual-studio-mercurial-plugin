@@ -19,11 +19,11 @@ namespace Saltukkos.MercurialVS.Package
     [ProvideAutoLoad(Constants.SourceControlGuid)]
     [ProvideService(typeof(SccProviderService))]
     [ProvideOptionPage(typeof(SccProviderOptions), "Source Control", Constants.SourceControlProviderName, 0, 0, true)]
-    //TODO ProvideOptionsPageVisibility
+    [ProvideToolsOptionsPageVisibility]
     [ProvideToolWindow(typeof(MainToolWindow))]
     [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
-    [Guid(Constants.PackageGuid)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [Guid(Constants.PackageGuid)]
     public sealed class StudioIntegrationPackage : Microsoft.VisualStudio.Shell.Package, IToolWindowContainer
     {
         protected override void Initialize()

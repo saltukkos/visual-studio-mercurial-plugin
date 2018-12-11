@@ -23,6 +23,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public const string CommandSetGuid = "3D262A98-C1C0-429D-A418-2A3DBC3425EA";
 
         [NotNull]
+        public const string SourceControlCategoryName = "Source Control";
+        
+        [NotNull]
         public const string SourceControlProviderName = "MercurialVS";
 
         public const int ShowToolWindowCommandId = 0x0100;

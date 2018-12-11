@@ -118,6 +118,7 @@
       <DependentUpon>PackageResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProvideToolsOptionsPageVisibilityAttribute.cs" />
     <Compile Include="SourceControlRegistrationAttribute.cs" />
     <Compile Include="StudioIntegrationPackage.cs" />
   </ItemGroup>
