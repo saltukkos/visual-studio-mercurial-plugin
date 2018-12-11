@@ -4,20 +4,17 @@ using System.ComponentModel.Design;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 
-namespace Saltukkos.MercurialVS.Package.Commands
+namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
     [Component]
     public class CommandsRegistry : ICommandsRegistry, IPackageComponent
     {
-        [NotNull]
-        private readonly IMenuCommandService _menuCommandService;
-
         public IReadOnlyCollection<MenuCommand> RegisteredCommands { get; }
 
         public CommandsRegistry(
             [NotNull] IMenuCommandService menuCommandService,
             [ItemNotNull] [NotNull] IReadOnlyCollection<ICommand> commands)
-        {            
+        {
             var menuCommands = new List<MenuCommand>(commands.Count);
             foreach (var command in commands)
             {
@@ -27,7 +24,6 @@ namespace Saltukkos.MercurialVS.Package.Commands
                 menuCommands.Add(menuCommand);
             }
 
-            _menuCommandService = menuCommandService;
             RegisteredCommands = menuCommands;
         }
     }

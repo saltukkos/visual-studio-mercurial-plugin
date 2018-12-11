@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
+using Saltukkos.MercurialVS.StudioIntegration;
 
 namespace Saltukkos.MercurialVS.Package
 {

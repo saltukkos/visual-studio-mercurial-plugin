@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 
-namespace Saltukkos.MercurialVS.Package.Commands
+namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
     [Component]
     public class ShowToolWindowCommand : ICommand

@@ -2,7 +2,7 @@
 using System.ComponentModel.Design;
 using JetBrains.Annotations;
 
-namespace Saltukkos.MercurialVS.Package.Commands
+namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
     public interface ICommandsRegistry
     {

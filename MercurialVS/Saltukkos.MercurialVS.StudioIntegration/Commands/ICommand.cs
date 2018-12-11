@@ -1,6 +1,6 @@
 ﻿using Saltukkos.Container.Meta;
 
-namespace Saltukkos.MercurialVS.Package.Commands
+namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
     public interface ICommand : IPackageComponent
     {

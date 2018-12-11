@@ -7,7 +7,9 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container;
 using Saltukkos.Container.Meta;
+using Saltukkos.MercurialVS.StudioIntegration;
 using Saltukkos.Utils;
+using Constants = Saltukkos.MercurialVS.StudioIntegration.Constants;
 using IContainer = Saltukkos.Container.Meta.IContainer;
 
 namespace Saltukkos.MercurialVS.Package

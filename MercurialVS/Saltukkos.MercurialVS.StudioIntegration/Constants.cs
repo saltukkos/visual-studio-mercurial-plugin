@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace Saltukkos.MercurialVS.Package
+namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    public class Constants
+    public static class Constants
     {
         [NotNull]
         public const string PackageGuid = "FCA36CF1-C45C-4C36-A5D1-A74B0011B175";

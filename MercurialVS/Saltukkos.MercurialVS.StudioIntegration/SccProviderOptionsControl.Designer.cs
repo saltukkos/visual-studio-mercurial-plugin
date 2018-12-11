@@ -1,4 +1,4 @@
-﻿namespace Saltukkos.MercurialVS.Package
+﻿namespace Saltukkos.MercurialVS.StudioIntegration
 {
     partial class SccProviderOptionsControl
     {

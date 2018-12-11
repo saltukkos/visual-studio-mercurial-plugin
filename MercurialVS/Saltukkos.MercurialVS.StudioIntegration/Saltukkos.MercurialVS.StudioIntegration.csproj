@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.14.0" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop" Version="7.10.6071" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="10.0.30319" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0" Version="12.0.30110" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.8.0" Version="8.0.50727" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SccProviderOptionsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="SccProviderOptionsControl.Designer.cs">
+      <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="SccProviderOptionsControl.resx">
+      <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

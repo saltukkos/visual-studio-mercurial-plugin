@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 
-namespace Saltukkos.MercurialVS.Package
+namespace Saltukkos.MercurialVS.StudioIntegration
 {
     [Guid(Constants.OptionsPageGuid)]
     public sealed class SccProviderOptions : DialogPage

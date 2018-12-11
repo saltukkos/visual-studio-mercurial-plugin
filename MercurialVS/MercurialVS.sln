@@ -5,11 +5,13 @@ VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.MercurialVS.Package", "Saltukkos.MercurialVs.Package\Saltukkos.MercurialVS.Package.csproj", "{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Container", "Saltukkos.Container\Saltukkos.Container.csproj", "{D7CB4981-7C97-4751-978D-51D2262E6BEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.Container", "Saltukkos.Container\Saltukkos.Container.csproj", "{D7CB4981-7C97-4751-978D-51D2262E6BEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Utils", "Saltukkos.Utils\Saltukkos.Utils.csproj", "{6A881ABC-E0F9-4600-93B2-513C64165116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.Utils", "Saltukkos.Utils\Saltukkos.Utils.csproj", "{6A881ABC-E0F9-4600-93B2-513C64165116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Container.Meta", "Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj", "{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.Container.Meta", "Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj", "{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.MercurialVS.StudioIntegration", "Saltukkos.MercurialVS.StudioIntegration\Saltukkos.MercurialVS.StudioIntegration.csproj", "{7D1B8815-5EE9-44BF-A332-63A37C4EF82E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A1EEC5B-35B2-48B3-86F3-6C68B0C366D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D1B8815-5EE9-44BF-A332-63A37C4EF82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D1B8815-5EE9-44BF-A332-63A37C4EF82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D1B8815-5EE9-44BF-A332-63A37C4EF82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D1B8815-5EE9-44BF-A332-63A37C4EF82E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
