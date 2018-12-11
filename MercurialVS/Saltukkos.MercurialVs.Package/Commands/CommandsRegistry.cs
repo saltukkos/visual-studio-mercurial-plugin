@@ -4,7 +4,7 @@ using System.ComponentModel.Design;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 
-namespace StudioIntegrationPackage.Commands
+namespace Saltukkos.MercurialVS.Package.Commands
 {
     [Component]
     public class CommandsRegistry : ICommandsRegistry, IPackageComponent

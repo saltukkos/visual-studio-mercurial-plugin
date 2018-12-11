@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 
-namespace StudioIntegrationPackage
+namespace Saltukkos.MercurialVS.Package
 {
     [Guid(Constants.ToolWindowPaneGuid)]
     public class MainToolWindow : ToolWindowPane

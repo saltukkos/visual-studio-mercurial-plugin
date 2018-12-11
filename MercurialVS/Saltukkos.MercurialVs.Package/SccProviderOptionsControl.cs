@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace StudioIntegrationPackage
+namespace Saltukkos.MercurialVS.Package
 {
     public partial class SccProviderOptionsControl : UserControl
     {

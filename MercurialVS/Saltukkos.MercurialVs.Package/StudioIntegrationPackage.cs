@@ -10,7 +10,7 @@ using Saltukkos.Container.Meta;
 using Saltukkos.Utils;
 using IContainer = Saltukkos.Container.Meta.IContainer;
 
-namespace StudioIntegrationPackage
+namespace Saltukkos.MercurialVS.Package
 {
     [SourceControlRegistration]
     [PackageRegistration(UseManagedResourcesOnly = true)]
@@ -22,7 +22,7 @@ namespace StudioIntegrationPackage
     [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
     [Guid(Constants.PackageGuid)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class StudioIntegrationPackage : Package, IToolWindowContainer
+    public sealed class StudioIntegrationPackage : Microsoft.VisualStudio.Shell.Package, IToolWindowContainer
     {
         protected override void Initialize()
         {

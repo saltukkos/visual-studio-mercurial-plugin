@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
 
-namespace StudioIntegrationPackage
+namespace Saltukkos.MercurialVS.Package
 {
     public interface IToolWindowContainer
     {

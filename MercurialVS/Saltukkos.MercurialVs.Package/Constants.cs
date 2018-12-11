@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace StudioIntegrationPackage
+namespace Saltukkos.MercurialVS.Package
 {
     public class Constants
     {

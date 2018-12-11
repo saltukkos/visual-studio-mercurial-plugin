@@ -4,7 +4,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 
-namespace StudioIntegrationPackage
+namespace Saltukkos.MercurialVS.Package
 {
     [Guid(Constants.SourceControlServiceGuid)]
     public sealed class SccProviderService : IVsSccProvider
