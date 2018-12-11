@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudioIntegrationPackage", "StudioIntegrationPackage\StudioIntegrationPackage.csproj", "{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.MercurialVS.Package", "Saltukkos.MercurialVs.Package\Saltukkos.MercurialVS.Package.csproj", "{EEBCF3DD-4474-48AD-9FAF-E999A12EF5FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.Container", "Saltukkos.Container\Saltukkos.Container.csproj", "{D7CB4981-7C97-4751-978D-51D2262E6BEB}"
 EndProject

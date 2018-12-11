@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
@@ -28,12 +27,9 @@ namespace StudioIntegrationPackage
         protected override void Initialize()
         {
             base.Initialize();
-
             var container = BuildContainer();
             container.Resolve<IReadOnlyCollection<IPackageComponent>>();
-
             ((IServiceContainer) this).AddService(typeof(SccProviderService), new SccProviderService(container), true);
-
             var registerScciProvider = GetService<IVsRegisterScciProvider>();
             registerScciProvider.RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
         }

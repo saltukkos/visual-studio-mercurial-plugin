@@ -18,8 +18,6 @@
     <OutputType>Library</OutputType>
     <VsixType>v3</VsixType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Saltukkos.StudioIntegrationPackage</RootNamespace>
-    <AssemblyName>Saltukkos.StudioIntegrationPackage</AssemblyName>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile />
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
