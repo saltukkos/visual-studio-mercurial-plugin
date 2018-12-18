@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <Compile Update="SccProviderOptionsControl.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Update="SccProviderOptionsControl.Designer.cs">
       <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
