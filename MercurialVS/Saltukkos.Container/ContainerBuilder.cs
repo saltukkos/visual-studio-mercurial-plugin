@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using Autofac.Features.ResolveAnything;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 
@@ -18,6 +19,7 @@ namespace Saltukkos.Container
         public ContainerBuilder()
         {
             _containerBuilder = new Autofac.ContainerBuilder();
+            _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
             foreach (var packageComponent in FindInheritors(typeof(IPackageComponent)))
             {

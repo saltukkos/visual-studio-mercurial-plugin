@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using JetBrains.Annotations;
@@ -18,7 +19,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         }
 
         [NotNull]
-        private readonly UserControl _control = new SccProviderOptionsControl();
+        private readonly UserControl _control = new UserControl();
 
         protected override void Dispose(bool disposing)
         {

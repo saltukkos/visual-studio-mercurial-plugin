@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj" />
+    <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl\Saltukkos.MercurialVS.SourceControl.csproj" />
   </ItemGroup>
 
   <ItemGroup>

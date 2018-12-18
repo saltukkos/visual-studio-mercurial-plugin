@@ -143,6 +143,14 @@
       <Project>{d7cb4981-7c97-4751-978d-51d2262e6beb}</Project>
       <Name>Saltukkos.Container</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl.Implementation\Saltukkos.MercurialVS.SourceControl.Implementation.csproj">
+      <Project>{2a2a8573-e54e-424e-825c-3b6663b4d646}</Project>
+      <Name>Saltukkos.MercurialVS.SourceControl.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl\Saltukkos.MercurialVS.SourceControl.csproj">
+      <Project>{D41E7F09-DC7A-4B17-95E8-97D2E3B24B83}</Project>
+      <Name>Saltukkos.MercurialVS.SourceControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Saltukkos.MercurialVS.StudioIntegration\Saltukkos.MercurialVS.StudioIntegration.csproj">
       <Project>{7d1b8815-5ee9-44bf-a332-63a37c4ef82e}</Project>
       <Name>Saltukkos.MercurialVS.StudioIntegration</Name>
