@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
 using JetBrains.Annotations;
-using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    [Component]
-    public partial class SccProviderOptionsControl : UserControl, IPackageComponent
+    public partial class SccProviderOptionsControl : UserControl
     {
         [NotNull]
         private readonly IConfigurationStorage _configurationStorage;
 
-        [CanBeNull]
-        public static SccProviderOptionsControl Instance { get; private set; }
-
         public SccProviderOptionsControl([NotNull] IConfigurationStorage configurationStorage)
         {
             _configurationStorage = configurationStorage;
-            //because of bad designed ProviderOption creation trough parameterless constructor
-            Instance = this;
             InitializeComponent();
         }
 

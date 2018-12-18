@@ -4,34 +4,33 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
     [Guid(Constants.OptionsPageGuid)]
     public sealed class SccProviderOptions : DialogPage
     {
+        [NotNull]
+        private readonly SccProviderOptionsControl _optionsControl;
 
         public SccProviderOptions()
         {
-            _page = SccProviderOptionsControl.Instance ??
-                    throw new ArgumentNullException(nameof(SccProviderOptionsControl.Instance));
+            var dependencies = SccProviderOptionsDependenciesProvider.Instance ??
+                               throw new InvalidOperationException("Container was not initialized");
+            _optionsControl = new SccProviderOptionsControl(dependencies.ConfigurationStorage);
         }
 
-        [NotNull]
-        private SccProviderOptionsControl _page;
-
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        protected override IWin32Window Window => _page;
+        protected override IWin32Window Window => _optionsControl;
 
         public override void LoadSettingsFromStorage()
         {
-            _page.LoadConfiguration();
+            _optionsControl.LoadConfiguration();
         }
 
         public override void SaveSettingsToStorage()
         {
-            _page.StoreConfiguration();
+            _optionsControl.StoreConfiguration();
         }
     }
 }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
@@ -12,7 +9,6 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
 using Saltukkos.Container;
 using Saltukkos.Container.Meta;
-using Saltukkos.MercurialVS.SourceControl.Implementation;
 using Saltukkos.MercurialVS.StudioIntegration;
 using Saltukkos.Utils;
 using Constants = Saltukkos.MercurialVS.StudioIntegration.Constants;
@@ -39,15 +35,11 @@ namespace Saltukkos.MercurialVS.Package
             try
             {
                 base.Initialize();
+
                 _container = BuildContainer();
                 _container.Resolve<IReadOnlyCollection<IPackageComponent>>();
 
                 AddService(_container.Resolve<IMercurialSccProviderService>());
-                AddComponentToPagesAndProfiles(_container.Resolve<SccProviderOptions>());
-
-                //TODO load assemblies
-                var t = typeof(ConfigurationStorage).FullName;
-
                 GetService<IVsRegisterScciProvider>()
                     .RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
             }
@@ -59,13 +51,15 @@ namespace Saltukkos.MercurialVS.Package
 
         protected override void Dispose(bool disposing)
         {
-            try {
+            try
+            {
                 _container?.Dispose();
             }
             catch
             {
                 Debugger.Break();
             }
+
             base.Dispose(disposing);
         }
 
@@ -95,28 +89,13 @@ namespace Saltukkos.MercurialVS.Package
             container.AddService(typeof(T), service, true);
         }
 
-        //TODO dirty hack, but fixes bad design of optionsPages
-        private void AddComponentToPagesAndProfiles([NotNull] object component)
-        {
-            var pagesAndProfilesField = GetType().BaseType?.GetField("_pagesAndProfiles", BindingFlags.Instance | BindingFlags.NonPublic);
-            ThrowIf.Null(pagesAndProfilesField, nameof(pagesAndProfilesField));
-            var pagesAndProfiles = (System.ComponentModel.Container) pagesAndProfilesField.GetValue(this);
-            if (pagesAndProfiles == null)
-            {
-                var type = GetType().BaseType?
-                    .GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public)
-                    .Single(x => x.FullName?.Contains("Container") == true);
+        //#region ReferenceHacks
 
-                var constructorInfo = type
-                    ?.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single();
-                
-                ThrowIf.Null(constructorInfo, nameof(constructorInfo));
-                
-                pagesAndProfiles = (System.ComponentModel.Container)constructorInfo.Invoke(new object[] { this });
-                pagesAndProfilesField.SetValue(this, pagesAndProfiles);
-            }
+        //static StudioIntegrationPackage()
+        //{
+        //    Trace.WriteLine(typeof(IRegistryStorage).Assembly.FullName);
+        //}
 
-            pagesAndProfiles?.Add((IComponent) component);
-        }
+        //#endregion
     }
 }

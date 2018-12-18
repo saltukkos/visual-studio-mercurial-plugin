@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -18,6 +19,8 @@ namespace Saltukkos.Container
 
         public ContainerBuilder()
         {
+            //LoadApplicationAssemblies();
+
             _containerBuilder = new Autofac.ContainerBuilder();
             _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
@@ -38,6 +41,17 @@ namespace Saltukkos.Container
                 .SingleInstance();
         }
 
+        //private void LoadApplicationAssemblies()
+        //{
+        //    var directoryName = Path.GetDirectoryName(typeof(ContainerBuilder).Assembly.Location)
+        //                        ?? throw new NullReferenceException("directory of assembly file");
+        //    var assemblies = Directory.GetFiles(directoryName, $"{MyAssembliesPrefix}*.dll");
+        //    foreach (var referencedAssembly in assemblies)
+        //    {
+        //        Assembly.Load(referencedAssembly);
+        //    }
+        //}
+
         [NotNull]
         [ItemNotNull]
         private static IEnumerable<Type> FindInheritors([NotNull] Type baseTypes)
@@ -55,7 +69,7 @@ namespace Saltukkos.Container
             _containerBuilder
                 .RegisterInstance(instance)
                 .As<T>()
-                ?.ExternallyOwned();
+                .ExternallyOwned();
         }
 
         [NotNull]
