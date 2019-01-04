@@ -29,6 +29,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public int AnyItemsUnderSourceControl(out int pfResult)
         {
+            //TODO not implemented
             pfResult = 0;
             return VSConstants.S_OK;
         }

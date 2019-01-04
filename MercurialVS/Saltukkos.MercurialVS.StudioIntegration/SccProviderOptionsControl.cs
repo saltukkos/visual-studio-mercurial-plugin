@@ -30,6 +30,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         private void label1_Click(object sender, EventArgs e)
         {
+            // ReSharper disable once LocalizableElement
             MessageBox.Show("Clicked!");
         }
     }

@@ -6,7 +6,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Saltukkos.MercurialVS.HgServices\Saltukkos.MercurialVS.HgServices.csproj" />
-    <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl\Saltukkos.MercurialVS.SourceControl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mercurial.Net" Version="1.1.1.607" />
   </ItemGroup>
 
 </Project>
