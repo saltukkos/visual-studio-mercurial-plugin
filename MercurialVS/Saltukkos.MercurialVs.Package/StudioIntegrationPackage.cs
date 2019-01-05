@@ -4,10 +4,12 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
+using Mercurial;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container;
 using Saltukkos.Container.Meta;
+using Saltukkos.MercurialVS.HgServices.Implementation;
 using Saltukkos.MercurialVS.SourceControl.Implementation;
 using Saltukkos.MercurialVS.StudioIntegration;
 using Saltukkos.Utils;
@@ -69,7 +71,7 @@ namespace Saltukkos.MercurialVS.Package
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
             // ReSharper disable once SuspiciousTypeConversion.Global
-            containerBuilder.RegisterGlobalComponent((IVsSolution4)GetService<SVsSolution>());
+            containerBuilder.RegisterGlobalComponent((IVsSolution)GetService<SVsSolution>());
             containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
             var container = containerBuilder.Build();
             return container;
@@ -95,6 +97,8 @@ namespace Saltukkos.MercurialVS.Package
         static StudioIntegrationPackage()
         {
             Trace.WriteLine(typeof(IRegistryStorage).Assembly.FullName);
+            Trace.WriteLine(typeof(SourceControlClientFactory).Assembly.FullName);
+            Trace.WriteLine(typeof(Client).Assembly.FullName);
         }
 
         #endregion

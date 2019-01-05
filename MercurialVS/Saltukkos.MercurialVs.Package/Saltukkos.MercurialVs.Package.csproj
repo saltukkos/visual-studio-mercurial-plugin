@@ -46,11 +46,11 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="JetBrains.Annotations, Version=2018.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2018.2.1\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Mercurial.Net, Version=1.1.1.607, Culture=neutral, PublicKeyToken=9e2fabf3af85dba9, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mercurial.Net.1.1.1.607\lib\net35-Client\Mercurial.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
@@ -124,7 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -135,6 +137,10 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Autofac\Autofac.csproj">
+      <Project>{366a1251-f0e3-41d4-8fd1-8da3e2becae7}</Project>
+      <Name>Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj">
       <Project>{0a1eec5b-35b2-48b3-86f3-6c68b0c366d0}</Project>
       <Name>Saltukkos.Container.Meta</Name>
@@ -142,6 +148,14 @@
     <ProjectReference Include="..\Saltukkos.Container\Saltukkos.Container.csproj">
       <Project>{d7cb4981-7c97-4751-978d-51d2262e6beb}</Project>
       <Name>Saltukkos.Container</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Saltukkos.MercurialVS.HgServices.Implementation\Saltukkos.MercurialVS.HgServices.Implementation.csproj">
+      <Project>{96ba85d4-edbd-4573-a56d-8e867cc2e8de}</Project>
+      <Name>Saltukkos.MercurialVS.HgServices.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Saltukkos.MercurialVS.HgServices\Saltukkos.MercurialVS.HgServices.csproj">
+      <Project>{a28fb91f-ba26-48e8-8187-705dc03f9251}</Project>
+      <Name>Saltukkos.MercurialVS.HgServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl.Implementation\Saltukkos.MercurialVS.SourceControl.Implementation.csproj">
       <Project>{2A2A8573-E54E-424E-825C-3B6663B4D646}</Project>

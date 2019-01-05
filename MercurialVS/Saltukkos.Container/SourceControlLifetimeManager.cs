@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Autofac;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
@@ -43,7 +44,15 @@ namespace Saltukkos.Container
                         .SingleInstance();
                 }
             });
-            _sourceControlLifetimeScope.Resolve<IReadOnlyCollection<ISourceControlComponent>>();
+
+            try
+            {
+                _sourceControlLifetimeScope.Resolve<IReadOnlyCollection<ISourceControlComponent>>();
+            }
+            catch
+            {
+                Debugger.Break();
+            }
         }
 
         public void EndLifetime()

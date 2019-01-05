@@ -7,6 +7,7 @@ using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
+    [Component]
     public class CurrentSolutionProvider : IDisposable, ISourceControlComponent, IVsSolutionEvents
     {
         private readonly uint _solutionEventsSubscriberId;
