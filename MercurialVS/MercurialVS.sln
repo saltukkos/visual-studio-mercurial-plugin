@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.MercurialVS.Sourc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.MercurialVS.SourceControl.Implementation", "Saltukkos.MercurialVS.SourceControl.Implementation\Saltukkos.MercurialVS.SourceControl.Implementation.csproj", "{2A2A8573-E54E-424E-825C-3B6663B4D646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.MercurialVS.HgServices", "Saltukkos.MercurialVS.HgServices\Saltukkos.MercurialVS.HgServices.csproj", "{A28FB91F-BA26-48E8-8187-705DC03F9251}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.MercurialVS.HgServices", "Saltukkos.MercurialVS.HgServices\Saltukkos.MercurialVS.HgServices.csproj", "{A28FB91F-BA26-48E8-8187-705DC03F9251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.MercurialVS.HgServices.Implementation", "Saltukkos.MercurialVS.HgServices.Implementation\Saltukkos.MercurialVS.HgServices.Implementation.csproj", "{96BA85D4-EDBD-4573-A56D-8E867CC2E8DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.MercurialVS.HgServices.Implementation", "Saltukkos.MercurialVS.HgServices.Implementation\Saltukkos.MercurialVS.HgServices.Implementation.csproj", "{96BA85D4-EDBD-4573-A56D-8E867CC2E8DE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac", "Autofac\Autofac.csproj", "{366A1251-F0E3-41D4-8FD1-8DA3E2BECAE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{96BA85D4-EDBD-4573-A56D-8E867CC2E8DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96BA85D4-EDBD-4573-A56D-8E867CC2E8DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96BA85D4-EDBD-4573-A56D-8E867CC2E8DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{366A1251-F0E3-41D4-8FD1-8DA3E2BECAE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{366A1251-F0E3-41D4-8FD1-8DA3E2BECAE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{366A1251-F0E3-41D4-8FD1-8DA3E2BECAE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{366A1251-F0E3-41D4-8FD1-8DA3E2BECAE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
