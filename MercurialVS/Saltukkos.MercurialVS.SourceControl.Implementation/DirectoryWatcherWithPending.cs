@@ -2,26 +2,25 @@
 using System.IO;
 using System.Threading;
 using JetBrains.Annotations;
+using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    public sealed class DirectoryWatcherWithPending : IDirectoryWatcherWithPending
+    [PackageComponent]
+    public sealed class DirectoryWatcherWithPending : IDirectoryWatcherWithPending, IDisposable
     {
-        private readonly int _pendingInMilliseconds;
-
         private bool _isPending;
 
         [NotNull]
-        private readonly object _notifyingSyncRoot = new object();
+        private readonly object _syncRoot = new object();
 
         [NotNull]
         private readonly Timer _pendingTimer;
 
-        [CanBeNull]
-        private readonly Predicate<string> _includeFilter;
-
         [NotNull]
         private readonly FileSystemWatcher _fileSystemWatcher;
+
+        public Predicate<string> IncludeFilter { get; set; }
 
         public string Path
         {
@@ -29,16 +28,20 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             set => _fileSystemWatcher.Path = value;
         }
 
+        public int PendingInMilliseconds { get; set; }
+
         public bool RaiseEvents
         {
-            get
-            {
-                return _fileSystemWatcher.EnableRaisingEvents;
-            }
+            get { return _fileSystemWatcher.EnableRaisingEvents; }
             set
             {
                 _fileSystemWatcher.EnableRaisingEvents = value;
-                if (value == false)
+                if (value)
+                {
+                    return;
+                }
+
+                lock (_syncRoot)
                 {
                     StopPendingTimer();
                 }
@@ -47,13 +50,9 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
 
         public event EventHandler OnDirectoryChanged;
 
-        public DirectoryWatcherWithPending(
-            int pendingInMilliseconds,
-            [CanBeNull] Predicate<string> includeFilter = null)
+        public DirectoryWatcherWithPending()
         {
-            _pendingInMilliseconds = pendingInMilliseconds;
             _pendingTimer = new Timer(OnPendingFinished, null, Timeout.Infinite, Timeout.Infinite);
-            _includeFilter = includeFilter;
             _fileSystemWatcher = new FileSystemWatcher
             {
                 IncludeSubdirectories = true,
@@ -67,7 +66,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
 
         private void OnPendingFinished(object state)
         {
-            lock (_notifyingSyncRoot)
+            lock (_syncRoot)
             {
                 StopPendingTimer();
                 OnDirectoryChanged?.Invoke(this, EventArgs.Empty);
@@ -81,12 +80,12 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
                 return;
             }
 
-            if (_includeFilter?.Invoke(e.Name) == false)
+            if (IncludeFilter?.Invoke(e.Name) == false)
             {
                 return;
             }
 
-            lock (_notifyingSyncRoot)
+            lock (_syncRoot)
             {
                 StartPendingTimer();
             }
@@ -95,7 +94,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         private void StartPendingTimer()
         {
             _isPending = true;
-            _pendingTimer.Change(_pendingInMilliseconds, Timeout.Infinite);
+            _pendingTimer.Change(PendingInMilliseconds, Timeout.Infinite);
         }
 
         private void StopPendingTimer()
