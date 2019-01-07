@@ -3,7 +3,7 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [Component]
+    [PackageComponent]
     internal sealed class RegistryStorage : IRegistryStorage
     {
         private const string StoragePath = @"SOFTWARE\Saltukkos\MercuraialVS\";

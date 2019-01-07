@@ -4,7 +4,7 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    [Component]
+    [PackageComponent]
     public sealed class MercurialSccProviderService : IMercurialSccProviderService
     {
         [NotNull]

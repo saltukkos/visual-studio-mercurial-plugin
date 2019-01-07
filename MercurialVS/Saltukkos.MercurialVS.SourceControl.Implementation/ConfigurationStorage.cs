@@ -3,7 +3,7 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [Component]
+    [PackageComponent]
     public sealed class ConfigurationStorage : IConfigurationStorage
     {
         [NotNull]

@@ -6,8 +6,8 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    [Component]
-    public class CommandsRegistry : ICommandsRegistry, IPackageComponent
+    [PackageComponent]
+    public class CommandsRegistry : ICommandsRegistry
     {
         public IReadOnlyCollection<MenuCommand> RegisteredCommands { get; }
 

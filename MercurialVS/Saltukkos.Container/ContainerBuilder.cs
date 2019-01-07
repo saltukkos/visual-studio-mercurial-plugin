@@ -23,7 +23,7 @@ namespace Saltukkos.Container
             _containerBuilder = new Autofac.ContainerBuilder();
             _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
 
-            foreach (var packageComponent in FindInheritors(typeof(IPackageComponent)))
+            foreach (var packageComponent in FindInheritors<PackageComponentAttribute>(typeof(IPackageComponent)))
             {
                 _containerBuilder
                     .RegisterType(packageComponent)
@@ -31,7 +31,9 @@ namespace Saltukkos.Container
                     .SingleInstance();
             }
 
-            var sourceControlComponents = FindInheritors(typeof(ISourceControlComponent)).ToList();
+            var sourceControlComponents = 
+                FindInheritors<SourceControlComponentAttribute>(typeof(ISourceControlComponent)).ToList();
+            
             _containerBuilder
                 .Register(context => new SourceControlLifetimeManager(
                     context.Resolve<ILifetimeScope>(),
@@ -53,14 +55,14 @@ namespace Saltukkos.Container
 
         [NotNull]
         [ItemNotNull]
-        private static IEnumerable<Type> FindInheritors([NotNull] Type baseTypes)
+        private static IEnumerable<Type> FindInheritors<TAttribute>([NotNull] Type baseTypes) where TAttribute : Attribute
         {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(x => x?.FullName.StartsWith(MyAssembliesPrefix) == true)
                 .SelectMany(x => x.GetTypes())
                 .Where(baseTypes.IsAssignableFrom)
-                .Where(type => type?.GetCustomAttribute<ComponentAttribute>() != null);
+                .Where(type => type?.GetCustomAttribute<TAttribute>() != null);
         }
 
         public void RegisterGlobalComponent<T>([NotNull] T instance) where T : class

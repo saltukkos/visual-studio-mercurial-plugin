@@ -6,7 +6,7 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
-    [Component]
+    [PackageComponent]
     public class SourceControlClientFactory : ISourceControlClientFactory
     {
         public SourceControlClientFactory()

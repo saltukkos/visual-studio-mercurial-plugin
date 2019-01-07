@@ -4,7 +4,7 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    [Component]
+    [SourceControlComponent]
     public class CommandActivator : ISourceControlComponent, IDisposable
     {
         [NotNull]

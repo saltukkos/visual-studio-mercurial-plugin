@@ -4,7 +4,7 @@ using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    [Component]
+    [PackageComponent]
     public class ShowToolWindowCommand : ICommand
     {
         [NotNull]

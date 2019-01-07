@@ -8,7 +8,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
     /// Visual Studio creates Tools Options Page only through
     /// paramerless constructor, so we need this hack
     /// </summary>
-    [Component]
+    [PackageComponent]
     public class SccProviderOptionsDependenciesProvider : IPackageComponent
     {
         [CanBeNull]
