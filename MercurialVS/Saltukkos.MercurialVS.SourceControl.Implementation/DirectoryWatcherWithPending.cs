@@ -56,7 +56,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             _fileSystemWatcher = new FileSystemWatcher
             {
                 IncludeSubdirectories = true,
-                NotifyFilter = NotifyFilters.FileName
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName
             };
             _fileSystemWatcher.Changed += OnChanged;
             _fileSystemWatcher.Created += OnChanged;
@@ -80,7 +80,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
                 return;
             }
 
-            if (IncludeFilter?.Invoke(e.Name) == false)
+            if (IncludeFilter?.Invoke(e.FullPath) == false)
             {
                 return;
             }
