@@ -70,8 +70,12 @@ namespace Saltukkos.MercurialVS.Package
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
-            // ReSharper disable once SuspiciousTypeConversion.Global
+            
+            // ReSharper disable SuspiciousTypeConversion.Global
             containerBuilder.RegisterGlobalComponent((IVsSolution)GetService<SVsSolution>());
+            containerBuilder.RegisterGlobalComponent((IVsSolution2)GetService<SVsSolution>());
+            containerBuilder.RegisterGlobalComponent((IVsHierarchy)GetService<SVsSolution>());
+            // ReSharper restore SuspiciousTypeConversion.Global
             containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
             var container = containerBuilder.Build();
             return container;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using Mercurial;
@@ -33,7 +34,10 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
 
             return (statusCommand.Result ?? throw new InvalidOperationException("Command result is null"))
                 .Where(x => x?.Path != null)
-                .Select(x => new FileState(x.Path, ToFileStatus(x.State))).ToList();
+                .Select(x => new FileState(
+                    Path.GetFullPath($"{RootPath}{Path.DirectorySeparatorChar}{x.Path}"),
+                    ToFileStatus(x.State)))
+                .ToList();
         }
 
         private FileStatus ToFileStatus(Mercurial.FileState mercurialState)
