@@ -1,7 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.HgServices;
@@ -29,6 +29,9 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         [CanBeNull]
         private ISourceControlClient _currentSourceControlClient;
 
+        [CanBeNull]
+        private Task _initializingTask;
+
         public SolutionStateTracker(
             [NotNull] ISourceControlClientFactory sourceControlClientFactory,
             [NotNull] IDirectoryWatcherWithPending directoryWatcherWithPending,
@@ -38,7 +41,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             _directoryWatcherWithPending = directoryWatcherWithPending;
             _directoryStateProvider = directoryStateProvider;
             _directoryWatcherWithPending.PendingInMilliseconds = RefreshPendingInMilliseconds;
-            _directoryWatcherWithPending.OnDirectoryChanged += OnDirectoryChanged;
+            _directoryWatcherWithPending.OnDirectoryChanged += (sender, args) => OnDirectoryChanged();
             _directoryWatcherWithPending.IncludeFilter = path =>
             {
                 return !IgnoredPaths.Any(
@@ -46,10 +49,11 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             };
         }
 
-        private void OnDirectoryChanged(object sender, EventArgs e)
+        private void OnDirectoryChanged()
         {
             if (_currentSourceControlClient == null)
             {
+                _directoryStateProvider.SetNewDirectoryStatus(new FileState[0]);
                 return;
             }
 
@@ -61,8 +65,8 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         {
             if (path == null || !_sourceControlClientFactory.TryCreateClient(path, out var sourceControlClient))
             {
-                StopSolutionTracking();
                 _currentSourceControlClient = null;
+                StopSolutionTracking();
                 return;
             }
 
@@ -73,13 +77,21 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         private void StartSolutionTracking()
         {
             Debug.Assert(_currentSourceControlClient != null);
-            _directoryWatcherWithPending.Path = _currentSourceControlClient.RootPath;
-            _directoryWatcherWithPending.RaiseEvents = true;
+            _initializingTask = Task.Run(() =>
+            {
+                OnDirectoryChanged();
+                _directoryWatcherWithPending.Path = _currentSourceControlClient.RootPath;
+                _directoryWatcherWithPending.RaiseEvents = true;
+                _initializingTask = null;
+            });
         }
 
         private void StopSolutionTracking()
         {
+            //TODO cancellation token
+            _initializingTask?.Wait();
             _directoryWatcherWithPending.RaiseEvents = false;
+            OnDirectoryChanged();
         }
     }
 }
