@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,12 +11,11 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
     [PackageComponent]
     public sealed class SolutionStateTracker : ISolutionStateTracker
     {
+        private const int RefreshPendingInMilliseconds = 200;
+
         [NotNull]
         [ItemNotNull]
         private static readonly string[] IgnoredPaths = {".hg", ".vs"};
-
-        [NotNull]
-        private IReadOnlyList<FileState> _currentFilesState = new FileState[0]; 
 
         [NotNull]
         private readonly ISourceControlClientFactory _sourceControlClientFactory;
@@ -25,26 +23,38 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         [NotNull]
         private readonly IDirectoryWatcherWithPending _directoryWatcherWithPending;
 
+        [NotNull]
+        private readonly IDirectoryStateProviderInternal _directoryStateProvider;
+
         [CanBeNull]
         private ISourceControlClient _currentSourceControlClient;
 
         public SolutionStateTracker(
             [NotNull] ISourceControlClientFactory sourceControlClientFactory,
-            [NotNull] IDirectoryWatcherWithPending directoryWatcherWithPending)
+            [NotNull] IDirectoryWatcherWithPending directoryWatcherWithPending,
+            [NotNull] IDirectoryStateProviderInternal directoryStateProvider)
         {
             _sourceControlClientFactory = sourceControlClientFactory;
             _directoryWatcherWithPending = directoryWatcherWithPending;
+            _directoryStateProvider = directoryStateProvider;
+            _directoryWatcherWithPending.PendingInMilliseconds = RefreshPendingInMilliseconds;
             _directoryWatcherWithPending.OnDirectoryChanged += OnDirectoryChanged;
-            _directoryWatcherWithPending.PendingInMilliseconds = 5000;
-            _directoryWatcherWithPending.IncludeFilter =
-                path => !IgnoredPaths.Any(
+            _directoryWatcherWithPending.IncludeFilter = path =>
+            {
+                return !IgnoredPaths.Any(
                     ignored => path.Split(Path.DirectorySeparatorChar).Contains(ignored));
+            };
         }
 
         private void OnDirectoryChanged(object sender, EventArgs e)
         {
-            _currentFilesState = _currentSourceControlClient.GetNotCleanFiles().ToList();
-            Trace.WriteLine($"New files state:\n* {string.Join("\n* ", _currentFilesState.Select(c => c.FilePath))}");
+            if (_currentSourceControlClient == null)
+            {
+                return;
+            }
+
+            var allFilesStates = _currentSourceControlClient.GetAllFilesStates();
+            _directoryStateProvider.SetNewDirectoryStatus(allFilesStates);
         }
 
         public void SetActiveSolution(string path)
