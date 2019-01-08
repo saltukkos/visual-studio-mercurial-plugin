@@ -15,10 +15,15 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public static SccProviderOptionsDependenciesProvider Instance { get; private set; }
 
         [NotNull]
+        public IDirectoryStateProvider DirectoryStateProvider { get; }
+
+        [NotNull]
         public IConfigurationStorage ConfigurationStorage { get; }
 
-        public SccProviderOptionsDependenciesProvider([NotNull] IConfigurationStorage configurationStorage)
+        public SccProviderOptionsDependenciesProvider([NotNull] IConfigurationStorage configurationStorage,
+            [NotNull] IDirectoryStateProvider directoryStateProvider)
         {
+            DirectoryStateProvider = directoryStateProvider;
             ConfigurationStorage = configurationStorage;
             Instance = this;
         }

@@ -19,7 +19,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+    <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="SccProviderOptionsControl.resx">
+      <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -32,9 +48,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="SccProviderOptionsControl.resx">
-      <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Update="SolutionFilesStatusControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="SolutionFilesStatusControl.Designer.cs">
+      <DependentUpon>SolutionFilesStatusControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SolutionFilesStatusControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 
 </Project>
