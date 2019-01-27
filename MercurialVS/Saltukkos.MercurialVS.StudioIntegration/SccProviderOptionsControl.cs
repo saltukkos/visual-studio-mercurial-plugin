@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using JetBrains.Annotations;
 using Saltukkos.MercurialVS.SourceControl;
 
+// ReSharper disable PossibleNullReferenceException
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
     public partial class SccProviderOptionsControl : UserControl

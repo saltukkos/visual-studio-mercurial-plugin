@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -68,24 +67,24 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         void SetDefaultColors()
         {
-            var defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-            var defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+            //var defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            //var defaultForeground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
 
-            UpdateWindowColors(defaultBackground, defaultForeground);
+            //UpdateWindowColors(defaultBackground, defaultForeground);
         }
 
         public override IWin32Window Window => _elementHost;
 
-        private void UpdateWindowColors(Color clrBackground, Color clrForeground)
-        {
-            //_control.BackColor = clrBackground;
-            //_control.ForeColor = clrForeground;
+        //private void UpdateWindowColors(Color clrBackground, Color clrForeground)
+        //{
+        //    _control.BackColor = clrBackground;
+        //    _control.ForeColor = clrForeground;
 
-            //foreach (Control child in _control.Controls)
-            //{
-            //    child.BackColor = _control.BackColor;
-            //    child.ForeColor = _control.ForeColor;
-            //}
-        }
+        //    foreach (Control child in _control.Controls)
+        //    {
+        //        child.BackColor = _control.BackColor;
+        //        child.ForeColor = _control.ForeColor;
+        //    }
+        //}
     }
 }

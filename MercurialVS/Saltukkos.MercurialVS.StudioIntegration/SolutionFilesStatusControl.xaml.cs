@@ -11,6 +11,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
     /// </summary>
     public partial class SolutionFilesStatusControl
     {
+        [NotNull]
         public ObservableCollection<FileState> Files { get; } = new ObservableCollection<FileState>();
 
         public SolutionFilesStatusControl()
@@ -21,7 +22,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public void SetFiles([NotNull] IEnumerable<FileState> files)
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher?.Invoke(() =>
             {
                 Files.Clear();
                 foreach (var file in files)
