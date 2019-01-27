@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using Mercurial;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container;
@@ -21,7 +22,8 @@ namespace Saltukkos.MercurialVS.Package
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(Constants.SourceControlGuid)]
     [ProvideService(typeof(IMercurialSccProviderService))]
-    [ProvideOptionPage(typeof(SccProviderOptions), Constants.SourceControlCategoryName, Constants.SourceControlProviderName, 0, 0, true)]
+    [ProvideOptionPage(typeof(SccProviderOptions),
+        Constants.SourceControlCategoryName, Constants.SourceControlProviderName, 0, 0, true)]
     [ProvideToolsOptionsPageVisibility]
     [ProvideToolWindow(typeof(MainToolWindow))]
     [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
@@ -40,7 +42,6 @@ namespace Saltukkos.MercurialVS.Package
 
                 _container = BuildContainer();
                 _container.Resolve<IReadOnlyCollection<IPackageComponent>>();
-
                 AddService(_container.Resolve<IMercurialSccProviderService>());
                 GetService<IVsRegisterScciProvider>()
                     .RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
@@ -70,12 +71,10 @@ namespace Saltukkos.MercurialVS.Package
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
-            
-            // ReSharper disable SuspiciousTypeConversion.Global
-            containerBuilder.RegisterGlobalComponent((IVsSolution)GetService<SVsSolution>());
-            containerBuilder.RegisterGlobalComponent((IVsSolution2)GetService<SVsSolution>());
-            containerBuilder.RegisterGlobalComponent((IVsHierarchy)GetService<SVsSolution>());
-            // ReSharper restore SuspiciousTypeConversion.Global
+            containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsSolution>());
+            containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsSolution2>());
+            containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsHierarchy>());
+            containerBuilder.RegisterGlobalComponent(GetService<SOleComponentManager, IOleComponentManager>());
             containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
             var container = containerBuilder.Build();
             return container;
@@ -83,11 +82,18 @@ namespace Saltukkos.MercurialVS.Package
 
         [NotNull]
         [MustUseReturnValue]
-        private T GetService<T>()
+        private TImplemented GetService<TActual, TImplemented>()
         {
-            var service = (T) GetService(typeof(T));
+            var service = (TImplemented) GetService(typeof(TActual));
             ThrowIf.Null(service, nameof(service));
             return service;
+        }
+
+        [NotNull]
+        [MustUseReturnValue]
+        private T GetService<T>()
+        {
+            return GetService<T, T>();
         }
 
         private void AddService<T>([NotNull] T service)
