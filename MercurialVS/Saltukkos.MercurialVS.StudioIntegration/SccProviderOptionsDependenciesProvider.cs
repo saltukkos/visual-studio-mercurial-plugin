@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
+using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.SourceControl;
 
@@ -27,5 +29,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             ConfigurationStorage = configurationStorage;
             Instance = this;
         }
+
+        public static Type GetSomeType() => typeof(IVsDifferenceService);
     }
 }
