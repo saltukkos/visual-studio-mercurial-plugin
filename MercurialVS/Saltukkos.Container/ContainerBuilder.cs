@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Features.ResolveAnything;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.Container
 {
@@ -14,69 +15,84 @@ namespace Saltukkos.Container
         private const string MyAssembliesPrefix = "Saltukkos.";
 
         [NotNull]
-        private readonly Autofac.ContainerBuilder _containerBuilder;
+        private readonly Autofac.ContainerBuilder _containerBuilder = new Autofac.ContainerBuilder();
 
         public ContainerBuilder()
         {
-            //LoadApplicationAssemblies();
-
-            _containerBuilder = new Autofac.ContainerBuilder();
             _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-
-            foreach (var packageComponent in FindInheritors<PackageComponentAttribute>(typeof(IPackageComponent)))
-            {
-                _containerBuilder
-                    .RegisterType(packageComponent)
-                    .AsImplementedInterfaces()
-                    .SingleInstance();
-            }
-
-            var sourceControlComponents = 
-                FindInheritors<SourceControlComponentAttribute>(typeof(ISourceControlComponent)).ToList();
-            
-            _containerBuilder
-                .Register(context => new SourceControlLifetimeManager(
-                    context.Resolve<ILifetimeScope>(),
-                    sourceControlComponents))
-                .AsImplementedInterfaces()
-                .SingleInstance();
+            var componentsForEachScope = FindComponentsForEachScope();
+            RegisterScopeComponents(typeof(PackageScope), componentsForEachScope);
         }
 
-        //private void LoadApplicationAssemblies()
-        //{
-        //    var directoryName = Path.GetDirectoryName(typeof(ContainerBuilder).Assembly.Location)
-        //                        ?? throw new NullReferenceException("directory of assembly file");
-        //    var assemblies = Directory.GetFiles(directoryName, $"{MyAssembliesPrefix}*.dll");
-        //    foreach (var referencedAssembly in assemblies)
-        //    {
-        //        Assembly.Load(referencedAssembly);
-        //    }
-        //}
-
         [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<Type> FindInheritors<TAttribute>([NotNull] Type baseTypes) where TAttribute : Attribute
+        private static IReadOnlyDictionary<Type, List<Type>> FindComponentsForEachScope()
         {
-            return AppDomain.CurrentDomain
+            var types = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(x => x?.FullName.StartsWith(MyAssembliesPrefix) == true)
-                .SelectMany(x => x.GetTypes())
-                .Where(baseTypes.IsAssignableFrom)
-                .Where(type => type?.GetCustomAttribute<TAttribute>() != null);
+                .SelectMany(x => x.GetTypes());
+
+            var components = new Dictionary<Type, List<Type>>();
+
+            foreach (var type in types)
+            {
+                var componentAttribute = type.GetCustomAttribute<ComponentAttribute>();
+                if (componentAttribute is null)
+                {
+                    continue;
+                }
+
+                if (!components.TryGetValue(componentAttribute.ScopeType, out var list))
+                {
+                    list = new List<Type>();
+                    components.Add(componentAttribute.ScopeType, list);
+                }
+
+                list.Add(type);
+            }
+
+            return components;
+        }
+
+        private void RegisterScopeComponents(
+            [NotNull] Type scopeType,
+            [NotNull] IReadOnlyDictionary<Type, List<Type>> scopeTypes)
+        {
+            var currentScopeTypes = scopeTypes[scopeType];
+            foreach (var type in currentScopeTypes)
+            {
+                _containerBuilder
+                    .RegisterType(type)
+                    .AsImplementedInterfaces()
+                    .SingleInstance()
+                    .InstancePerMatchingLifetimeScope(scopeType);
+            }
+
+            var nestedScopes = scopeType.Assembly.GetTypes().Where(type => type.BaseType == scopeType);
+            foreach (var nestedScope in nestedScopes)
+            {
+                var scopeManagerType = typeof(LifetimeScopeManager<>).MakeGenericType(nestedScope);
+                _containerBuilder
+                    .RegisterType(scopeManagerType)
+                    .AsImplementedInterfaces()
+                    .SingleInstance()
+                    .InstancePerMatchingLifetimeScope(scopeType);
+
+                RegisterScopeComponents(nestedScope, scopeTypes);
+            }
         }
 
         public void RegisterGlobalComponent<T>([NotNull] T instance) where T : class
         {
             _containerBuilder
                 .RegisterInstance(instance)
-                .As<T>()
                 .ExternallyOwned();
         }
 
         [NotNull]
-        public Container Build()
+        public ILifetimeScopeManager<PackageScope> Build()
         {
-            return new Container(_containerBuilder.Build());
+            return new LifetimeScopeManager<PackageScope>(_containerBuilder.Build());
         }
     }
 }
