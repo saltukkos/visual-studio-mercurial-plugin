@@ -3,10 +3,11 @@ using System.IO;
 using System.Threading;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public sealed class DirectoryWatcherWithPending : IDirectoryWatcherWithPending, IDisposable
     {
         private bool _isPending;
@@ -69,6 +70,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             lock (_syncRoot)
             {
                 StopPendingTimer();
+                //TODO possible deadlock because of Dispatcher.Invoke in handler, which depends on UI thread, which can do StopSolutionTracking in this moment
                 OnDirectoryChanged?.Invoke(this, EventArgs.Empty);
             }
         }

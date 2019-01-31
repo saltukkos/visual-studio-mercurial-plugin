@@ -3,12 +3,13 @@ using JetBrains.Annotations;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    [SourceControlComponent]
-    public class CurrentSolutionProvider : IDisposable, ISourceControlComponent, IVsSolutionEvents
+    [Component(typeof(SourceControlScope))]
+    public class CurrentSolutionProvider : IDisposable, IVsSolutionEvents
     {
         private readonly uint _solutionEventsSubscriberId;
 

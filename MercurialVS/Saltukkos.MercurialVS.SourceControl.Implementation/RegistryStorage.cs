@@ -1,9 +1,10 @@
 ﻿using Microsoft.Win32;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     internal sealed class RegistryStorage : IRegistryStorage
     {
         private const string StoragePath = @"SOFTWARE\Saltukkos\MercuraialVS\";

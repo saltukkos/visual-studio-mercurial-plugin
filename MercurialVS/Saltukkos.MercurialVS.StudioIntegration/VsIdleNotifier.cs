@@ -4,10 +4,11 @@ using JetBrains.Annotations;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public sealed class VsIdleNotifier : IDisposable, IOleComponent, IVsIdleNotifier
     {
         [NotNull] private readonly IOleComponentManager _oleComponentManager;

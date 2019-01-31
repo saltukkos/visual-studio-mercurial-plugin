@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
@@ -10,8 +11,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
     /// Visual Studio creates Tools Options Page only through
     /// paramerless constructor, so we need this hack
     /// </summary>
-    [PackageComponent]
-    public class SccProviderOptionsDependenciesProvider : IPackageComponent
+    [Component(typeof(PackageScope))]
+    public class SccProviderOptionsDependenciesProvider
     {
         [CanBeNull]
         public static SccProviderOptionsDependenciesProvider Instance { get; private set; }
@@ -22,14 +23,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull]
         public IConfigurationStorage ConfigurationStorage { get; }
 
-        public SccProviderOptionsDependenciesProvider([NotNull] IConfigurationStorage configurationStorage,
-            [NotNull] IDirectoryStateProvider directoryStateProvider)
+        public IVsDifferenceService VsDifferenceService { get; }
+
+        public SccProviderOptionsDependenciesProvider(
+            [NotNull] IConfigurationStorage configurationStorage,
+            [NotNull] IDirectoryStateProvider directoryStateProvider, 
+            [NotNull] IVsDifferenceService vsDifferenceService)
         {
             DirectoryStateProvider = directoryStateProvider;
+            VsDifferenceService = vsDifferenceService;
             ConfigurationStorage = configurationStorage;
             Instance = this;
-        }
-
-        public static Type GetSomeType() => typeof(IVsDifferenceService);
+        }        
     }
 }

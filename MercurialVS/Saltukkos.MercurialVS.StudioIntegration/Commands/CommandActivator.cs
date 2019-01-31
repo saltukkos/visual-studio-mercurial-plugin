@@ -1,11 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    [SourceControlComponent]
-    public class CommandActivator : ISourceControlComponent, IDisposable
+    [Component(typeof(SourceControlScope))]
+    public class CommandActivator : IDisposable
     {
         [NotNull]
         private readonly ICommandsRegistry _commandsRegistry;

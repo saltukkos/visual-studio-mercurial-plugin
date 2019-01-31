@@ -1,9 +1,8 @@
 ﻿using JetBrains.Annotations;
-using Saltukkos.Container.Meta;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    public interface IRegistryStorage : IPackageComponent
+    public interface IRegistryStorage
     {
         [CanBeNull]
         string LoadValue([NotNull] string key);

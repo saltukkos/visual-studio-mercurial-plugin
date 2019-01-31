@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public sealed class SolutionStateTracker : ISolutionStateTracker
     {
         private const int RefreshPendingInMilliseconds = 200;

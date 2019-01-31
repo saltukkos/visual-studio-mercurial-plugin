@@ -3,10 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using Mercurial;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public class SourceControlClientFactory : ISourceControlClientFactory
     {
         public SourceControlClientFactory()

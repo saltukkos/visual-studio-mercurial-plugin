@@ -6,22 +6,21 @@ using Autofac;
 using Autofac.Features.ResolveAnything;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.Container
 {
-    public class ContainerBuilder
+    public class ContainerBuilder<TRootScope>
     {
         private const string MyAssembliesPrefix = "Saltukkos.";
 
         [NotNull]
-        private readonly Autofac.ContainerBuilder _containerBuilder = new Autofac.ContainerBuilder();
+        private readonly ContainerBuilder _containerBuilder = new ContainerBuilder();
 
         public ContainerBuilder()
         {
             _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
             var componentsForEachScope = FindComponentsForEachScope();
-            RegisterScopeComponents(typeof(PackageScope), componentsForEachScope);
+            RegisterScopeComponents<TRootScope>(componentsForEachScope);
         }
 
         [NotNull]
@@ -54,31 +53,29 @@ namespace Saltukkos.Container
             return components;
         }
 
-        private void RegisterScopeComponents(
-            [NotNull] Type scopeType,
-            [NotNull] IReadOnlyDictionary<Type, List<Type>> scopeTypes)
+        private void RegisterScopeComponents<T>([NotNull] IReadOnlyDictionary<Type, List<Type>> scopeTypes)
         {
-            var currentScopeTypes = scopeTypes[scopeType];
-            foreach (var type in currentScopeTypes)
+            var scopeType = typeof(T);
+            var scopeManagerType = typeof(LifetimeScopeManager<T>);
+            if (!scopeTypes.TryGetValue(scopeType, out var currentScopeTypes))
             {
-                _containerBuilder
-                    .RegisterType(type)
-                    .AsImplementedInterfaces()
-                    .SingleInstance()
-                    .InstancePerMatchingLifetimeScope(scopeType);
+                return;
             }
+
+            _containerBuilder
+                .RegisterType(scopeManagerType)
+                .AsImplementedInterfaces()
+                .SingleInstance()
+                .InstancePerMatchingLifetimeScope(scopeType.BaseType)
+                .WithParameter("scopedTypes", currentScopeTypes);
 
             var nestedScopes = scopeType.Assembly.GetTypes().Where(type => type.BaseType == scopeType);
             foreach (var nestedScope in nestedScopes)
             {
-                var scopeManagerType = typeof(LifetimeScopeManager<>).MakeGenericType(nestedScope);
-                _containerBuilder
-                    .RegisterType(scopeManagerType)
-                    .AsImplementedInterfaces()
-                    .SingleInstance()
-                    .InstancePerMatchingLifetimeScope(scopeType);
-
-                RegisterScopeComponents(nestedScope, scopeTypes);
+                GetType()
+                    .GetMethod(nameof(RegisterScopeComponents), BindingFlags.NonPublic | BindingFlags.Instance)?
+                    .MakeGenericMethod(nestedScope)
+                    .Invoke(this, new object[] {scopeTypes});
             }
         }
 
@@ -90,9 +87,10 @@ namespace Saltukkos.Container
         }
 
         [NotNull]
-        public ILifetimeScopeManager<PackageScope> Build()
+        public ILifetimeScopeResolver<TRootScope> Build()
         {
-            return new LifetimeScopeManager<PackageScope>(_containerBuilder.Build());
+            var container = _containerBuilder.Build(rootTag: typeof(object));
+            return container.Resolve<ILifetimeScopeResolver<TRootScope>>();
         }
     }
 }

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     internal class DirectoryStateProvider : IDirectoryStateProviderInternal
     {
         public event EventHandler DirectoryStateChanged;

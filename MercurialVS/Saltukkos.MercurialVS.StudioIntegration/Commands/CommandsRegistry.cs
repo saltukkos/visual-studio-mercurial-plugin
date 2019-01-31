@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public class CommandsRegistry : ICommandsRegistry
     {
         public IReadOnlyCollection<MenuCommand> RegisteredCommands { get; }

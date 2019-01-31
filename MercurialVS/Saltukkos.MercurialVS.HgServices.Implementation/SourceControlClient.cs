@@ -16,6 +16,15 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
 
         public string RootPath { get; }
 
+        public string GetFileAtCurrentRevision(string filename)
+        {
+            var fileName = Path.GetFileName(filename);
+            var tempFile = Path.Combine(Path.GetTempPath(), fileName);
+            var catCommend = new CatCommand{OutputFormat = tempFile}.WithFile(filename);
+            Client.Execute(RootPath, catCommend);
+            return tempFile;
+        }
+
         public IReadOnlyList<FileState> GetNotCleanFiles()
         {
             return GetFilesStatesInternal(FileStatusIncludes.Default);

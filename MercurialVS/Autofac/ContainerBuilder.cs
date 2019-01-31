@@ -137,9 +137,9 @@ namespace Autofac
         /// first create the container, then call Update() on the builder.
         /// </remarks>
         /// <returns>A new container with the configured component registrations.</returns>
-        public IContainer Build(ContainerBuildOptions options = ContainerBuildOptions.None)
+        public IContainer Build(ContainerBuildOptions options = ContainerBuildOptions.None, object rootTag = null)
         {
-            var result = new Container(Properties);
+            var result = new Container(Properties, rootTag);
             result.ComponentRegistry.Properties[MetadataKeys.ContainerBuildOptions] = options;
             Build(result.ComponentRegistry, (options & ContainerBuildOptions.ExcludeDefaultModules) != ContainerBuildOptions.None);
 

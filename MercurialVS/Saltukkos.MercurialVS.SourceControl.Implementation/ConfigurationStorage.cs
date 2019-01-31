@@ -1,9 +1,10 @@
 ﻿using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public sealed class ConfigurationStorage : IConfigurationStorage
     {
         [NotNull]

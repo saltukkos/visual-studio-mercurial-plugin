@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using JetBrains.Annotations;
 
 namespace Saltukkos.Container.Meta
 {
+    [MeansImplicitUse]
     public sealed class ComponentAttribute : Attribute
     {
-        public ComponentAttribute([NotNull] Scope scope)
+        public ComponentAttribute([NotNull] Type scopeType)
         {
-            var scopeGenericType = scope.GetType();
-            var scopeType = scopeGenericType.GenericTypeArguments?.FirstOrDefault();
-            Debug.Assert(scopeType != null, nameof(scopeType) + " != null");
             ScopeType = scopeType;
         }
 

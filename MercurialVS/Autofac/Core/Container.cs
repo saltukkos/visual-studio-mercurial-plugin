@@ -46,7 +46,7 @@ namespace Autofac.Core
         /// Initializes a new instance of the <see cref="Container"/> class.
         /// </summary>
         /// <param name="properties">The properties used during component registration.</param>
-        internal Container(IDictionary<string, object> properties = null)
+        internal Container(IDictionary<string, object> properties = null, object rootTag = null)
         {
             ComponentRegistry = new ComponentRegistry(properties ?? new Dictionary<string, object>());
 
@@ -59,7 +59,7 @@ namespace Autofac.Core
                 new Service[] { new TypedService(typeof(ILifetimeScope)), new TypedService(typeof(IComponentContext)) },
                 new Dictionary<string, object>()));
 
-            _rootLifetimeScope = new LifetimeScope(ComponentRegistry);
+            _rootLifetimeScope = new LifetimeScope(ComponentRegistry, rootTag ?? LifetimeScope.RootTag);
         }
 
         /// <summary>

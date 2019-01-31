@@ -1,10 +1,11 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public class ShowToolWindowCommand : ICommand
     {
         [NotNull]

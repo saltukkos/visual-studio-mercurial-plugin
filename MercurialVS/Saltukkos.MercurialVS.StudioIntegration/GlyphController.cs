@@ -6,12 +6,13 @@ using JetBrains.Annotations;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    [PackageComponent]
+    [Component(typeof(PackageScope))]
     public sealed class GlyphController : IDisposable, IGlyphController
     {
         [NotNull]

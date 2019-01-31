@@ -1,10 +1,11 @@
 ﻿using JetBrains.Annotations;
-using Saltukkos.Container.Meta.LifetimeScopes;
 
 namespace Saltukkos.Container.Meta
 {
-    public interface ILifetimeScopeManager<T> where T : PackageScope
+    // ReSharper disable once UnusedTypeParameter
+    public interface ILifetimeScopeManager<TScope>
     {
+        //TODO constraint on initialization of T-scope
         void StartScopeLifetime([NotNull] [ItemNotNull] params object[] additionalComponents);
 
         void EndScopeLifetime();

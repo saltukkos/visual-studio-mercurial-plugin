@@ -58,7 +58,7 @@ namespace Autofac.Core.Lifetime
         /// <summary>
         /// The tag applied to root scopes when no other tag is specified.
         /// </summary>
-        public static readonly object RootTag = "root";
+        public static object RootTag = "root";
 
         private static object MakeAnonymousTag()
         {
