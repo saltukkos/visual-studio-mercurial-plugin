@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
-using Saltukkos.MercurialVS.HgServices;
-using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
@@ -18,35 +14,27 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         private readonly ElementHost _elementHost;
 
         [NotNull]
-        private readonly SolutionFilesStatusControl _solutionFilesStatusControl = new SolutionFilesStatusControl();
-
-        [NotNull]
-        private readonly IDirectoryStateProvider _directoryStateProvider;
+        private readonly SolutionFilesStatusViewModel _solutionFilesStatusViewModel;
 
         public MainToolWindow()
         {
             Caption = "Main tool window";
+
+            var dependenciesProvider = ToolWindowsDependenciesProvider.GetInstance();
+            _solutionFilesStatusViewModel = new SolutionFilesStatusViewModel(
+                dependenciesProvider.DirectoryStateProvider,
+                dependenciesProvider.VsDifferenceService,
+                dependenciesProvider.FileHistoryProvider);
+
             VSColorTheme.ThemeChanged += OnVsColorThemeChanged;
             _elementHost = new ElementHost
             {
-                Child = _solutionFilesStatusControl,
+                Child = new SolutionFilesStatusView(_solutionFilesStatusViewModel),
                 Dock = DockStyle.Fill
             };
 
-            var dependenciesProvider = SccProviderOptionsDependenciesProvider.Instance
-                                       ?? throw new InvalidOperationException();
-            _directoryStateProvider = dependenciesProvider.DirectoryStateProvider;
-            _directoryStateProvider.DirectoryStateChanged += (sender, args) => RefreshFilesList();
 
             SetDefaultColors();
-            RefreshFilesList();
-        }
-
-        private void RefreshFilesList()
-        {
-            _solutionFilesStatusControl.SetFiles(_directoryStateProvider
-                .CurrentStatus
-                .Where(f => f.Status != FileStatus.Clean && f.Status != FileStatus.Ignored));
         }
 
         protected override void Dispose(bool disposing)
@@ -55,6 +43,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             {
                 VSColorTheme.ThemeChanged -= OnVsColorThemeChanged;
                 _elementHost.Dispose();
+                _solutionFilesStatusViewModel.Dispose();
             }
 
             base.Dispose(disposing);

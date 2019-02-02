@@ -15,8 +15,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public SccProviderOptions()
         {
-            var dependencies = SccProviderOptionsDependenciesProvider.Instance ??
-                               throw new InvalidOperationException("Container was not initialized");
+            var dependencies = ToolWindowsDependenciesProvider.GetInstance();
             _optionsControl = new SccProviderOptionsControl(dependencies.ConfigurationStorage);
         }
 

@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj" />
     <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl\Saltukkos.MercurialVS.SourceControl.csproj" />
+    <ProjectReference Include="..\Saltukkos.Utils\Saltukkos.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,10 +56,13 @@
     <Compile Update="SolutionFilesStatusControl.Designer.cs">
       <DependentUpon>SolutionFilesStatusControl.cs</DependentUpon>
     </Compile>
+    <Compile Update="SolutionFilesStatusView.xaml.cs">
+      <DependentUpon>SolutionFilesStatusView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SolutionFilesStatusControl.xaml">
+    <None Update="SolutionFilesStatusView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>
