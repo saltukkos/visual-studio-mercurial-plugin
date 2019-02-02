@@ -4,6 +4,7 @@ using System.Linq;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
@@ -21,6 +22,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
 
         public void SetNewDirectoryStatus(IEnumerable<FileState> fileStatuses)
         {
+            ThrowIf.Null(fileStatuses, nameof(fileStatuses));
             CurrentStatus = fileStatuses.ToList();
             DirectoryStateChanged?.Invoke(this, EventArgs.Empty);
         }

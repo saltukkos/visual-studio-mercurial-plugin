@@ -7,6 +7,7 @@ using Mercurial;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.SourceControl;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
@@ -23,10 +24,11 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
 
         public string GetFileAtCurrentRevision(string filename)
         {
+            ThrowIf.Null(filename, nameof(filename));
             var fileName = Path.GetFileName(filename);
             var tempFile = Path.Combine(Path.GetTempPath(), fileName);
-            var catCommend = new CatCommand {OutputFormat = tempFile}.WithFile(filename);
-            Client.Execute(_rootPath, catCommend);
+            var catCommand = new CatCommand {OutputFormat = tempFile}.WithFile(filename);
+            Client.Execute(_rootPath, catCommand);
             return tempFile;
         }
 

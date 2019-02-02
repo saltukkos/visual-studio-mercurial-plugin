@@ -3,6 +3,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
@@ -21,6 +22,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             [NotNull] ILifetimeScopeManager<SourceControlScope> sourceControlLifetimeManager,
             [NotNull] IGlyphController glyphController)
         {
+            ThrowIf.Null(sourceControlLifetimeManager, nameof(sourceControlLifetimeManager));
+            ThrowIf.Null(glyphController, nameof(glyphController));
             _sourceControlLifetimeManager = sourceControlLifetimeManager;
             _glyphController = glyphController;
         }

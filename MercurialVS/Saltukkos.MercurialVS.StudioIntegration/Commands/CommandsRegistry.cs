@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
@@ -16,6 +17,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
             [NotNull] IMenuCommandService menuCommandService,
             [ItemNotNull] [NotNull] IReadOnlyCollection<ICommand> commands)
         {
+            ThrowIf.Null(commands, nameof(commands));
+            ThrowIf.Null(menuCommandService, nameof(menuCommandService));
+
             var menuCommands = new List<MenuCommand>(commands.Count);
             foreach (var command in commands)
             {

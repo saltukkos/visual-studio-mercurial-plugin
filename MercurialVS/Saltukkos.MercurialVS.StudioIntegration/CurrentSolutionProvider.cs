@@ -7,6 +7,7 @@ using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
@@ -31,6 +32,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             [NotNull] ILifetimeScopeManager<SolutionUnderSourceControlScope> solutionLifetimeScopeManager,
             [NotNull] ISourceControlBasePathProvider sourceControlBasePathProvider)
         {
+            ThrowIf.Null(vsSolution, nameof(vsSolution));
+            ThrowIf.Null(solutionLifetimeScopeManager, nameof(solutionLifetimeScopeManager));
+            ThrowIf.Null(sourceControlBasePathProvider, nameof(sourceControlBasePathProvider));
+
             _vsSolution = vsSolution;
             _solutionLifetimeScopeManager = solutionLifetimeScopeManager;
             _sourceControlBasePathProvider = sourceControlBasePathProvider;

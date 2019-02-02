@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Autofac;
 using JetBrains.Annotations;
+using Saltukkos.Utils;
 
 namespace Saltukkos.Container
 {
@@ -25,6 +26,7 @@ namespace Saltukkos.Container
 
         public void StartScopeLifetime(params object[] additionalComponents)
         {
+            ThrowIf.Null(additionalComponents, nameof(additionalComponents));
             if (_nestedScope != null)
             {
                 throw new InvalidOperationException($"Lifetime scope {typeof(TScope)} is already created");

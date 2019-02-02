@@ -9,6 +9,7 @@ using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
@@ -34,6 +35,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             [NotNull] IVsIdleNotifier idleNotifier,
             [NotNull] IVsSolution solution)
         {
+            ThrowIf.Null(directoryStateProvider, nameof(directoryStateProvider));
+            ThrowIf.Null(idleNotifier, nameof(idleNotifier));
+            ThrowIf.Null(solution, nameof(solution));
+
             _directoryStateProvider = directoryStateProvider;
             _idleNotifier = idleNotifier;
             _solution = solution;
@@ -49,6 +54,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public int GetSccGlyph(string[] paths, VsStateIcon[] glyphs, uint[] sccStatus)
         {
+            ThrowIf.Null(glyphs, nameof(glyphs));
+            ThrowIf.Null(paths, nameof(paths));
+
             Trace.WriteLine($"{DateTime.Now}: Got glyphs for {paths.Length} files");
             if (_fileStatuses == null || _fileStatuses.Count == 0)
             {

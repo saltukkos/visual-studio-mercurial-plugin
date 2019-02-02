@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
@@ -13,6 +14,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 
         public CommandActivator([NotNull] ICommandsRegistry commandsRegistry)
         {
+            ThrowIf.Null(commandsRegistry, nameof(commandsRegistry));
             _commandsRegistry = commandsRegistry;
 
             foreach (var menuCommand in commandsRegistry.RegisteredCommands)

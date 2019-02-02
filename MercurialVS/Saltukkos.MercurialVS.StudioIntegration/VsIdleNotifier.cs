@@ -5,6 +5,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
@@ -19,6 +20,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public VsIdleNotifier([NotNull] IOleComponentManager oleComponentManager)
         {
+            ThrowIf.Null(oleComponentManager, nameof(oleComponentManager));
             _oleComponentManager = oleComponentManager;
 
             var pcrInfo = new OLECRINFO[1];

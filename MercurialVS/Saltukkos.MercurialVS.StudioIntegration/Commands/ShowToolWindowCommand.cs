@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
@@ -13,6 +14,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 
         public ShowToolWindowCommand([NotNull] IToolWindowContainer toolWindowContainer)
         {
+            ThrowIf.Null(toolWindowContainer, nameof(toolWindowContainer));
             _toolWindowContainer = toolWindowContainer;
         }
 

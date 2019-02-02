@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
 using Saltukkos.MercurialVS.StudioIntegration;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.Package
 {
@@ -20,6 +21,7 @@ namespace Saltukkos.MercurialVS.Package
 
         public override void Register([NotNull] RegistrationContext context)
         {
+            ThrowIf.Null(context, nameof(context));
             using (var providersKey = context.CreateKey("SourceControlProviders"))
             {
                 using (var myProviderKey = providersKey.CreateSubkey(_sourceControlId.ToString("B")))
@@ -37,6 +39,7 @@ namespace Saltukkos.MercurialVS.Package
 
         public override void Unregister([NotNull] RegistrationContext context)
         {
+            ThrowIf.Null(context, nameof(context));
             context.RemoveKey("SourceControlProviders\\" + _sourceControlId.ToString("B"));
         }
     }

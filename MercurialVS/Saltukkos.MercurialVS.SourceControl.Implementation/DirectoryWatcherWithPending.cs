@@ -4,6 +4,7 @@ using System.Threading;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
@@ -75,14 +76,15 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             }
         }
 
-        private void OnChanged(object sender, FileSystemEventArgs e)
+        private void OnChanged(object sender, [NotNull] FileSystemEventArgs eventArgs)
         {
+            ThrowIf.Null(eventArgs, nameof(eventArgs));
             if (_isPending)
             {
                 return;
             }
 
-            if (IncludeFilter?.Invoke(e.FullPath) == false)
+            if (IncludeFilter?.Invoke(eventArgs.FullPath) == false)
             {
                 return;
             }

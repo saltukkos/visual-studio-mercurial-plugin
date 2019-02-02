@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.SourceControl
 {
@@ -9,6 +10,8 @@ namespace Saltukkos.MercurialVS.SourceControl
             [NotNull] string solutionDirectoryPath,
             [NotNull] string sourceControlDirectoryPath)
         {
+            ThrowIf.Null(solutionDirectoryPath, nameof(solutionDirectoryPath));
+            ThrowIf.Null(sourceControlDirectoryPath, nameof(sourceControlDirectoryPath));
             SolutionDirectoryPath = solutionDirectoryPath;
             SourceControlDirectoryPath = sourceControlDirectoryPath;
         }

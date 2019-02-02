@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.HgServices
 {
@@ -6,6 +7,7 @@ namespace Saltukkos.MercurialVS.HgServices
     {
         public FileState([NotNull] string filePath, FileStatus status)
         {
+            ThrowIf.Null(filePath, nameof(filePath));
             FilePath = filePath;
             Status = status;
         }

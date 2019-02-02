@@ -33,6 +33,11 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             [NotNull] IDirectoryStateProviderInternal directoryStateProvider,
             [NotNull] ISourceControlClient currentSourceControlClient)
         {
+            ThrowIf.Null(solutionUnderSourceControlInfo, nameof(solutionUnderSourceControlInfo));
+            ThrowIf.Null(directoryWatcherWithPending, nameof(directoryWatcherWithPending));
+            ThrowIf.Null(directoryStateProvider, nameof(directoryStateProvider));
+            ThrowIf.Null(currentSourceControlClient, nameof(currentSourceControlClient));
+
             _currentSourceControlClient = currentSourceControlClient;
             _directoryStateProvider = directoryStateProvider;
 

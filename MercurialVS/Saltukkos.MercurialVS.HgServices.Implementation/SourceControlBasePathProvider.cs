@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using JetBrains.Annotations;
 using Mercurial;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
@@ -22,6 +24,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
 
         public bool TryGetBasePath(string solutionPath, out string basePath)
         {
+            ThrowIf.Null(solutionPath, nameof(solutionPath));
             basePath = null;
 
             try

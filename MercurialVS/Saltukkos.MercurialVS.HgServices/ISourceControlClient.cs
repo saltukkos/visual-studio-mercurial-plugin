@@ -12,6 +12,6 @@ namespace Saltukkos.MercurialVS.HgServices
         IReadOnlyList<FileState> GetAllFilesStates();
 
         [NotNull]
-        string GetFileAtCurrentRevision(string filename);
+        string GetFileAtCurrentRevision([NotNull] string filename);
     }
 }

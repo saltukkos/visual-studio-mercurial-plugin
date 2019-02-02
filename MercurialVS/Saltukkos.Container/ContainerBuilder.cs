@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Features.ResolveAnything;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
+using Saltukkos.Utils;
 
 namespace Saltukkos.Container
 {
@@ -81,6 +82,7 @@ namespace Saltukkos.Container
 
         public void RegisterGlobalComponent<T>([NotNull] T instance) where T : class
         {
+            ThrowIf.Null(instance, nameof(instance));
             _containerBuilder
                 .RegisterInstance(instance)
                 .ExternallyOwned();
