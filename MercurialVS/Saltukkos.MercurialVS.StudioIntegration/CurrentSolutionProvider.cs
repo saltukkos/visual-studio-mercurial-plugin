@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
@@ -13,38 +15,32 @@ namespace Saltukkos.MercurialVS.StudioIntegration
     {
         private readonly uint _solutionEventsSubscriberId;
 
-        [NotNull]
-        private readonly ISolutionStateTracker _solutionStateTracker;
+        private bool _sourceControlScopeStarted;
 
         [NotNull]
         private readonly IVsSolution _vsSolution;
 
-        public CurrentSolutionProvider(
-            [NotNull] ISolutionStateTracker solutionStateTracker,
-            [NotNull] IVsSolution vsSolution)
-        {
-            _solutionStateTracker = solutionStateTracker;
-            _vsSolution = vsSolution;
+        [NotNull]
+        private readonly ILifetimeScopeManager<SolutionUnderSourceControlScope> _solutionLifetimeScopeManager;
 
-            NotifyActiveSolution();
+        [NotNull]
+        private readonly ISourceControlBasePathProvider _sourceControlBasePathProvider;
+
+        public CurrentSolutionProvider(
+            [NotNull] IVsSolution vsSolution,
+            [NotNull] ILifetimeScopeManager<SolutionUnderSourceControlScope> solutionLifetimeScopeManager,
+            [NotNull] ISourceControlBasePathProvider sourceControlBasePathProvider)
+        {
+            _vsSolution = vsSolution;
+            _solutionLifetimeScopeManager = solutionLifetimeScopeManager;
+            _sourceControlBasePathProvider = sourceControlBasePathProvider;
 
             _vsSolution.AdviseSolutionEvents(this, out _solutionEventsSubscriberId);
-        }
-
-        private void NotifyActiveSolution()
-        {
-            if (_vsSolution.GetSolutionInfo(out var solutionDirectory, out _, out _) != VSConstants.S_OK)
-            {
-                return;
-            }
-
-            _solutionStateTracker.SetActiveSolution(solutionDirectory);
         }
 
         public void Dispose()
         {
             _vsSolution.UnadviseSolutionEvents(_solutionEventsSubscriberId);
-            _solutionStateTracker.SetActiveSolution(null);
         }
 
         public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
@@ -79,7 +75,28 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
-            NotifyActiveSolution();
+            if (_sourceControlScopeStarted)
+            {
+                Debugger.Break();
+                _solutionLifetimeScopeManager.EndScopeLifetime();
+            }
+
+            if (_vsSolution.GetSolutionInfo(out var solutionDirectory, out _, out _) != VSConstants.S_OK)
+            {
+                return VSConstants.S_OK;
+            }
+
+            if (!_sourceControlBasePathProvider.TryGetBasePath(solutionDirectory, out var sourceControlBasePath))
+            {
+                return VSConstants.S_OK;
+            }
+
+            var solutionInfo = new SolutionUnderSourceControlInfo(
+                solutionDirectoryPath: solutionDirectory,
+                sourceControlDirectoryPath: sourceControlBasePath);
+
+            _solutionLifetimeScopeManager.StartScopeLifetime(solutionInfo);
+            _sourceControlScopeStarted = true;
             return VSConstants.S_OK;
         }
 
@@ -90,7 +107,11 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public int OnBeforeCloseSolution(object pUnkReserved)
         {
-            _solutionStateTracker.SetActiveSolution(null);
+            if (_sourceControlScopeStarted)
+            {
+                _solutionLifetimeScopeManager.EndScopeLifetime();
+            }
+
             return VSConstants.S_OK;
         }
 

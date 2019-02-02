@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Saltukkos.MercurialVS.HgServices\Saltukkos.MercurialVS.HgServices.csproj" />
     <ProjectReference Include="..\Saltukkos.MercurialVS.SourceControl\Saltukkos.MercurialVS.SourceControl.csproj" />
+    <ProjectReference Include="..\Saltukkos.Utils\Saltukkos.Utils.csproj" />
   </ItemGroup>
 
 </Project>

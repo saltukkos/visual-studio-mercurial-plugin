@@ -45,6 +45,7 @@ namespace Saltukkos.Container
                 {
                     builder
                         .RegisterInstance(additionalComponent)
+                        .AsSelf()
                         .AsImplementedInterfaces();
                 }
             });

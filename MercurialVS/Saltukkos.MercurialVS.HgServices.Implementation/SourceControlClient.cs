@@ -4,24 +4,29 @@ using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using Mercurial;
+using Saltukkos.Container.Meta;
+using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.SourceControl;
 
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
+    [Component(typeof(SolutionUnderSourceControlScope))]
     public sealed class SourceControlClient : ISourceControlClient
     {
-        public SourceControlClient([NotNull] string rootPath)
-        {
-            RootPath = rootPath;
-        }
+        [NotNull]
+        private readonly string _rootPath;
 
-        public string RootPath { get; }
+        public SourceControlClient([NotNull] SolutionUnderSourceControlInfo solutionUnderSourceControlInfo)
+        {
+            _rootPath = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
+        }
 
         public string GetFileAtCurrentRevision(string filename)
         {
             var fileName = Path.GetFileName(filename);
             var tempFile = Path.Combine(Path.GetTempPath(), fileName);
-            var catCommend = new CatCommand{OutputFormat = tempFile}.WithFile(filename);
-            Client.Execute(RootPath, catCommend);
+            var catCommend = new CatCommand {OutputFormat = tempFile}.WithFile(filename);
+            Client.Execute(_rootPath, catCommend);
             return tempFile;
         }
 
@@ -39,12 +44,12 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
         private IReadOnlyList<FileState> GetFilesStatesInternal(FileStatusIncludes includeStates)
         {
             var statusCommand = new StatusCommand {Include = includeStates};
-            Client.Execute(RootPath, statusCommand);
+            Client.Execute(_rootPath, statusCommand);
 
             return (statusCommand.Result ?? throw new InvalidOperationException("Command result is null"))
                 .Where(x => x?.Path != null)
                 .Select(x => new FileState(
-                    Path.GetFullPath($"{RootPath}{Path.DirectorySeparatorChar}{x.Path}"),
+                    Path.GetFullPath($"{_rootPath}{Path.DirectorySeparatorChar}{x.Path}"),
                     ToFileStatus(x.State)))
                 .ToList();
         }

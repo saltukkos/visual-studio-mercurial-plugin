@@ -110,7 +110,7 @@ namespace Saltukkos.MercurialVS.Package
         static StudioIntegrationPackage()
         {
             Trace.WriteLine(typeof(IRegistryStorage).Assembly.FullName);
-            Trace.WriteLine(typeof(SourceControlClientFactory).Assembly.FullName);
+            Trace.WriteLine(typeof(SourceControlBasePathProvider).Assembly.FullName);
             Trace.WriteLine(typeof(Client).Assembly.FullName);
         }
 

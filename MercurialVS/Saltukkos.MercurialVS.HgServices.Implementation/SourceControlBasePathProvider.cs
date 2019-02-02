@@ -8,9 +8,9 @@ using Saltukkos.Container.Meta.LifetimeScopes;
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
     [Component(typeof(PackageScope))]
-    public class SourceControlClientFactory : ISourceControlClientFactory
+    public class SourceControlBasePathProvider : ISourceControlBasePathProvider
     {
-        public SourceControlClientFactory()
+        public SourceControlBasePathProvider()
         {
             if (!Client.CouldLocateClient)
             {
@@ -20,9 +20,10 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             Trace.WriteLine($"Found hg client, path: {Client.ClientPath}");
         }
 
-        public bool TryCreateClient(string solutionPath, out ISourceControlClient client)
+        public bool TryGetBasePath(string solutionPath, out string basePath)
         {
-            client = null;
+            basePath = null;
+
             try
             {
                 var directory = Directory.GetParent(solutionPath);
@@ -30,7 +31,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                 {
                     if (directory.GetDirectories(".hg").Length == 1)
                     {
-                        client = new SourceControlClient(directory.FullName);
+                        basePath = directory.FullName;
                         return true;
                     }
 

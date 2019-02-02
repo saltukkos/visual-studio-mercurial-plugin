@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,11 +7,12 @@ using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
 using Saltukkos.Container.Meta.LifetimeScopes;
 using Saltukkos.MercurialVS.HgServices;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
-    [Component(typeof(PackageScope))]
-    public sealed class SolutionStateTracker : ISolutionStateTracker
+    [Component(typeof(SolutionUnderSourceControlScope))]
+    public sealed class SolutionStateTracker : IDisposable
     {
         private const int RefreshPendingInMilliseconds = 200;
 
@@ -19,80 +21,48 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         private static readonly string[] IgnoredPaths = {".hg", ".vs"};
 
         [NotNull]
-        private readonly ISourceControlClientFactory _sourceControlClientFactory;
-
-        [NotNull]
         private readonly IDirectoryWatcherWithPending _directoryWatcherWithPending;
 
         [NotNull]
         private readonly IDirectoryStateProviderInternal _directoryStateProvider;
 
-        [CanBeNull]
-        private ISourceControlClient _currentSourceControlClient;
-
-        [CanBeNull]
-        private Task _initializingTask;
+        [NotNull]
+        private readonly ISourceControlClient _currentSourceControlClient;
 
         public SolutionStateTracker(
-            [NotNull] ISourceControlClientFactory sourceControlClientFactory,
+            [NotNull] SolutionUnderSourceControlInfo solutionUnderSourceControlInfo,
             [NotNull] IDirectoryWatcherWithPending directoryWatcherWithPending,
-            [NotNull] IDirectoryStateProviderInternal directoryStateProvider)
+            [NotNull] IDirectoryStateProviderInternal directoryStateProvider,
+            [NotNull] ISourceControlClient currentSourceControlClient)
         {
-            _sourceControlClientFactory = sourceControlClientFactory;
-            _directoryWatcherWithPending = directoryWatcherWithPending;
+            _currentSourceControlClient = currentSourceControlClient;
             _directoryStateProvider = directoryStateProvider;
+
+            _directoryWatcherWithPending = directoryWatcherWithPending;
             _directoryWatcherWithPending.PendingInMilliseconds = RefreshPendingInMilliseconds;
+            _directoryWatcherWithPending.Path = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
             _directoryWatcherWithPending.OnDirectoryChanged += (sender, args) => OnDirectoryChanged();
             _directoryWatcherWithPending.IncludeFilter = path =>
             {
+                ThrowIf.Null(path, nameof(path));
                 return !IgnoredPaths.Any(
                     ignored => path.Split(Path.DirectorySeparatorChar).Contains(ignored));
             };
+            _directoryWatcherWithPending.RaiseEvents = true;
+
+            OnDirectoryChanged();
+        }
+
+        public void Dispose()
+        {
+            _directoryStateProvider.SetNewDirectoryStatus(new FileState[0]);
+            _directoryWatcherWithPending.RaiseEvents = false;
         }
 
         private void OnDirectoryChanged()
         {
-            if (_currentSourceControlClient == null)
-            {
-                _directoryStateProvider.SetNewDirectoryStatus(new FileState[0]);
-                return;
-            }
-
             var allFilesStates = _currentSourceControlClient.GetAllFilesStates();
             _directoryStateProvider.SetNewDirectoryStatus(allFilesStates);
-        }
-
-        public void SetActiveSolution(string path)
-        {
-            if (path == null || !_sourceControlClientFactory.TryCreateClient(path, out var sourceControlClient))
-            {
-                _currentSourceControlClient = null;
-                StopSolutionTracking();
-                return;
-            }
-
-            _currentSourceControlClient = sourceControlClient;
-            StartSolutionTracking();
-        }
-
-        private void StartSolutionTracking()
-        {
-            Debug.Assert(_currentSourceControlClient != null);
-            _initializingTask = Task.Run(() =>
-            {
-                OnDirectoryChanged();
-                _directoryWatcherWithPending.Path = _currentSourceControlClient.RootPath;
-                _directoryWatcherWithPending.RaiseEvents = true;
-                _initializingTask = null;
-            });
-        }
-
-        private void StopSolutionTracking()
-        {
-            //TODO cancellation token
-            _initializingTask?.Wait();
-            _directoryWatcherWithPending.RaiseEvents = false;
-            OnDirectoryChanged();
         }
     }
 }

@@ -6,9 +6,6 @@ namespace Saltukkos.MercurialVS.HgServices
     public interface ISourceControlClient
     {
         [NotNull]
-        string RootPath { get; }
-
-        [NotNull]
         IReadOnlyList<FileState> GetNotCleanFiles();
 
         [NotNull]

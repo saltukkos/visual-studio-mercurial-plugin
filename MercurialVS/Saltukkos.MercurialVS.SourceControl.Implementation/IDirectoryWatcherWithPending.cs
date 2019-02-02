@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
+    //TODO it's not actually SingleInstance, it's more like per-request instance
     public interface IDirectoryWatcherWithPending
     {
         [NotNull]
