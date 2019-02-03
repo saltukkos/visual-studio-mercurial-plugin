@@ -2,9 +2,10 @@
 
 namespace Saltukkos.Container.Meta
 {
+    // ReSharper disable once UnusedTypeParameter
+    // ReSharper disable once TypeParameterCanBeVariant
     public interface ILifetimeScopeManager<TScope, TInitializer>
         where TScope : ILifeTimeScope<TInitializer>
-        where TInitializer : class
 
     {
         void StartScopeLifetime([NotNull] TInitializer initializer);

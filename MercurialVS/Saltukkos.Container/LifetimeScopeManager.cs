@@ -9,7 +9,6 @@ namespace Saltukkos.Container
 {
     internal sealed class LifetimeScopeManager<TScope, TInitializer> : ILifetimeScopeResolver<TScope, TInitializer>
         where TScope : ILifeTimeScope<TInitializer>
-        where TInitializer : class
     {
         [NotNull]
         private readonly ILifetimeScope _parentLifetimeScope;
@@ -49,10 +48,13 @@ namespace Saltukkos.Container
                         .AutoActivate();
                 }
 
-                builder
-                    .RegisterInstance(scopeInitializer)
-                    .AsSelf()
-                    .AsImplementedInterfaces();
+                if (typeof(TInitializer) != typeof(None))
+                {
+                    builder
+                        .RegisterInstance(scopeInitializer)
+                        .AsSelf()
+                        .AsImplementedInterfaces();
+                }
             });
         }
 

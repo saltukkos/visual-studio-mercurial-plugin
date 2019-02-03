@@ -86,7 +86,6 @@ namespace Autofac
         /// static type <typeparamref name="T"/> will be used as the default service (i.e. *not* <code>instance.GetType()</code>).</remarks>
         public static IRegistrationBuilder<T, SimpleActivatorData, SingleRegistrationStyle>
             RegisterInstance<T>(this ContainerBuilder builder, T instance)
-            where T : class
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             if (instance == null) throw new ArgumentNullException(nameof(instance));

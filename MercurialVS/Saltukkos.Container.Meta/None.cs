@@ -1,6 +1,9 @@
-﻿namespace Saltukkos.Container.Meta
+﻿using System.Runtime.InteropServices;
+
+namespace Saltukkos.Container.Meta
 {
-    public sealed class None
+    [StructLayout(LayoutKind.Sequential, Size = 1)]
+    public struct None
     {
     }
 }

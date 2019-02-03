@@ -60,7 +60,6 @@ namespace Saltukkos.Container
 
         private void RegisterScopeComponents<TScope, TInitializer>()
             where TScope : ILifeTimeScope<TInitializer>
-            where TInitializer : class
         {
             var scopeType = typeof(TScope);
             var scopeManagerType = typeof(LifetimeScopeManager<TScope, TInitializer>);
