@@ -24,7 +24,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
         public string GetFileAtCurrentRevision(string filename)
         {
             ThrowIf.Null(filename, nameof(filename));
-            var fileName = Path.GetFileName(filename);
+            var fileName = $"{Guid.NewGuid():N}-{Path.GetFileName(filename)}";
             var tempFile = Path.Combine(Path.GetTempPath(), fileName);
             var catCommand = new CatCommand {OutputFormat = tempFile}.WithFile(filename);
             Client.Execute(_rootPath, catCommand);
