@@ -2,11 +2,12 @@
 
 namespace Saltukkos.Container.Meta
 {
-    // ReSharper disable once UnusedTypeParameter
-    public interface ILifetimeScopeManager<TScope>
+    public interface ILifetimeScopeManager<TScope, TInitializer>
+        where TScope : ILifeTimeScope<TInitializer>
+        where TInitializer : class
+
     {
-        //TODO constraint on initialization of T-scope
-        void StartScopeLifetime([NotNull] [ItemNotNull] params object[] additionalComponents);
+        void StartScopeLifetime([NotNull] TInitializer initializer);
 
         void EndScopeLifetime();
     }

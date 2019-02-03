@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using JetBrains.Annotations;
 using Mercurial;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.HgServices.Implementation

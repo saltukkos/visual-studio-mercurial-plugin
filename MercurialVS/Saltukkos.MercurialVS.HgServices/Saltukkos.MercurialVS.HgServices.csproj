@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj" />
+    <ProjectReference Include="..\Saltukkos.MercurialVS.Architecture\Saltukkos.MercurialVS.Architecture.csproj" />
   </ItemGroup>
 
 </Project>

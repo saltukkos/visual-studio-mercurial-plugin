@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
 using Saltukkos.Utils;
@@ -22,14 +22,15 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         private readonly IVsSolution _vsSolution;
 
         [NotNull]
-        private readonly ILifetimeScopeManager<SolutionUnderSourceControlScope> _solutionLifetimeScopeManager;
+        private readonly ILifetimeScopeManager<SolutionUnderSourceControlScope, SolutionUnderSourceControlInfo>
+            _solutionLifetimeScopeManager;
 
         [NotNull]
         private readonly ISourceControlBasePathProvider _sourceControlBasePathProvider;
 
         public CurrentSolutionProvider(
             [NotNull] IVsSolution vsSolution,
-            [NotNull] ILifetimeScopeManager<SolutionUnderSourceControlScope> solutionLifetimeScopeManager,
+            [NotNull] ILifetimeScopeManager<SolutionUnderSourceControlScope, SolutionUnderSourceControlInfo> solutionLifetimeScopeManager,
             [NotNull] ISourceControlBasePathProvider sourceControlBasePathProvider)
         {
             ThrowIf.Null(vsSolution, nameof(vsSolution));

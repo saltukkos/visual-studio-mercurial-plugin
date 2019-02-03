@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.Utils;
 

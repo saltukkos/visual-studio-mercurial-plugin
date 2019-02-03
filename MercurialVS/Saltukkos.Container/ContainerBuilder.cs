@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -10,55 +9,62 @@ using Saltukkos.Utils;
 
 namespace Saltukkos.Container
 {
-    public class ContainerBuilder<TRootScope>
+    public sealed class ContainerBuilder
     {
         private const string MyAssembliesPrefix = "Saltukkos.";
 
         [NotNull]
-        private readonly ContainerBuilder _containerBuilder = new ContainerBuilder();
+        private readonly Autofac.ContainerBuilder _containerBuilder = new Autofac.ContainerBuilder();
+
+        [NotNull]
+        private readonly ScopesHierarchy _scopesHierarchy;
+
+        [NotNull]
+        private readonly ScopeComponentsMap _scopeComponentsMap;
 
         public ContainerBuilder()
         {
+            var scopeComponentsMapBuilder = new ScopeComponentsMapBuilder();
+            var scopesHierarchyBuilder = new ScopesHierarchyBuilder();
+            ParseAppDomainTypes(scopeComponentsMapBuilder, scopesHierarchyBuilder);
+            _scopeComponentsMap = scopeComponentsMapBuilder.Build();
+            _scopesHierarchy = scopesHierarchyBuilder.Build();
+
             _containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-            var componentsForEachScope = FindComponentsForEachScope();
-            RegisterScopeComponents<TRootScope>(componentsForEachScope);
         }
 
-        [NotNull]
-        private static IReadOnlyDictionary<Type, List<Type>> FindComponentsForEachScope()
+        private static void ParseAppDomainTypes(
+            [NotNull] ScopeComponentsMapBuilder scopeComponentsMapBuilder,
+            [NotNull] ScopesHierarchyBuilder scopesHierarchyBuilder)
         {
             var types = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(x => x?.FullName.StartsWith(MyAssembliesPrefix) == true)
                 .SelectMany(x => x.GetTypes());
 
-            var components = new Dictionary<Type, List<Type>>();
-
             foreach (var type in types)
             {
                 var componentAttribute = type.GetCustomAttribute<ComponentAttribute>();
-                if (componentAttribute is null)
+                if (componentAttribute != null)
                 {
-                    continue;
+                    scopeComponentsMapBuilder.AddComponentToScope(type, componentAttribute.ScopeType);
                 }
 
-                if (!components.TryGetValue(componentAttribute.ScopeType, out var list))
+                var scopeAttribute = type.GetCustomAttribute<LifetimeScopeAttribute>();
+                if (scopeAttribute != null)
                 {
-                    list = new List<Type>();
-                    components.Add(componentAttribute.ScopeType, list);
+                    scopesHierarchyBuilder.AddScope(type, scopeAttribute.BaseScopeType);
                 }
-
-                list.Add(type);
             }
-
-            return components;
         }
 
-        private void RegisterScopeComponents<T>([NotNull] IReadOnlyDictionary<Type, List<Type>> scopeTypes)
+        private void RegisterScopeComponents<TScope, TInitializer>()
+            where TScope : ILifeTimeScope<TInitializer>
+            where TInitializer : class
         {
-            var scopeType = typeof(T);
-            var scopeManagerType = typeof(LifetimeScopeManager<T>);
-            if (!scopeTypes.TryGetValue(scopeType, out var currentScopeTypes))
+            var scopeType = typeof(TScope);
+            var scopeManagerType = typeof(LifetimeScopeManager<TScope, TInitializer>);
+            if (!_scopeComponentsMap.TryGetScopeComponents(scopeType, out var currentScopeTypes))
             {
                 return;
             }
@@ -67,16 +73,22 @@ namespace Saltukkos.Container
                 .RegisterType(scopeManagerType)
                 .AsImplementedInterfaces()
                 .SingleInstance()
-                .InstancePerMatchingLifetimeScope(scopeType.BaseType)
+                .InstancePerMatchingLifetimeScope(_scopesHierarchy.GetBaseScope(scopeType))
                 .WithParameter("scopedTypes", currentScopeTypes);
 
-            var nestedScopes = scopeType.Assembly.GetTypes().Where(type => type.BaseType == scopeType);
-            foreach (var nestedScope in nestedScopes)
+            foreach (var nestedScope in _scopesHierarchy.GetNestedScopes(scopeType))
             {
+                var scopeInterfaceType = nestedScope
+                    .GetInterfaces()
+                    .Single(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ILifeTimeScope<>));
+
+                // ReSharper disable once PossibleNullReferenceException
+                var initializerType = scopeInterfaceType.GetGenericArguments()[0];
+
                 GetType()
                     .GetMethod(nameof(RegisterScopeComponents), BindingFlags.NonPublic | BindingFlags.Instance)?
-                    .MakeGenericMethod(nestedScope)
-                    .Invoke(this, new object[] {scopeTypes});
+                    .MakeGenericMethod(nestedScope, initializerType)
+                    .Invoke(this, null);
             }
         }
 
@@ -89,10 +101,12 @@ namespace Saltukkos.Container
         }
 
         [NotNull]
-        public ILifetimeScopeResolver<TRootScope> Build()
+        public ILifetimeScopeResolver<TRootScope, None> Build<TRootScope>()
+            where TRootScope : ILifeTimeScope<None>
         {
+            RegisterScopeComponents<TRootScope, None>();
             var container = _containerBuilder.Build(rootTag: typeof(object));
-            return container.Resolve<ILifetimeScopeResolver<TRootScope>>();
+            return container.Resolve<ILifetimeScopeResolver<TRootScope, None>>();
         }
     }
 }

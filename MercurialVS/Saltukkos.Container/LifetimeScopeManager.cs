@@ -2,31 +2,37 @@
 using System.Collections.Generic;
 using Autofac;
 using JetBrains.Annotations;
+using Saltukkos.Container.Meta;
 using Saltukkos.Utils;
 
 namespace Saltukkos.Container
 {
-    internal sealed class LifetimeScopeManager<TScope> : ILifetimeScopeResolver<TScope>
+    internal sealed class LifetimeScopeManager<TScope, TInitializer> : ILifetimeScopeResolver<TScope, TInitializer>
+        where TScope : ILifeTimeScope<TInitializer>
+        where TInitializer : class
     {
         [NotNull]
         private readonly ILifetimeScope _parentLifetimeScope;
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<Type> _scopedTypes;
+        private readonly IReadOnlyList<Type> _scopedTypes;
 
         [CanBeNull]
         private ILifetimeScope _nestedScope;
 
-        public LifetimeScopeManager([NotNull] ILifetimeScope parentLifetimeScope, [NotNull] [ItemNotNull] List<Type> scopedTypes)
+        public LifetimeScopeManager([NotNull] ILifetimeScope parentLifetimeScope,
+            [NotNull] [ItemNotNull] IReadOnlyList<Type> scopedTypes)
         {
+            ThrowIf.Null(parentLifetimeScope, nameof(parentLifetimeScope));
+            ThrowIf.Null(scopedTypes, nameof(scopedTypes));
             _parentLifetimeScope = parentLifetimeScope;
             _scopedTypes = scopedTypes;
         }
 
-        public void StartScopeLifetime(params object[] additionalComponents)
+        public void StartScopeLifetime(TInitializer scopeInitializer)
         {
-            ThrowIf.Null(additionalComponents, nameof(additionalComponents));
+            ThrowIf.Null(scopeInitializer, nameof(scopeInitializer));
             if (_nestedScope != null)
             {
                 throw new InvalidOperationException($"Lifetime scope {typeof(TScope)} is already created");
@@ -43,13 +49,10 @@ namespace Saltukkos.Container
                         .AutoActivate();
                 }
 
-                foreach (var additionalComponent in additionalComponents)
-                {
-                    builder
-                        .RegisterInstance(additionalComponent)
-                        .AsSelf()
-                        .AsImplementedInterfaces();
-                }
+                builder
+                    .RegisterInstance(scopeInitializer)
+                    .AsSelf()
+                    .AsImplementedInterfaces();
             });
         }
 

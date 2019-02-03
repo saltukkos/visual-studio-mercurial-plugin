@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
@@ -13,13 +13,13 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         IVsSccManager2
     {
         [NotNull] 
-        private readonly ILifetimeScopeManager<SourceControlScope> _sourceControlLifetimeManager;
+        private readonly ILifetimeScopeManager<SourceControlScope, None> _sourceControlLifetimeManager;
 
         [NotNull] 
         private readonly IGlyphController _glyphController;
 
         public MercurialSccProviderService(
-            [NotNull] ILifetimeScopeManager<SourceControlScope> sourceControlLifetimeManager,
+            [NotNull] ILifetimeScopeManager<SourceControlScope, None> sourceControlLifetimeManager,
             [NotNull] IGlyphController glyphController)
         {
             ThrowIf.Null(sourceControlLifetimeManager, nameof(sourceControlLifetimeManager));
@@ -30,13 +30,13 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public int SetActive()
         {
-            _sourceControlLifetimeManager.StartScopeLifetime();
+            _sourceControlLifetimeManager.StartScopeLifetime(new None());
             return VSConstants.S_OK;
         }
 
         public int SetInactive()
         {
-            _sourceControlLifetimeManager.StartScopeLifetime();
+            _sourceControlLifetimeManager.EndScopeLifetime();
             return VSConstants.S_OK;
         }
 

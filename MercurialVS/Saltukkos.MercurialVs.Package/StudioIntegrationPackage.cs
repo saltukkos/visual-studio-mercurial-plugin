@@ -8,7 +8,8 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.Container.Meta;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices.Implementation;
 using Saltukkos.MercurialVS.SourceControl.Implementation;
 using Saltukkos.MercurialVS.StudioIntegration;
@@ -31,7 +32,7 @@ namespace Saltukkos.MercurialVS.Package
     public sealed class StudioIntegrationPackage : Microsoft.VisualStudio.Shell.Package, IToolWindowContainer
     {
         [CanBeNull]
-        private ILifetimeScopeResolver<PackageScope> _rootLifetimeManager;
+        private ILifetimeScopeResolver<PackageScope, None> _rootLifetimeManager;
 
         protected override void Initialize()
         {
@@ -40,7 +41,7 @@ namespace Saltukkos.MercurialVS.Package
                 base.Initialize();
 
                 _rootLifetimeManager = BuildContainer();
-                _rootLifetimeManager.StartScopeLifetime();
+                _rootLifetimeManager.StartScopeLifetime(new None());
 
                 AddService(_rootLifetimeManager.Resolve<IMercurialSccProviderService>());
                 GetService<IVsRegisterScciProvider>()
@@ -67,9 +68,9 @@ namespace Saltukkos.MercurialVS.Package
         }
 
         [NotNull]
-        private ILifetimeScopeResolver<PackageScope> BuildContainer()
+        private ILifetimeScopeResolver<PackageScope, None> BuildContainer()
         {
-            var containerBuilder = new ContainerBuilder<PackageScope>();
+            var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
             containerBuilder.RegisterGlobalComponent(GetService<IVsRegisterScciProvider>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsSolution>());
@@ -79,8 +80,8 @@ namespace Saltukkos.MercurialVS.Package
             containerBuilder.RegisterGlobalComponent(GetService<SVsDifferenceService, IVsDifferenceService>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsFileMergeService, IVsFileMergeService>());
             containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
-            var container = containerBuilder.Build();
-            return container;
+            var lifetimeScopeResolver = containerBuilder.Build<PackageScope>();
+            return lifetimeScopeResolver;
         }
 
         [NotNull]

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation

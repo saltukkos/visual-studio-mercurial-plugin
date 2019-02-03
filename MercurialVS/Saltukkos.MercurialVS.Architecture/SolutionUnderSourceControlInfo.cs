@@ -1,9 +1,8 @@
 ﻿using JetBrains.Annotations;
 using Saltukkos.Utils;
 
-namespace Saltukkos.MercurialVS.SourceControl
+namespace Saltukkos.MercurialVS.Architecture
 {
-    //TODO move to infrastructure package
     public class SolutionUnderSourceControlInfo
     {
         public SolutionUnderSourceControlInfo(

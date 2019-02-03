@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation

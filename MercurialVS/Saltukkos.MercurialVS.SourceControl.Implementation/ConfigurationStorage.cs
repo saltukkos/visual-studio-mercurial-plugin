@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Saltukkos.Container.Meta;
-using Saltukkos.Container.Meta.LifetimeScopes;
+using Saltukkos.MercurialVS.Architecture;
 
 namespace Saltukkos.MercurialVS.SourceControl.Implementation
 {
