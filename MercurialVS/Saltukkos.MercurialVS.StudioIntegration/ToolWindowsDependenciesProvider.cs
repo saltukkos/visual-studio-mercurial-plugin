@@ -20,28 +20,16 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public ToolWindowsDependenciesProvider(
             [NotNull] IConfigurationStorage configurationStorage,
-            [NotNull] IDirectoryStateProvider directoryStateProvider,
-            [NotNull] IFileHistoryProvider fileHistoryProvider,
-            [NotNull] IVsDifferenceService vsDifferenceService)
+            [NotNull] Func<SolutionFilesStatusViewModel> solutionFilesStatusViewModelFactoryFunc)
         {
-            FileHistoryProvider = fileHistoryProvider;
-            DirectoryStateProvider = directoryStateProvider;
-            VsDifferenceService = vsDifferenceService;
             ConfigurationStorage = configurationStorage;
+            SolutionFilesStatusViewModelFactoryFunc = solutionFilesStatusViewModelFactoryFunc;
             _instance = this;
         }
 
-        [NotNull]
-        public IFileHistoryProvider FileHistoryProvider { get; }
+        [NotNull] public IConfigurationStorage ConfigurationStorage { get; }
 
-        [NotNull]
-        public IDirectoryStateProvider DirectoryStateProvider { get; }
-
-        [NotNull]
-        public IConfigurationStorage ConfigurationStorage { get; }
-
-        [NotNull]
-        public IVsDifferenceService VsDifferenceService { get; }
+        [NotNull] public Func<SolutionFilesStatusViewModel> SolutionFilesStatusViewModelFactoryFunc { get; }
 
         [NotNull]
         public static ToolWindowsDependenciesProvider GetInstance()

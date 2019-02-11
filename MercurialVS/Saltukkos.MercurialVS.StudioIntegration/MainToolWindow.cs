@@ -17,13 +17,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public MainToolWindow()
         {
-            Caption = "Main tool window";
+            Caption = "VCS changes";
 
             var dependenciesProvider = ToolWindowsDependenciesProvider.GetInstance();
-            _solutionFilesStatusViewModel = new SolutionFilesStatusViewModel(
-                dependenciesProvider.DirectoryStateProvider,
-                dependenciesProvider.VsDifferenceService,
-                dependenciesProvider.FileHistoryProvider);
+            _solutionFilesStatusViewModel = dependenciesProvider.SolutionFilesStatusViewModelFactoryFunc.Invoke();
 
             _elementHost = new ElementHost
             {
@@ -31,6 +28,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
                 Dock = DockStyle.Fill
             };
         }
+
+        public override IWin32Window Window => _elementHost;
 
         protected override void Dispose(bool disposing)
         {
@@ -42,7 +41,5 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
             base.Dispose(disposing);
         }
-
-        public override IWin32Window Window => _elementHost;
     }
 }
