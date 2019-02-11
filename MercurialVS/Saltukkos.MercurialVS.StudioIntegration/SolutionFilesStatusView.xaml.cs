@@ -1,27 +1,42 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using JetBrains.Annotations;
-using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {
-    /// <summary>
-    /// Interaction logic for SolutionFilesStatusControl.xaml
-    /// </summary>
-    public partial class SolutionFilesStatusView
+    public partial class PendingChangesView
     {
         [NotNull]
         private readonly SolutionFilesStatusViewModel _viewModel;
 
-        public SolutionFilesStatusView([NotNull] SolutionFilesStatusViewModel viewModel)
+        public PendingChangesView([NotNull] SolutionFilesStatusViewModel viewModel)
         {
-            ThrowIf.Null(viewModel, nameof(viewModel));
             DataContext = _viewModel = viewModel;
             InitializeComponent();
         }
 
-        private void OnItemDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ShowDiff(object sender, RoutedEventArgs e)
         {
             _viewModel.OnItemClicked();
+        }
+
+        private void OpenSelectedFile(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is ListViewItem item) || !item.IsSelected)
+            {
+                return;
+            }
+
+            _viewModel.OnItemClicked();
+        }
+
+        private void OnListViewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                _viewModel.OnItemClicked();
+            }
         }
     }
 }

@@ -50,12 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="SolutionFilesStatusControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="SolutionFilesStatusControl.Designer.cs">
-      <DependentUpon>SolutionFilesStatusControl.cs</DependentUpon>
-    </Compile>
     <Compile Update="SolutionFilesStatusView.xaml.cs">
       <DependentUpon>SolutionFilesStatusView.xaml</DependentUpon>
     </Compile>

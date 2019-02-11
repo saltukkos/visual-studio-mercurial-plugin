@@ -73,6 +73,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         {
             if (SelectedItem.Status != FileStatus.Modified)
             {
+                //TODO just open
                 return;
             }
 
