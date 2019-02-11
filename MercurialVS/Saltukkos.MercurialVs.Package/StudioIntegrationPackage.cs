@@ -79,6 +79,7 @@ namespace Saltukkos.MercurialVS.Package
             containerBuilder.RegisterGlobalComponent(GetService<SOleComponentManager, IOleComponentManager>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsDifferenceService, IVsDifferenceService>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsFileMergeService, IVsFileMergeService>());
+            containerBuilder.RegisterGlobalComponent(GetService<SVsUIShellOpenDocument, IVsUIShellOpenDocument>());
             containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
             var lifetimeScopeResolver = containerBuilder.Build<PackageScope>();
             return lifetimeScopeResolver;

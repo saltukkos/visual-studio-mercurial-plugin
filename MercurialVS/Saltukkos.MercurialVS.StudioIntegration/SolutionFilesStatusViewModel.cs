@@ -25,6 +25,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         private readonly IFileHistoryProvider _fileHistoryProvider;
 
         [NotNull]
+        private readonly IVsUIShellOpenDocument _uiShellOpenDocument;
+
+        [NotNull]
         private readonly Dispatcher _dispatcher;
 
         [NotNull]
@@ -35,14 +38,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public SolutionFilesStatusViewModel(
             [NotNull] IDirectoryStateProvider directoryStateProvider,
             [NotNull] IVsDifferenceService vsDifferenceService,
-            [NotNull] IFileHistoryProvider fileHistoryProvider)
+            [NotNull] IFileHistoryProvider fileHistoryProvider,
+            [NotNull] IVsUIShellOpenDocument uiShellOpenDocument)
         {
             ThrowIf.Null(directoryStateProvider, nameof(directoryStateProvider));
             ThrowIf.Null(vsDifferenceService, nameof(vsDifferenceService));
             ThrowIf.Null(fileHistoryProvider, nameof(fileHistoryProvider));
+            ThrowIf.Null(uiShellOpenDocument, nameof(uiShellOpenDocument));
             _directoryStateProvider = directoryStateProvider;
             _vsDifferenceService = vsDifferenceService;
             _fileHistoryProvider = fileHistoryProvider;
+            _uiShellOpenDocument = uiShellOpenDocument;
 
             _dispatcher = Dispatcher.CurrentDispatcher;
             _directoryStateProvider.DirectoryStateChanged += SetFiles;
@@ -71,31 +77,63 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public void OnItemClicked()
         {
-            if (SelectedItem.Status != FileStatus.Modified)
-            {
-                //TODO just open
-                return;
-            }
-
             var selectedItemFilePath = SelectedItem.FilePath;
             var name = Path.GetFileName(selectedItemFilePath);
-
-            _fileHistoryProvider.ExecuteWithFileAtCurrentRevision(selectedItemFilePath, oldFile =>
+            switch (SelectedItem.Status)
             {
-                using (new NewDocumentStateScope(__VSNEWDOCUMENTSTATE.NDS_Provisional, VSConstants.NewDocumentStateReason.TeamExplorer))
-                {
-                    _vsDifferenceService.OpenComparisonWindow2(
-                        leftFileMoniker: oldFile,
-                        rightFileMoniker: selectedItemFilePath,
-                        caption: $"Diff - {name}",
-                        Tooltip: $"{name}: current revision - changed",
-                        leftLabel: $"{name}: at current revision",
-                        rightLabel: $"{name}: changed version",
-                        inlineLabel: $"{name}: current revision - changed",
-                        roles: null,
-                        grfDiffOptions: (uint)(__VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary));
-                }
-            });
+                case FileStatus.Unknown:
+                case FileStatus.Added:
+                case FileStatus.Clean:
+                case FileStatus.Ignored:
+                    OpenFileInEditor(selectedItemFilePath);
+                    break;
+                case FileStatus.Modified:
+                    _fileHistoryProvider.ExecuteWithFileAtCurrentRevision(selectedItemFilePath, oldFile =>
+                    {
+                        using (TemporaryFilesScopeCookie())
+                        {
+                            _vsDifferenceService.OpenComparisonWindow2(
+                                leftFileMoniker: oldFile,
+                                rightFileMoniker: selectedItemFilePath,
+                                caption: $"Diff - {name}",
+                                Tooltip: $"{name}: current revision - changed",
+                                leftLabel: $"{name}: at current revision",
+                                rightLabel: $"{name}: changed version",
+                                inlineLabel: $"{name}: current revision - changed",
+                                roles: null,
+                                grfDiffOptions: (uint)(__VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary));
+                        }
+                    });
+                    break;
+                case FileStatus.Removed:
+                case FileStatus.Missing:
+                    _fileHistoryProvider.ExecuteWithFileAtCurrentRevision(selectedItemFilePath, oldFile =>
+                    {
+                        using (TemporaryFilesScopeCookie())
+                        {
+                            OpenFileInEditor(oldFile);
+                        }
+                    });
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(SelectedItem.Status), SelectedItem.Status, null);
+            }
+        }
+
+        private void OpenFileInEditor([NotNull] string selectedItemFilePath)
+        {
+            var __ = Guid.Empty;
+            _uiShellOpenDocument
+                .OpenDocumentViaProject(selectedItemFilePath, ref __, out _, out _, out _, out var frame);
+            //TODO readonly and readable name
+            //var vsTextView = VsShellUtilities.GetTextView(frame);
+            frame?.Show();
+        }
+
+        [NotNull]
+        private static NewDocumentStateScope TemporaryFilesScopeCookie()
+        {
+            return new NewDocumentStateScope(__VSNEWDOCUMENTSTATE.NDS_Provisional, VSConstants.NewDocumentStateReason.TeamExplorer);
         }
     }
 }
