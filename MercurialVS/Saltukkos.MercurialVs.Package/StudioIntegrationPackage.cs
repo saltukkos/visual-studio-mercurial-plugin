@@ -22,10 +22,16 @@ namespace Saltukkos.MercurialVS.Package
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideAutoLoad(Constants.SourceControlGuid)]
     [ProvideService(typeof(IMercurialSccProviderService))]
-    [ProvideOptionPage(typeof(SccProviderOptions),
-        Constants.SourceControlCategoryName, Constants.SourceControlProviderName, 0, 0, true)]
+    [ProvideOptionPage(
+        typeof(SccProviderOptions),
+        Constants.SourceControlCategoryName, 
+        Constants.SourceControlProviderName,
+        0, 0, true)]
     [ProvideToolsOptionsPageVisibility]
-    [ProvideToolWindow(typeof(MainToolWindow))]
+    [ProvideToolWindow(
+        typeof(MainToolWindow),
+        Window = "{3AE79031-E1BC-11D0-8F78-00A0C9110057}", //EnvDTE.Constants.vsWindowKindSolutionExplorer
+        Style = VsDockStyle.Tabbed)]
     [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(Constants.PackageGuid)]
