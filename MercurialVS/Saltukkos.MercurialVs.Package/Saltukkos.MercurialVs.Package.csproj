@@ -187,6 +187,12 @@
       <MergeWithCTO>true</MergeWithCTO>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="mercurial.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
