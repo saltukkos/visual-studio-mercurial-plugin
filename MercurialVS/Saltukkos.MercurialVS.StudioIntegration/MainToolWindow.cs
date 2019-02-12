@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
+using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
 {

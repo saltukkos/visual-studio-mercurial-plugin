@@ -51,7 +51,8 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                 .Where(x => x?.Path != null)
                 .Select(x => new FileState(
                     Path.GetFullPath($"{_rootPath}{Path.DirectorySeparatorChar}{x.Path}"),
-                    ToFileStatus(x.State)))
+                    ToFileStatus(x.State),
+                    x.Path))
                 .ToList();
         }
 

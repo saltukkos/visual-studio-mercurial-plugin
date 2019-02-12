@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using JetBrains.Annotations;
 
-namespace Saltukkos.MercurialVS.StudioIntegration
+namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
 {
     public partial class PendingChangesView
     {

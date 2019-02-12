@@ -50,13 +50,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="SolutionFilesStatusView.xaml.cs">
+    <Compile Update="SolutionFilesStatus\SolutionFilesStatusView.xaml.cs">
       <DependentUpon>SolutionFilesStatusView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SolutionFilesStatusView.xaml">
+    <None Update="SolutionFilesStatus\SolutionFilesStatusView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>

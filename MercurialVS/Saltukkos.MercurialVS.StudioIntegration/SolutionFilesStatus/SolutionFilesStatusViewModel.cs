@@ -11,7 +11,7 @@ using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
 using Saltukkos.Utils;
 
-namespace Saltukkos.MercurialVS.StudioIntegration
+namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
 {
     public sealed class SolutionFilesStatusViewModel : IDisposable
     {
@@ -30,10 +30,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull]
         private readonly Dispatcher _dispatcher;
 
-        [NotNull]
-        public ObservableCollection<FileState> Files { get; } = new ObservableCollection<FileState>();
+        [NotNull] public ObservableCollection<FileStateView> Files { get; } = new ObservableCollection<FileStateView>();
 
-        public FileState SelectedItem { get; set; }
+        public FileStateView SelectedItem { get; set; }
 
         public SolutionFilesStatusViewModel(
             [NotNull] IDirectoryStateProvider directoryStateProvider,
@@ -45,6 +44,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             ThrowIf.Null(vsDifferenceService, nameof(vsDifferenceService));
             ThrowIf.Null(fileHistoryProvider, nameof(fileHistoryProvider));
             ThrowIf.Null(uiShellOpenDocument, nameof(uiShellOpenDocument));
+
             _directoryStateProvider = directoryStateProvider;
             _vsDifferenceService = vsDifferenceService;
             _fileHistoryProvider = fileHistoryProvider;
@@ -58,7 +58,14 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         {
             var fileStates = _directoryStateProvider
                 .CurrentStatus
-                .Where(f => f.Status != FileStatus.Clean && f.Status != FileStatus.Ignored);
+                .Where(f => f.Status != FileStatus.Clean && f.Status != FileStatus.Ignored)
+                .Select(f => new FileStateView
+                {
+                    Status = f.Status,
+                    FileName = Path.GetFileName(f.FilePath),
+                    RelativePath = f.RelativePath,
+                    FullPath = f.FilePath
+                });
 
             _dispatcher.Invoke(() =>
             {
@@ -77,8 +84,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public void OnItemClicked()
         {
-            var selectedItemFilePath = SelectedItem.FilePath;
-            var name = Path.GetFileName(selectedItemFilePath);
+            var selectedItemFilePath = SelectedItem.FullPath;
+            var name = SelectedItem.FileName;
             switch (SelectedItem.Status)
             {
                 case FileStatus.Unknown:
@@ -101,7 +108,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
                                 rightLabel: $"{name}: changed version",
                                 inlineLabel: $"{name}: current revision - changed",
                                 roles: null,
-                                grfDiffOptions: (uint)(__VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary));
+                                grfDiffOptions: (uint) (__VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary));
                         }
                     });
                     break;
@@ -133,7 +140,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull]
         private static NewDocumentStateScope TemporaryFilesScopeCookie()
         {
-            return new NewDocumentStateScope(__VSNEWDOCUMENTSTATE.NDS_Provisional, VSConstants.NewDocumentStateReason.TeamExplorer);
+            return new NewDocumentStateScope(__VSNEWDOCUMENTSTATE.NDS_Provisional,
+                VSConstants.NewDocumentStateReason.TeamExplorer);
         }
     }
 }
