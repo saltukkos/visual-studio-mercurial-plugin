@@ -16,19 +16,16 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             InitializeComponent();
         }
 
+        //TODO routed commands
+
         private void ShowDiff(object sender, RoutedEventArgs e)
         {
-            _viewModel.OnItemClicked();
+            _viewModel.OnDiffClicked();
         }
 
-        private void OpenSelectedFile(object sender, RoutedEventArgs e)
+        private void OpenFile(object sender, RoutedEventArgs e)
         {
-            if (!(sender is ListViewItem item) || !item.IsSelected)
-            {
-                return;
-            }
-
-            _viewModel.OnItemClicked();
+            _viewModel.OnOpenClicked();
         }
 
         private void OnListViewKeyDown(object sender, KeyEventArgs e)
@@ -37,6 +34,16 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             {
                 _viewModel.OnItemClicked();
             }
+        }
+
+        private void OnItemClicked(object sender, MouseButtonEventArgs e)
+        {
+            _viewModel.OnItemClicked();
+        }
+
+        private void OnContextMenuLoaded(object sender, RoutedEventArgs e)
+        {
+            ((ContextMenu) sender).DataContext = _viewModel;
         }
     }
 }

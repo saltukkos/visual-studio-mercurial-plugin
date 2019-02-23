@@ -28,6 +28,8 @@
         <SolidColorBrush x:Key="WindowBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowBackgroundColorKey}}"/>
         <SolidColorBrush x:Key="WindowTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
 
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
         <Style x:Key="FocusStyle">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -39,6 +41,11 @@
         </Style>
 
         <Style TargetType="{x:Type MenuItem}">
+            <Setter Property="Visibility" Value="{Binding Path=IsEnabled,
+                RelativeSource={RelativeSource Self},
+                Mode=OneWay,
+                Converter={StaticResource BooleanToVisibilityConverter}}">
+            </Setter>
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -140,6 +147,11 @@
             <Setter Property="HorizontalContentAlignment" Value="Left" />
         </Style>
 
+        <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
+            <MenuItem Header="Open" Click="OpenFile" />
+            <MenuItem Header="Diff" Click="ShowDiff" IsEnabled="{Binding CanDiff}" />
+        </ContextMenu>
+
         <Style TargetType="{x:Type ListViewItem}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -174,18 +186,13 @@
             </Setter>
             <Setter Property="FocusVisualStyle" Value="{DynamicResource FocusStyle}" />
             <Setter Property="Foreground" Value="{StaticResource WindowTextBrush}"/>
-            <EventSetter Event="MouseDoubleClick" Handler="OpenSelectedFile"/>
+            <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}"/>
+            <EventSetter Event="MouseDoubleClick" Handler="OnItemClicked"/>
         </Style>
     </UserControl.Resources>
 
     <Grid>
         <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}">
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Open" Click="OpenSelectedFile" />
-                    <MenuItem Header="Diff" Click="ShowDiff" />
-                </ContextMenu>
-            </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding Status}" />
