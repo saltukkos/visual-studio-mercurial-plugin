@@ -12,7 +12,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
     {
         private ISourceControlClient _client;
 
-        public bool ExecuteWithFileAtCurrentRevision(string path, Action<string> action)
+        public bool ExecuteWithFileAtRevision(string path, Revision? revision, Action<string> action)
         {
             ThrowIf.Null(action, nameof(action));
             ThrowIf.Null(path, nameof(path));
@@ -22,7 +22,13 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
                 return false;
             }
 
-            var fileAtCurrentRevision = _client.GetFileAtCurrentRevision(path);
+            if (revision == null)
+            {
+                action(path);
+                return true;
+            }
+
+            var fileAtCurrentRevision = _client.GetFileAtRevision(path, revision.Value);
             try
             {
                 action(fileAtCurrentRevision);

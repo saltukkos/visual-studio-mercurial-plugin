@@ -5,9 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
 using Saltukkos.Utils;
@@ -20,13 +17,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         private readonly IDirectoryStateProvider _directoryStateProvider;
 
         [NotNull]
-        private readonly IVsDifferenceService _vsDifferenceService;
-
-        [NotNull]
-        private readonly IFileHistoryProvider _fileHistoryProvider;
-
-        [NotNull]
-        private readonly IVsUIShellOpenDocument _uiShellOpenDocument;
+        private readonly IOpenFileService _openFileService;
 
         [NotNull]
         private readonly IVsIdleNotifier _idleNotifier;
@@ -40,21 +31,15 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
 
         public SolutionFilesStatusViewModel(
             [NotNull] IDirectoryStateProvider directoryStateProvider,
-            [NotNull] IVsDifferenceService vsDifferenceService,
-            [NotNull] IFileHistoryProvider fileHistoryProvider,
-            [NotNull] IVsUIShellOpenDocument uiShellOpenDocument,
+            [NotNull] IOpenFileService openFileService,
             [NotNull] IVsIdleNotifier idleNotifier)
         {
+            ThrowIf.Null(openFileService, nameof(openFileService));
             ThrowIf.Null(directoryStateProvider, nameof(directoryStateProvider));
-            ThrowIf.Null(vsDifferenceService, nameof(vsDifferenceService));
-            ThrowIf.Null(fileHistoryProvider, nameof(fileHistoryProvider));
-            ThrowIf.Null(uiShellOpenDocument, nameof(uiShellOpenDocument));
             ThrowIf.Null(idleNotifier, nameof(idleNotifier));
 
             _directoryStateProvider = directoryStateProvider;
-            _vsDifferenceService = vsDifferenceService;
-            _fileHistoryProvider = fileHistoryProvider;
-            _uiShellOpenDocument = uiShellOpenDocument;
+            _openFileService = openFileService;
             _idleNotifier = idleNotifier;
 
             _idleNotifier.IdlingStarted += UpdateFilesList;
@@ -144,38 +129,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
                 case FileStatus.Added:
                 case FileStatus.Clean:
                 case FileStatus.Ignored:
-                    OpenFileInEditor(selectedItemFilePath);
+                    _openFileService.OpenFileFromWorkingDirectory(selectedItemFilePath);
                     break;
                 case FileStatus.Modified when diffRequested:
-                    _fileHistoryProvider.ExecuteWithFileAtCurrentRevision(selectedItemFilePath, oldFile =>
-                    {
-                        using (TemporaryFilesScopeCookie())
-                        {
-                            _vsDifferenceService.OpenComparisonWindow2(
-                                leftFileMoniker: oldFile,
-                                rightFileMoniker: selectedItemFilePath,
-                                caption: $"Diff - {name}",
-                                Tooltip: $"{name}: current revision - changed",
-                                leftLabel: $"{name}: at current revision",
-                                rightLabel: $"{name}: changed version",
-                                inlineLabel: $"{name}: current revision - changed",
-                                roles: null,
-                                grfDiffOptions: (uint) (__VSDIFFSERVICEOPTIONS.VSDIFFOPT_LeftFileIsTemporary));
-                        }
-                    });
+                    _openFileService.OpenFileDiff(selectedItemFilePath, Revision.Current);
                     break;
                 case FileStatus.Modified:
-                    OpenFileInEditor(selectedItemFilePath);
+                    _openFileService.OpenFileFromWorkingDirectory(selectedItemFilePath);
                     break;
                 case FileStatus.Removed:
                 case FileStatus.Missing:
-                    _fileHistoryProvider.ExecuteWithFileAtCurrentRevision(selectedItemFilePath, oldFile =>
-                    {
-                        using (TemporaryFilesScopeCookie())
-                        {
-                            OpenFileInEditor(oldFile);
-                        }
-                    });
+                    _openFileService.OpenFileFromRevision(selectedItemFilePath, Revision.Current);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(SelectedItem.Status), SelectedItem.Status, null);
@@ -188,23 +152,6 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             {
                 _filesListOutdated = true;
             }
-        }
-
-        private void OpenFileInEditor([NotNull] string selectedItemFilePath)
-        {
-            var __ = Guid.Empty;
-            _uiShellOpenDocument
-                .OpenDocumentViaProject(selectedItemFilePath, ref __, out _, out _, out _, out var frame);
-            //TODO readonly and readable name
-            //var vsTextView = VsShellUtilities.GetTextView(frame);
-            frame?.Show();
-        }
-
-        [NotNull]
-        private static NewDocumentStateScope TemporaryFilesScopeCookie()
-        {
-            return new NewDocumentStateScope(__VSNEWDOCUMENTSTATE.NDS_Provisional,
-                VSConstants.NewDocumentStateReason.TeamExplorer);
         }
 
         [NotifyPropertyChangedInvocator]

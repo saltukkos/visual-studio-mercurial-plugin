@@ -1,10 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Saltukkos.MercurialVS.HgServices;
 
 namespace Saltukkos.MercurialVS.SourceControl
 {
     public interface IFileHistoryProvider
     {
-        bool ExecuteWithFileAtCurrentRevision([NotNull] string path, [NotNull] Action<string> action);
+        bool ExecuteWithFileAtRevision([NotNull] string path, Revision? revision, [NotNull] Action<string> action);
     }
 }
