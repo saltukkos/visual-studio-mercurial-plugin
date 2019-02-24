@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Threading;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -30,7 +29,12 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         private readonly IVsUIShellOpenDocument _uiShellOpenDocument;
 
         [NotNull]
-        private readonly Dispatcher _dispatcher;
+        private readonly IVsIdleNotifier _idleNotifier;
+
+        [NotNull]
+        private readonly object _outdatedFilesSyncRoot = new object();
+
+        private bool _filesListOutdated = true;
 
         private FileStateView _selectedItem;
 
@@ -38,19 +42,22 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             [NotNull] IDirectoryStateProvider directoryStateProvider,
             [NotNull] IVsDifferenceService vsDifferenceService,
             [NotNull] IFileHistoryProvider fileHistoryProvider,
-            [NotNull] IVsUIShellOpenDocument uiShellOpenDocument)
+            [NotNull] IVsUIShellOpenDocument uiShellOpenDocument,
+            [NotNull] IVsIdleNotifier idleNotifier)
         {
             ThrowIf.Null(directoryStateProvider, nameof(directoryStateProvider));
             ThrowIf.Null(vsDifferenceService, nameof(vsDifferenceService));
             ThrowIf.Null(fileHistoryProvider, nameof(fileHistoryProvider));
             ThrowIf.Null(uiShellOpenDocument, nameof(uiShellOpenDocument));
+            ThrowIf.Null(idleNotifier, nameof(idleNotifier));
 
             _directoryStateProvider = directoryStateProvider;
             _vsDifferenceService = vsDifferenceService;
             _fileHistoryProvider = fileHistoryProvider;
             _uiShellOpenDocument = uiShellOpenDocument;
+            _idleNotifier = idleNotifier;
 
-            _dispatcher = Dispatcher.CurrentDispatcher;
+            _idleNotifier.IdlingStarted += UpdateFilesList;
             _directoryStateProvider.DirectoryStateChanged += SetFiles;
         }
 
@@ -74,6 +81,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         public void Dispose()
         {
             _directoryStateProvider.DirectoryStateChanged -= SetFiles;
+            _idleNotifier.IdlingStarted -= UpdateFilesList;
         }
 
         public void OnOpenClicked()
@@ -94,6 +102,36 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         public void OnItemClicked()
         {
             HandleFileClick(diffRequested: true);
+        }
+
+        private void UpdateFilesList()
+        {
+            lock (_outdatedFilesSyncRoot)
+            {
+                if (!_filesListOutdated)
+                {
+                    return;
+                }
+
+                var fileStateViews = _directoryStateProvider
+                    .CurrentStatus
+                    .Where(f => f.Status != FileStatus.Clean && f.Status != FileStatus.Ignored)
+                    .Select(f => new FileStateView
+                    {
+                        Status = f.Status,
+                        FileName = Path.GetFileName(f.FilePath),
+                        RelativePath = f.RelativePath,
+                        FullPath = f.FilePath
+                    });
+
+                Files.Clear();
+                foreach (var fileStateView in fileStateViews)
+                {
+                    Files.Add(fileStateView);
+                }
+
+                _filesListOutdated = false;
+            }
         }
 
         private void HandleFileClick(bool diffRequested)
@@ -146,25 +184,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
 
         private void SetFiles(object sender, EventArgs e)
         {
-            var fileStates = _directoryStateProvider
-                .CurrentStatus
-                .Where(f => f.Status != FileStatus.Clean && f.Status != FileStatus.Ignored)
-                .Select(f => new FileStateView
-                {
-                    Status = f.Status,
-                    FileName = Path.GetFileName(f.FilePath),
-                    RelativePath = f.RelativePath,
-                    FullPath = f.FilePath
-                });
-
-            _dispatcher.Invoke(() =>
+            lock (_outdatedFilesSyncRoot)
             {
-                Files.Clear();
-                foreach (var item in fileStates)
-                {
-                    Files.Add(item);
-                }
-            }, DispatcherPriority.Normal);
+                _filesListOutdated = true;
+            }
         }
 
         private void OpenFileInEditor([NotNull] string selectedItemFilePath)
