@@ -11,22 +11,26 @@ using Saltukkos.Utils;
 namespace Saltukkos.MercurialVS.HgServices.Implementation
 {
     [Component(typeof(SolutionUnderSourceControlScope))]
-    public sealed class SourceControlClient : ISourceControlClient
+    internal sealed class SourceControlClient : ISourceControlClient
     {
         [NotNull]
         private readonly string _rootPath;
 
         public SourceControlClient([NotNull] SolutionUnderSourceControlInfo solutionUnderSourceControlInfo)
         {
+            ThrowIf.Null(solutionUnderSourceControlInfo, nameof(solutionUnderSourceControlInfo));
             _rootPath = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
         }
 
-        public string GetFileAtCurrentRevision(string filename)
+        public string GetFileAtRevision(string filename, Revision revision)
         {
             ThrowIf.Null(filename, nameof(filename));
             var fileName = $"{Guid.NewGuid():N}-{Path.GetFileName(filename)}";
             var tempFile = Path.Combine(Path.GetTempPath(), fileName);
-            var catCommand = new CatCommand {OutputFormat = tempFile}.WithFile(filename);
+            var catCommand = new CatCommand()
+                .WithFile(filename)
+                .WithOutputFormat(tempFile)
+                .WithRevision(revision.ToRevSpec());
             Client.Execute(_rootPath, catCommand);
             return tempFile;
         }
@@ -51,32 +55,9 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                 .Where(x => x?.Path != null)
                 .Select(x => new FileState(
                     Path.GetFullPath($"{_rootPath}{Path.DirectorySeparatorChar}{x.Path}"),
-                    ToFileStatus(x.State),
+                    x.State.ToFileStatus(),
                     x.Path))
                 .ToList();
-        }
-
-        private FileStatus ToFileStatus(Mercurial.FileState mercurialState)
-        {
-            switch (mercurialState)
-            {
-                case Mercurial.FileState.Unknown:
-                    return FileStatus.Unknown;
-                case Mercurial.FileState.Modified:
-                    return FileStatus.Modified;
-                case Mercurial.FileState.Added:
-                    return FileStatus.Added;
-                case Mercurial.FileState.Removed:
-                    return FileStatus.Removed;
-                case Mercurial.FileState.Clean:
-                    return FileStatus.Clean;
-                case Mercurial.FileState.Missing:
-                    return FileStatus.Missing;
-                case Mercurial.FileState.Ignored:
-                    return FileStatus.Ignored;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mercurialState), mercurialState, null);
-            }
         }
     }
 }
