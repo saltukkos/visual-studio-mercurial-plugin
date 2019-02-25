@@ -122,7 +122,6 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         private void HandleFileClick(bool diffRequested)
         {
             var selectedItemFilePath = SelectedItem.FullPath;
-            var name = SelectedItem.FileName;
             switch (SelectedItem.Status)
             {
                 case FileStatus.Unknown:

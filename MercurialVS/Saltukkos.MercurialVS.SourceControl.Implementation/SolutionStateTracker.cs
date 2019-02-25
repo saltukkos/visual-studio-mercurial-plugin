@@ -44,7 +44,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             _directoryWatcherWithPending = directoryWatcherWithPending;
             _directoryWatcherWithPending.PendingInMilliseconds = RefreshPendingInMilliseconds;
             _directoryWatcherWithPending.Path = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
-            _directoryWatcherWithPending.OnDirectoryChanged += (sender, args) => OnDirectoryChanged();
+            _directoryWatcherWithPending.OnDirectoryChanged += OnDirectoryChanged;
             _directoryWatcherWithPending.IncludeFilter = path =>
             {
                 ThrowIf.Null(path, nameof(path));
@@ -60,12 +60,18 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         {
             _directoryStateProvider.SetNewDirectoryStatus(new FileState[0]);
             _directoryWatcherWithPending.RaiseEvents = false;
+            _directoryWatcherWithPending.OnDirectoryChanged -= OnDirectoryChanged;
         }
 
         private void OnDirectoryChanged()
         {
             var allFilesStates = _currentSourceControlClient.GetAllFilesStates();
             _directoryStateProvider.SetNewDirectoryStatus(allFilesStates);
+        }
+
+        private void OnDirectoryChanged(object sender, EventArgs e)
+        {
+            OnDirectoryChanged();
         }
     }
 }
