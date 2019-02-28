@@ -25,6 +25,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         [NotNull]
         private readonly object _outdatedFilesSyncRoot = new object();
 
+        [NotNull]
+        private string _filter = string.Empty;
+        
         private bool _filesListOutdated = true;
 
         private FileStateView _selectedItem;
@@ -60,6 +63,18 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         }
 
         public bool CanDiff => SelectedItem.Status == FileStatus.Modified;
+
+        [NotNull]
+        public string Filter
+        {
+            get => _filter;
+            set
+            {
+                ThrowIf.Null(value, nameof(value));
+                _filter = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -11,6 +11,9 @@
              UseLayoutRounding="True">
 
     <UserControl.Resources>
+        <SolidColorBrush x:Key="SearchBoxBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBackgroundColorKey}}"/>
+        <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBorderColorKey}}"/>
+        <SolidColorBrush x:Key="FilterTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.TitleBarInactiveTextColorKey}}"/>
         <SolidColorBrush x:Key="HeaderBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowContentGridColorKey}}"/>
         <SolidColorBrush x:Key="HeaderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowBackgroundColorKey}}"/>
         <SolidColorBrush x:Key="HeaderMouseDownBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMouseDownBackgroundBeginColorKey}}"/>
@@ -39,6 +42,27 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Padding" Value="3"/>
+            <Setter Property="Background" Value="{StaticResource SearchBoxBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SearchBoxBorderBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource HeaderTextBrush}" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="7, 0, 0, 0" />
+            <Setter Property="Foreground" Value="{StaticResource FilterTextBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Filter}" Value="">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
 
         <Style TargetType="{x:Type MenuItem}">
             <Setter Property="Visibility" Value="{Binding Path=IsEnabled,
@@ -192,7 +216,13 @@
     </UserControl.Resources>
 
     <Grid>
-        <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" />
+        <TextBlock IsHitTestVisible="False" Text="Type here to filter the list" Grid.Row="0" />
+        <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}" Grid.Row="1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding Status}" />
