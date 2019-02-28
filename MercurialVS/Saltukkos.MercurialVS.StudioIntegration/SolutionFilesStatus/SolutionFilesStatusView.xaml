@@ -50,7 +50,7 @@
             <Setter Property="Foreground" Value="{StaticResource HeaderTextBrush}" />
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}">
+        <Style x:Key="HintTextStyle" TargetType="{x:Type TextBlock}" >
             <Setter Property="Margin" Value="7, 0, 0, 0" />
             <Setter Property="Foreground" Value="{StaticResource FilterTextBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -221,13 +221,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" />
-        <TextBlock IsHitTestVisible="False" Text="Type here to filter the list" Grid.Row="0" />
+        <TextBlock IsHitTestVisible="False" Style="{StaticResource HintTextStyle}" Text="Type here to filter the list" Grid.Row="0" />
         <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}" Grid.Row="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding Status}" />
-                    <GridViewColumn Width="Auto" Header="File Name" DisplayMemberBinding="{Binding FileName}" />
-                    <GridViewColumn Width="Auto" Header="Path" DisplayMemberBinding="{Binding RelativePath}" />
+                    <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding (local:FileStateView.Status)}" />
+                    <GridViewColumn Width="Auto" Header="File Name" DisplayMemberBinding="{Binding (local:FileStateView.FileName)}" />
+                    <GridViewColumn Width="Auto" Header="Path" DisplayMemberBinding="{Binding (local:FileStateView.RelativePath)}" />
                 </GridView>
             </ListView.View>
         </ListView>

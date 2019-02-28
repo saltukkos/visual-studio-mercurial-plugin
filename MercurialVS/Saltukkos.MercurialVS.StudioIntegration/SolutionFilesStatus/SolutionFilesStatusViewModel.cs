@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Data;
 using JetBrains.Annotations;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
@@ -23,11 +24,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
         private readonly IVsIdleNotifier _idleNotifier;
 
         [NotNull]
+        private readonly ObservableCollection<FileStateView> _files = new ObservableCollection<FileStateView>();
+
+        [NotNull]
+        private readonly CollectionViewSource _filesViewSource = new CollectionViewSource();
+
+        [NotNull]
         private readonly object _outdatedFilesSyncRoot = new object();
 
         [NotNull]
         private string _filter = string.Empty;
-        
+
         private bool _filesListOutdated = true;
 
         private FileStateView _selectedItem;
@@ -45,11 +52,12 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             _openFileService = openFileService;
             _idleNotifier = idleNotifier;
 
+            _filesViewSource.Source = _files;
+            _filesViewSource.Filter += FilesViewSourceOnFilter;
+
             _idleNotifier.IdlingStarted += UpdateFilesList;
             _directoryStateProvider.DirectoryStateChanged += SetFiles;
         }
-
-        [NotNull] public ObservableCollection<FileStateView> Files { get; } = new ObservableCollection<FileStateView>();
 
         public FileStateView SelectedItem
         {
@@ -62,6 +70,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             }
         }
 
+        public ICollectionView Files => _filesViewSource.View;
+
         public bool CanDiff => SelectedItem.Status == FileStatus.Modified;
 
         [NotNull]
@@ -73,6 +83,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
                 ThrowIf.Null(value, nameof(value));
                 _filter = value;
                 OnPropertyChanged();
+                _filesViewSource.View.Refresh();
             }
         }
 
@@ -124,10 +135,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
                         FullPath = f.FilePath
                     });
 
-                Files.Clear();
+                _files.Clear();
                 foreach (var fileStateView in fileStateViews)
                 {
-                    Files.Add(fileStateView);
+                    _files.Add(fileStateView);
                 }
 
                 _filesListOutdated = false;
@@ -158,6 +169,23 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
                 default:
                     throw new ArgumentOutOfRangeException(nameof(SelectedItem.Status), SelectedItem.Status, null);
             }
+        }
+
+        private void FilesViewSourceOnFilter(object sender, FilterEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_filter))
+            {
+                e.Accepted = true;
+                return;
+            }
+
+            if (!(e.Item is FileStateView stateView))
+            {
+                e.Accepted = true;
+                return;
+            }
+
+            e.Accepted = stateView.FullPath.Contains(_filter);
         }
 
         private void SetFiles(object sender, EventArgs e)
