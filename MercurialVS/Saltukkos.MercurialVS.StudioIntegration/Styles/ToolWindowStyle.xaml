@@ -1,0 +1,105 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0">
+
+    <SolidColorBrush x:Key="HeaderBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowContentGridColorKey}}"/>
+    <SolidColorBrush x:Key="HeaderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowBackgroundColorKey}}"/>
+    <SolidColorBrush x:Key="HeaderMouseDownBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMouseDownBackgroundBeginColorKey}}"/>
+    <SolidColorBrush x:Key="HeaderMouseDownTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarTextMouseDownColorKey}}"/>
+    <SolidColorBrush x:Key="HeaderMouseOverBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMouseOverBackgroundBeginColorKey}}"/>
+    <SolidColorBrush x:Key="HeaderTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
+    <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SystemHighlightColorKey}}"/>
+    <SolidColorBrush x:Key="HighlightTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SystemHighlightTextColorKey}}"/>
+    <SolidColorBrush x:Key="InactiveSelectionHighlightBrush" Color="#2F808080"/> <!--Just can't find something matching this-->
+    <SolidColorBrush x:Key="InactiveSelectionHighlightTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
+    <SolidColorBrush x:Key="ListViewBackgroundBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowBackgroundColorKey}}"/>
+    <SolidColorBrush x:Key="ListViewTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
+
+    <Style TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="{StaticResource ListViewBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ListViewTextBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border Width="12" Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                    <Grid>
+                        <Border Height="24" Margin="-2,0,0,0" Padding="10,0,0,0" BorderThickness="0,0,1,1" 
+                                    BorderBrush="{StaticResource HeaderBorderBrush}" 
+                                    Background="{TemplateBinding Background}">
+                            <DockPanel>
+                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </DockPanel>
+                        </Border>
+                        <Thumb x:Name="PART_HeaderGripper"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,0,-6,0"
+                                   Style="{StaticResource GridViewColumnHeaderGripper}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource HeaderMouseOverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{StaticResource HeaderMouseDownBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HeaderMouseDownTextBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource HeaderBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource HeaderTextBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
+
+    <Style TargetType="{x:Type ListViewItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border Margin="0,0,0,-1"
+                                Padding="4,0,0,1"
+                                BorderThickness="0"
+                                Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="17" />
+                            </Grid.RowDefinitions>
+                            <GridViewRowPresenter VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource HighlightTextBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" Value="{StaticResource InactiveSelectionHighlightBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource InactiveSelectionHighlightTextBrush}" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="{StaticResource ListViewTextBrush}"/>
+    </Style>
+
+</ResourceDictionary>

@@ -32,6 +32,9 @@
   <ItemGroup>
     <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
     <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
+    <None Remove="Styles\ContextMenuStyle.xaml" />
+    <None Remove="Styles\SearchBoxStyle.xaml" />
+    <None Remove="Styles\ToolWindowStyle.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,12 +49,6 @@
     </Compile>
     <Compile Update="SccProviderOptionsControl.Designer.cs">
       <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="SolutionFilesStatus\SolutionFilesStatusView.xaml.cs">
-      <DependentUpon>SolutionFilesStatusView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

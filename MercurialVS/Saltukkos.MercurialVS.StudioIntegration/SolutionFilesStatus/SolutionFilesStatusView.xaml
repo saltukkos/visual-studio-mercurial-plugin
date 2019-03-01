@@ -4,215 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus"
-             xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="610"
              d:DataContext="{d:DesignInstance Type=local:SolutionFilesStatusViewModel, IsDesignTimeCreatable=True}"
              UseLayoutRounding="True">
 
     <UserControl.Resources>
-        <SolidColorBrush x:Key="SearchBoxBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBackgroundColorKey}}"/>
-        <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBorderColorKey}}"/>
-        <SolidColorBrush x:Key="FilterTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.TitleBarInactiveTextColorKey}}"/>
-        <SolidColorBrush x:Key="HeaderBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowContentGridColorKey}}"/>
-        <SolidColorBrush x:Key="HeaderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowBackgroundColorKey}}"/>
-        <SolidColorBrush x:Key="HeaderMouseDownBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMouseDownBackgroundBeginColorKey}}"/>
-        <SolidColorBrush x:Key="HeaderMouseDownTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarTextMouseDownColorKey}}"/>
-        <SolidColorBrush x:Key="HeaderMouseOverBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMouseOverBackgroundBeginColorKey}}"/>
-        <SolidColorBrush x:Key="HeaderTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
-        <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SystemHighlightColorKey}}"/>
-        <SolidColorBrush x:Key="HighlightTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SystemHighlightTextColorKey}}"/>
-        <SolidColorBrush x:Key="InactiveSelectionHighlightBrush" Color="#2F808080"/> <!--Just can't find something matching this-->
-        <SolidColorBrush x:Key="InactiveSelectionHighlightTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
-        <SolidColorBrush x:Key="MenuBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMenuBorderColorKey}}"/>
-        <SolidColorBrush x:Key="MenuBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMenuBackgroundGradientBeginColorKey}}"/>
-        <SolidColorBrush x:Key="MenuHighlightBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMenuItemMouseOverColorKey}}"/>
-        <SolidColorBrush x:Key="MenuHighlightTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.CommandBarMenuItemMouseOverTextColorKey}}"/>
-        <SolidColorBrush x:Key="WindowBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowBackgroundColorKey}}"/>
-        <SolidColorBrush x:Key="WindowTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles/ContextMenuStyle.xaml"/>
+                <ResourceDictionary Source="../Styles/SearchBoxStyle.xaml"/>
+                <ResourceDictionary Source="../Styles/ToolWindowStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
+                <MenuItem Header="Open" Click="OpenFile" />
+                <MenuItem Header="Diff" Click="ShowDiff" IsEnabled="{Binding CanDiff}" />
+            </ContextMenu>
 
-        <Style x:Key="FocusStyle">
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Rectangle Margin="0,0,0,-1" StrokeThickness="1" Stroke="{StaticResource HighlightBrush}"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Padding" Value="3"/>
-            <Setter Property="Background" Value="{StaticResource SearchBoxBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SearchBoxBorderBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource HeaderTextBrush}" />
-        </Style>
-
-        <Style x:Key="HintTextStyle" TargetType="{x:Type TextBlock}" >
-            <Setter Property="Margin" Value="7, 0, 0, 0" />
-            <Setter Property="Foreground" Value="{StaticResource FilterTextBrush}" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Visibility" Value="Collapsed" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Filter}" Value="">
-                    <Setter Property="Visibility" Value="Visible"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-
-        <Style TargetType="{x:Type MenuItem}">
-            <Setter Property="Visibility" Value="{Binding Path=IsEnabled,
-                RelativeSource={RelativeSource Self},
-                Mode=OneWay,
-                Converter={StaticResource BooleanToVisibilityConverter}}">
-            </Setter>
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="MenuItem">
-                        <Border Name="Border" Height="22" SnapsToDevicePixels="True">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
-                                    <ColumnDefinition Width="*" MinWidth="150" />
-                                </Grid.ColumnDefinitions>
-                                <ContentPresenter ContentSource="Icon"
-                                                  Margin="5,0,14,0"
-                                                  Width="16" Height="Auto"
-                                                  VerticalAlignment="Center" 
-                                                  SnapsToDevicePixels="True" />
-                                <TextBlock Name="Header" Grid.Column="1" 
-                                           Text="{TemplateBinding Header}" 
-                                           Foreground="{StaticResource WindowTextBrush}"
-                                           VerticalAlignment="Center" 
-                                           SnapsToDevicePixels="True"/>
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsHighlighted" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{StaticResource MenuHighlightBrush}"/>
-                                <Setter TargetName="Header" Property="Foreground" Value="{StaticResource MenuHighlightTextBrush}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type ContextMenu}">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContextMenu">
-                        <Border BorderThickness="1" Padding="2"
-                                BorderBrush="{StaticResource MenuBorderBrush}" 
-                                Background="{StaticResource MenuBrush}">
-                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type ListView}">
-            <Setter Property="Background" Value="{StaticResource WindowBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource WindowTextBrush}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <EventSetter Event="KeyDown" Handler="OnListViewKeyDown"/>
-        </Style>
-
-        <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border Width="12" Background="Transparent" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                        <Grid>
-                            <Border Height="24" Margin="-2,0,0,0" Padding="10,0,0,0" BorderThickness="0,0,1,1" 
-                                    BorderBrush="{StaticResource HeaderBorderBrush}" 
-                                    Background="{TemplateBinding Background}">
-                                <DockPanel>
-                                    <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                </DockPanel>
-                            </Border>
-                            <Thumb x:Name="PART_HeaderGripper"
-                                   HorizontalAlignment="Right"
-                                   Margin="0,0,-6,0"
-                                   Style="{StaticResource GridViewColumnHeaderGripper}"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource HeaderMouseOverBrush}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="{StaticResource HeaderMouseDownBrush}"/>
-                                <Setter Property="Foreground" Value="{StaticResource HeaderMouseDownTextBrush}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="{StaticResource HeaderBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource HeaderTextBrush}" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-        </Style>
-
-        <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
-            <MenuItem Header="Open" Click="OpenFile" />
-            <MenuItem Header="Diff" Click="ShowDiff" IsEnabled="{Binding CanDiff}" />
-        </ContextMenu>
-
-        <Style TargetType="{x:Type ListViewItem}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                        <Border Margin="0,0,0,-1"
-                                Padding="4,0,0,1"
-                                BorderThickness="0"
-                                Background="{TemplateBinding Background}">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="17" />
-                                </Grid.RowDefinitions>
-                                <GridViewRowPresenter VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
-                                <Setter Property="Foreground" Value="{StaticResource HighlightTextBrush}" />
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="True" />
-                                    <Condition Property="Selector.IsSelectionActive" Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" Value="{StaticResource InactiveSelectionHighlightBrush}" />
-                                <Setter Property="Foreground" Value="{StaticResource InactiveSelectionHighlightTextBrush}" />
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="FocusVisualStyle" Value="{DynamicResource FocusStyle}" />
-            <Setter Property="Foreground" Value="{StaticResource WindowTextBrush}"/>
-            <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}"/>
-            <EventSetter Event="MouseDoubleClick" Handler="OnItemClicked"/>
-        </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
@@ -220,9 +30,15 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" />
-        <TextBlock IsHitTestVisible="False" Style="{StaticResource HintTextStyle}" Text="Type here to filter the list" Grid.Row="0" />
-        <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}" Grid.Row="1">
+        <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" />
+        <TextBlock Style="{StaticResource HintTextStyle}" IsHitTestVisible="False" Text="Type here to filter the list" Grid.Row="0" />
+        <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}" KeyDown="OnListViewKeyDown" Grid.Row="1">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="OnItemClicked"/>
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding (local:FileStateView.Status)}" />

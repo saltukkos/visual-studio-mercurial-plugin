@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0">
+
+    <SolidColorBrush x:Key="SearchBoxBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBackgroundColorKey}}"/>
+    <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBorderColorKey}}"/>
+    <SolidColorBrush x:Key="SearchBoxTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.TitleBarActiveTextColorKey}}"/>
+    <SolidColorBrush x:Key="FilterTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.TitleBarInactiveTextColorKey}}"/>
+
+    <Style x:Key="SearchBoxStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="Background" Value="{StaticResource SearchBoxBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource SearchBoxBorderBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource SearchBoxTextBrush}" />
+    </Style>
+
+    <Style x:Key="HintTextStyle" TargetType="{x:Type TextBlock}" >
+        <Setter Property="Margin" Value="7, 0, 0, 0" />
+        <Setter Property="Foreground" Value="{StaticResource FilterTextBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Visibility" Value="Collapsed" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Filter}" Value=""> <!--TODO attached property-->
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
