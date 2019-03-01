@@ -13,15 +13,14 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/ContextMenuStyle.xaml"/>
+                <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml"/>
                 <ResourceDictionary Source="../Styles/SearchBoxStyle.xaml"/>
                 <ResourceDictionary Source="../Styles/ToolWindowStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
             <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
                 <MenuItem Header="Open" Click="OpenFile" />
                 <MenuItem Header="Diff" Click="ShowDiff" IsEnabled="{Binding CanDiff}" />
             </ContextMenu>
-
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -32,11 +31,12 @@
         </Grid.RowDefinitions>
         <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" />
         <TextBlock Style="{StaticResource HintTextStyle}" IsHitTestVisible="False" Text="Type here to filter the list" Grid.Row="0" />
+
         <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}" KeyDown="OnListViewKeyDown" Grid.Row="1">
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}"/>
-                    <EventSetter Event="MouseDoubleClick" Handler="OnItemClicked"/>
+                    <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}" />
+                    <EventSetter Event="MouseDoubleClick" Handler="OnItemClicked" />
                 </Style>
             </ListView.Resources>
             <ListView.View>
