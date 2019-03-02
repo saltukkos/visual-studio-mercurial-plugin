@@ -32,8 +32,8 @@
   <ItemGroup>
     <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
     <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
+    <None Remove="Controls\TextBoxWIthHint.xaml" />
     <None Remove="Styles\ContextMenuStyle.xaml" />
-    <None Remove="Styles\SearchBoxStyle.xaml" />
     <None Remove="Styles\ToolWindowStyle.xaml" />
   </ItemGroup>
 
@@ -44,6 +44,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\TextBoxWIthHint.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>TextBoxWithHint.xaml</DependentUpon>
+    </Compile>
     <Compile Update="SccProviderOptionsControl.cs">
       <SubType>Form</SubType>
     </Compile>

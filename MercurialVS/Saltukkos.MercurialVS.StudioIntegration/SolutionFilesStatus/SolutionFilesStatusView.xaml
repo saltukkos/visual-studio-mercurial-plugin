@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus"
+             xmlns:controls="clr-namespace:Saltukkos.MercurialVS.StudioIntegration.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="610"
              d:DataContext="{d:DesignInstance Type=local:SolutionFilesStatusViewModel, IsDesignTimeCreatable=True}"
@@ -14,7 +15,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/ContextMenuStyle.xaml"/>
                 <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml"/>
-                <ResourceDictionary Source="../Styles/SearchBoxStyle.xaml"/>
                 <ResourceDictionary Source="../Styles/ToolWindowStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
@@ -25,12 +25,13 @@
     </UserControl.Resources>
 
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox Style="{StaticResource SearchBoxStyle}" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" />
-        <TextBlock Style="{StaticResource HintTextStyle}" IsHitTestVisible="False" Text="Type here to filter the list" Grid.Row="0" />
+
+        <controls:TextBoxWithHint Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Hint="Type here to filter the list" Grid.Row="0" />
 
         <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedItem}" KeyDown="OnListViewKeyDown" Grid.Row="1">
             <ListView.Resources>
@@ -47,5 +48,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
     </Grid>
 </UserControl>
