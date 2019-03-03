@@ -171,8 +171,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             }
         }
 
-        private void FilesViewSourceOnFilter(object sender, FilterEventArgs e)
+        private void FilesViewSourceOnFilter(object sender, [NotNull] FilterEventArgs e)
         {
+            ThrowIf.Null(e, nameof(e));
+
             if (string.IsNullOrEmpty(_filter))
             {
                 e.Accepted = true;
@@ -185,7 +187,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
                 return;
             }
 
-            e.Accepted = stateView.FullPath.Contains(_filter);
+            e.Accepted = stateView.FullPath.Contains(_filter, StringComparison.OrdinalIgnoreCase);
         }
 
         private void SetFiles(object sender, EventArgs e)

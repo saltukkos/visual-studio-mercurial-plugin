@@ -11,32 +11,26 @@
         <SolidColorBrush x:Key="SearchBoxBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBackgroundColorKey}}"/>
         <SolidColorBrush x:Key="SearchBoxBorderBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.SearchBoxBorderColorKey}}"/>
         <SolidColorBrush x:Key="SearchBoxTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.ToolWindowTextColorKey}}"/>
-        <SolidColorBrush x:Key="FilterTextBrush" Color="{DynamicResource {x:Static vs:EnvironmentColors.DesignerWatermarkColorKey}}"/>
     </UserControl.Resources>
 
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
 
-        <TextBox Grid.Row="0" Padding="3"
-                 Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                 Background="{StaticResource SearchBoxBrush}"
-                 Foreground="{StaticResource SearchBoxTextBrush}"
-                 BorderBrush="{StaticResource SearchBoxBorderBrush}" />
+        <TextBox
+            Grid.Row="0" Padding="3"
+            Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+            Background="{StaticResource SearchBoxBrush}"
+            Foreground="{StaticResource SearchBoxTextBrush}"
+            BorderBrush="{StaticResource SearchBoxBorderBrush}" />
 
-        <TextBlock Grid.Row="0" IsHitTestVisible="False" Text="{Binding Hint}"
-                   Margin="7, 0, 0, 0"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   Visibility="Collapsed"
-                   Foreground="{StaticResource FilterTextBrush}">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}" >
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text}" Value="">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
+        <TextBlock x:Name="HintTextBlock"
+            Grid.Row="0" IsHitTestVisible="False"
+            Text="{Binding Hint}"
+            Margin="7, 0, 0, 0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            Visibility="Visible"
+            Opacity="0.5"
+            Foreground="{StaticResource SearchBoxTextBrush}">
         </TextBlock>
 
     </Grid>
