@@ -22,6 +22,15 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             _rootPath = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
         }
 
+        public IReadOnlyList<ChangeSet> GetFileHistoryLog(string filename)
+        {
+            ThrowIf.Null(filename, nameof(filename));
+            var logCommand = new LogCommand()
+                .WithPath(filename);
+            Client.Execute(_rootPath, logCommand);
+            return logCommand.Result.Select(c => c.ToChangeSet()).ToList();
+        }
+
         public string GetFileAtRevision(string filename, Revision revision)
         {
             ThrowIf.Null(filename, nameof(filename));
