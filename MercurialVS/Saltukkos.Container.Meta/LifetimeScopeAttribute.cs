@@ -9,8 +9,8 @@ namespace Saltukkos.Container.Meta
     {
         public LifetimeScopeAttribute([NotNull] Type baseScopeType)
         {
-            BaseScopeType = baseScopeType;
             ThrowIf.Null(baseScopeType, nameof(baseScopeType));
+            BaseScopeType = baseScopeType;
         }
 
         [NotNull] 

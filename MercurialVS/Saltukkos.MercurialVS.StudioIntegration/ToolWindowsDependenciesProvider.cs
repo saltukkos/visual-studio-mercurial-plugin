@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.SourceControl;

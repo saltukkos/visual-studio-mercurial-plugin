@@ -25,7 +25,7 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             ThrowIf.Null(key, nameof(key));
             using (var configKey = Registry.CurrentUser.CreateSubKey(StoragePath))
             {
-                configKey.SetValue(key, value);
+                configKey?.SetValue(key, value);
             }
         }
     }

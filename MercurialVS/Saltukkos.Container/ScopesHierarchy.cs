@@ -17,7 +17,6 @@ namespace Saltukkos.Container
             [NotNull] IReadOnlyDictionary<Type, List<Type>> nestedScopes,
             [NotNull] IReadOnlyDictionary<Type, Type> baseScopes)
         {
-            ThrowIf.Null(nestedScopes, nameof(nestedScopes));
             ThrowIf.Null(baseScopes, nameof(baseScopes));
             _nestedScopes = nestedScopes;
             _baseScopes = baseScopes;
@@ -27,7 +26,7 @@ namespace Saltukkos.Container
         public Type GetBaseScope([NotNull] Type scope)
         {
             ThrowIf.Null(scope, nameof(scope));
-            return _baseScopes[scope];
+            return Ensure.NotNull(_baseScopes[scope]);
         }
 
         [NotNull]

@@ -28,7 +28,9 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             var logCommand = new LogCommand()
                 .WithPath(filename);
             Client.Execute(_rootPath, logCommand);
-            return logCommand.Result.Select(c => c.ToChangeSet()).ToList();
+            var logCommandResult = logCommand.Result;
+            ThrowIf.Null(logCommandResult, nameof(logCommandResult));
+            return logCommandResult.Select(c => c.ToChangeSet()).ToList();
         }
 
         public string GetFileAtRevision(string filename, Revision revision)

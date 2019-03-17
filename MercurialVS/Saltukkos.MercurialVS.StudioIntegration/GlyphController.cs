@@ -66,7 +66,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             for (var i = 0; i < paths.Length; ++i)
             {
                 var path = paths[i];
-                Debug.Assert(path != null, nameof(path) + " != null");
+                Ensure.NotNull(path);
                 if (_fileStatuses.TryGetValue(path.ToUpper(), out var fileStatus))
                 {
                     glyphs[i] = ToVsGlyph(fileStatus);

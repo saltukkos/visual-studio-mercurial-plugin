@@ -1,6 +1,14 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String>
+	<s:Boolean x:Key="/Default/CodeEditing/NullCheckPatterns/CanUseCustomExpressionPatternForAssertion/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeEditing/NullCheckPatterns/CanUseCustomStatementPatternForAssertion/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/CodeEditing/NullCheckPatterns/CustomExpressionPatternText/@EntryValue">Saltukkos.Utils.Ensure.NotNull($EXPR$)</s:String>
 	<s:String x:Key="/Default/CodeEditing/NullCheckPatterns/CustomStatementPatternText/@EntryValue">Saltukkos.Utils.ThrowIf.Null($EXPR$, $NAME$);</s:String>
+	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002ECustomExpressionBasedPattern/@EntryIndexedValue">5001</s:Int64>
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002ECustomStatementBasedPattern/@EntryIndexedValue">5000</s:Int64>
+	<s:Boolean x:Key="/Default/Housekeeping/ExcludedProjects/ProjectMasksToIgnore/=Autofac/@EntryIndexedValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/Housekeeping/ExcludedProjects/ProjectMasksToIgnore/=Autofac/@EntryIndexRemoved">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Housekeeping/ExcludedProjects/ProjectMasksToIgnore/=Autofac_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Autofac/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Saltukkos/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>

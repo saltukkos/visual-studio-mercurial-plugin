@@ -83,7 +83,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
                 ThrowIf.Null(value, nameof(value));
                 _filter = value;
                 OnPropertyChanged();
-                _filesViewSource.View.Refresh();
+                Ensure.NotNull(_filesViewSource.View).Refresh();
             }
         }
 

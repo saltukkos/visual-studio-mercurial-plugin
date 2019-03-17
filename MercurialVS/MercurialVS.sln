@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.MercurialVS.HgSer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Autofac", "Autofac\Autofac.csproj", "{366A1251-F0E3-41D4-8FD1-8DA3E2BECAE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltukkos.MercurialVS.Architecture", "Saltukkos.MercurialVS.Architecture\Saltukkos.MercurialVS.Architecture.csproj", "{D922BC08-7C91-4319-B681-DB7E2FBD4FED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saltukkos.MercurialVS.Architecture", "Saltukkos.MercurialVS.Architecture\Saltukkos.MercurialVS.Architecture.csproj", "{D922BC08-7C91-4319-B681-DB7E2FBD4FED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalAnnotations", "ExternalAnnotations\ExternalAnnotations.csproj", "{E6CE713C-B840-486A-BF9E-6735A5CB848E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,8 @@ Global
 		{D922BC08-7C91-4319-B681-DB7E2FBD4FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D922BC08-7C91-4319-B681-DB7E2FBD4FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D922BC08-7C91-4319-B681-DB7E2FBD4FED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6CE713C-B840-486A-BF9E-6735A5CB848E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6CE713C-B840-486A-BF9E-6735A5CB848E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

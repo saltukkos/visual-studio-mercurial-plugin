@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<assembly name="Mercurial.Net">
+  <member name="M:Mercurial.LogCommand.WithPath(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="M:Mercurial.CatCommand.WithFile(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="M:Mercurial.CatCommand.WithOutputFormat(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="M:Mercurial.CatCommand.WithRevision(Mercurial.RevSpec)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="P:Mercurial.LogCommand.Result">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
+  </member>
+</assembly>

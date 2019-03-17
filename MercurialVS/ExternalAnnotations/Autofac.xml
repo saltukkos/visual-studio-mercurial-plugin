@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<assembly name="Autofac">
+	<member name="M:Autofac.RegistrationExtensions.RegisterType(Autofac.ContainerBuilder,System.Type)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.RegistrationExtensions.AsImplementedInterfaces``2(Autofac.Builder.IRegistrationBuilder{``0,``1,Autofac.Builder.SingleRegistrationStyle})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.Builder.IRegistrationBuilder`3.SingleInstance">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerMatchingLifetimeScope(System.Object[])">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.RegistrationExtensions.WithParameter``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.String,System.Object)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.RegistrationExtensions.RegisterInstance``1(Autofac.ContainerBuilder,``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.Builder.IRegistrationBuilder`3.ExternallyOwned">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.ContainerBuilder.Build(Autofac.Builder.ContainerBuildOptions,System.Object)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.ILifetimeScope.BeginLifetimeScope(System.Object,System.Action{Autofac.ContainerBuilder})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.RegistrationExtensions.AutoActivate``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.RegistrationExtensions.RegisterInstance``1(Autofac.ContainerBuilder,``0)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.RegistrationExtensions.AsSelf``2(Autofac.Builder.IRegistrationBuilder{``0,``1,Autofac.Builder.SingleRegistrationStyle})">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+	<member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext)">
+		<attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+	</member>
+</assembly>

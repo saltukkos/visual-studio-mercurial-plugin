@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<assembly name="mscorlib">
+  <member name="F:Microsoft.Win32.Registry.CurrentUser">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Microsoft.Win32.Registry.LocalMachine">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Microsoft.Win32.Registry.ClassesRoot">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Microsoft.Win32.Registry.Users">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Microsoft.Win32.Registry.PerformanceData">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+  <member name="F:Microsoft.Win32.Registry.CurrentConfig">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+  </member>
+</assembly>

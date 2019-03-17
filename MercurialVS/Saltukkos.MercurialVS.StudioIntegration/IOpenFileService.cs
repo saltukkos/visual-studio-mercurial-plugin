@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using System.Windows.Shapes;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Saltukkos.MercurialVS.HgServices;
 
 namespace Saltukkos.MercurialVS.StudioIntegration

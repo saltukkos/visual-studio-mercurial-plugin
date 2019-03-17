@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices;
-using Saltukkos.MercurialVS.SourceControl;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration

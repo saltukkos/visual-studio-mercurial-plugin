@@ -18,17 +18,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
 
         //TODO routed commands
 
-        private void ShowDiff(object sender, RoutedEventArgs e)
+        private void ShowDiff([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             _viewModel.OnDiffClicked();
         }
 
-        private void OpenFile(object sender, RoutedEventArgs e)
+        private void OpenFile([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             _viewModel.OnOpenClicked();
         }
 
-        private void OnListViewKeyDown(object sender, KeyEventArgs e)
+        private void OnListViewKeyDown([NotNull] object sender, [NotNull] KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -36,12 +36,12 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             }
         }
 
-        private void OnItemClicked(object sender, MouseButtonEventArgs e)
+        private void OnItemClicked([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
         {
             _viewModel.OnItemClicked();
         }
 
-        private void OnContextMenuLoaded(object sender, RoutedEventArgs e)
+        private void OnContextMenuLoaded([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             ((ContextMenu) sender).DataContext = _viewModel;
         }
