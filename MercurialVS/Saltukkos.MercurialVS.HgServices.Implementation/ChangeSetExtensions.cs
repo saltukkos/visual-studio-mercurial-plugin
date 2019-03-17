@@ -21,6 +21,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                 Author = changeset.AuthorName,
                 RevisionNumber = changeset.RevisionNumber,
                 RevisionHash = changeset.Hash,
+                Timestamp = changeset.Timestamp
             };
         }
     }

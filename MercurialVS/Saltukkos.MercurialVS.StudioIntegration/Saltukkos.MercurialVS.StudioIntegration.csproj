@@ -33,6 +33,7 @@
     <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
     <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
     <None Remove="Controls\TextBoxWIthHint.xaml" />
+    <None Remove="FileHistory\FileHistoryView.xaml" />
     <None Remove="Styles\ContextMenuStyle.xaml" />
     <None Remove="Styles\ListViewStyle.xaml" />
   </ItemGroup>
@@ -47,6 +48,9 @@
     <Compile Update="Controls\TextBoxWIthHint.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>TextBoxWithHint.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FileHistory\FileHistoryView.xaml.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Update="SccProviderOptionsControl.cs">
       <SubType>Form</SubType>

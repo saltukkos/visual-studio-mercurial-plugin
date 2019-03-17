@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace Saltukkos.MercurialVS.HgServices
 {
@@ -17,5 +18,7 @@ namespace Saltukkos.MercurialVS.HgServices
         public string RevisionHash { get; set; }
         
         public int RevisionNumber { get; set; }
+
+        public DateTime Timestamp { get; set; }
     }
 }
