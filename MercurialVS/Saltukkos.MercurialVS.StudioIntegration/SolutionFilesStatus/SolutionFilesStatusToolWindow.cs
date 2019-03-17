@@ -3,12 +3,12 @@ using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
-using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
+using Saltukkos.Utils;
 
-namespace Saltukkos.MercurialVS.StudioIntegration
+namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
 {
-    [Guid(Constants.ToolWindowPaneGuid)]
-    public class MainToolWindow : ToolWindowPane
+    [Guid(Constants.SolutionFilesStatusToolWindowGuid)]
+    public class SolutionFilesStatusToolWindow : ToolWindowPane
     {
         [NotNull]
         private readonly ElementHost _elementHost;
@@ -16,12 +16,12 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull]
         private readonly SolutionFilesStatusViewModel _solutionFilesStatusViewModel;
 
-        public MainToolWindow()
+        public SolutionFilesStatusToolWindow()
         {
             Caption = "VCS changes";
 
             var dependenciesProvider = ToolWindowsDependenciesProvider.GetInstance();
-            _solutionFilesStatusViewModel = dependenciesProvider.SolutionFilesStatusViewModelFactoryFunc.Invoke();
+            _solutionFilesStatusViewModel = Ensure.NotNull(dependenciesProvider.SolutionFilesStatusViewModelFactoryFunc.Invoke());
 
             _elementHost = new ElementHost
             {

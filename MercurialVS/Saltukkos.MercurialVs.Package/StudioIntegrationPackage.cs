@@ -13,6 +13,7 @@ using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices.Implementation;
 using Saltukkos.MercurialVS.SourceControl.Implementation;
 using Saltukkos.MercurialVS.StudioIntegration;
+using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
 using Saltukkos.Utils;
 using Constants = Saltukkos.MercurialVS.StudioIntegration.Constants;
 
@@ -29,10 +30,10 @@ namespace Saltukkos.MercurialVS.Package
         0, 0, true)]
     [ProvideToolsOptionsPageVisibility]
     [ProvideToolWindow(
-        typeof(MainToolWindow),
+        typeof(SolutionFilesStatusToolWindow),
         Window = "{3AE79031-E1BC-11D0-8F78-00A0C9110057}", //EnvDTE.Constants.vsWindowKindSolutionExplorer
         Style = VsDockStyle.Tabbed)]
-    [ProvideToolWindowVisibility(typeof(MainToolWindow), Constants.SourceControlGuid)]
+    [ProvideToolWindowVisibility(typeof(SolutionFilesStatusToolWindow), Constants.SourceControlGuid)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(Constants.PackageGuid)]
     public sealed class StudioIntegrationPackage : Microsoft.VisualStudio.Shell.Package, IToolWindowContainer

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
+using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
@@ -22,7 +23,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 
         public void Invoke()
         {
-            var toolWindow = _toolWindowContainer.FindToolWindow(typeof(MainToolWindow), 0, true);
+            var toolWindow = _toolWindowContainer.FindToolWindow(typeof(SolutionFilesStatusToolWindow), 0, true);
             ((IVsWindowFrame) toolWindow?.Frame)?.Show();
         }
     }

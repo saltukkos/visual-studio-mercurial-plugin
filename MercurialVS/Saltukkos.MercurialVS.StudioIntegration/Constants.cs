@@ -14,7 +14,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public const string SourceControlServiceGuid = "5EB7635D-A0F9-4B8E-ACDF-841CC3790359";
 
         [NotNull]
-        public const string ToolWindowPaneGuid = "0A504052-326E-4110-81F4-98CD2E9B5C48";
+        public const string SolutionFilesStatusToolWindowGuid = "0A504052-326E-4110-81F4-98CD2E9B5C48";
 
         [NotNull]
         public const string OptionsPageGuid = "47AD10C4-93EA-4257-AFF9-7461D5BD5A3A";

@@ -34,7 +34,7 @@
     <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
     <None Remove="Controls\TextBoxWIthHint.xaml" />
     <None Remove="Styles\ContextMenuStyle.xaml" />
-    <None Remove="Styles\ToolWindowStyle.xaml" />
+    <None Remove="Styles\ListViewStyle.xaml" />
   </ItemGroup>
 
   <ItemGroup>

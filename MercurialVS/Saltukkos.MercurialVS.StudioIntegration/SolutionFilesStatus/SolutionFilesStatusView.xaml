@@ -15,7 +15,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/ContextMenuStyle.xaml"/>
                 <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml"/>
-                <ResourceDictionary Source="../Styles/ToolWindowStyle.xaml"/>
+                <ResourceDictionary Source="../Styles/ListViewStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
                 <MenuItem Header="Open" Click="OpenFile" />
