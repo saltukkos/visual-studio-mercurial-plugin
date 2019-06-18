@@ -1,21 +1,19 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 using Saltukkos.MercurialVS.HgServices;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
 {
-    public class FileHistoryViewModel : INotifyPropertyChanged
+    public class FileHistoryViewModel
     {
-        public ObservableCollection<ChangeSet> ChangeSets { get; } = new ObservableCollection<ChangeSet>();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public FileHistoryViewModel([NotNull] IReadOnlyList<ChangeSet> changeSets)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            ThrowIf.Null(changeSets, nameof(changeSets));
+            ChangeSets = changeSets;
         }
+
+        [NotNull] 
+        public IReadOnlyList<ChangeSet> ChangeSets { get; }
     }
 }

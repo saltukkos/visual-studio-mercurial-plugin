@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
+using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
 {
@@ -12,9 +13,6 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
         [NotNull]
         private readonly ElementHost _elementHost;
 
-        [NotNull]
-        private readonly FileHistoryViewModel _fileHistoryViewModel = new FileHistoryViewModel();
-
         public FileHistoryToolWindow()
         {
             //TODO dynamic name
@@ -22,12 +20,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
 
             _elementHost = new ElementHost
             {
-                Child = new FileHistoryView(_fileHistoryViewModel),
                 Dock = DockStyle.Fill
             };
         }
 
         public override IWin32Window Window => _elementHost;
+
+        public void SetViewModel([NotNull] FileHistoryViewModel fileHistoryViewModel)
+        {
+            ThrowIf.Null(fileHistoryViewModel, nameof(fileHistoryViewModel));
+            _elementHost.Child = new FileHistoryView(fileHistoryViewModel);
+        }
 
         protected override void Dispose(bool disposing)
         {

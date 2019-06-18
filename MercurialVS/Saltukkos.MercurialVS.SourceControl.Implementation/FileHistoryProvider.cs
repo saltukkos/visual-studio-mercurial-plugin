@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
@@ -39,6 +40,12 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             }
 
             return true;
+        }
+
+        public IReadOnlyList<ChangeSet> GetFileChangesHistory(string path)
+        {
+            ThrowIf.Null(path, nameof(path));
+            return _client?.GetFileHistoryLog(path);
         }
 
         public void SetCurrentSourceControlClientProvider(ISourceControlClient client)
