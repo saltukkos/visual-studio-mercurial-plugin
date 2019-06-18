@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
-using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
+using Saltukkos.MercurialVS.StudioIntegration.VsServicesWrappers;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
@@ -19,12 +19,12 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
             _toolWindowContainer = toolWindowContainer;
         }
 
-        public int CommandId => Constants.ShowToolWindowCommandId;
+        public int CommandId => Constants.ShowSolutionFileStatusToolWindowCommandId;
 
         public void Invoke()
         {
             var toolWindow = _toolWindowContainer.FindToolWindow(typeof(SolutionFilesStatusToolWindow), 0, true);
-            ((IVsWindowFrame) toolWindow?.Frame)?.Show();
+            toolWindow?.Show();
         }
     }
 }
