@@ -8,12 +8,12 @@ using Saltukkos.Utils;
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
     [Component(typeof(PackageScope))]
-    public class ShowToolWindowCommand : ICommand
+    public class ShowSolutionFileStatusToolWindowCommand : ICommand
     {
         [NotNull]
         private readonly IToolWindowContainer _toolWindowContainer;
 
-        public ShowToolWindowCommand([NotNull] IToolWindowContainer toolWindowContainer)
+        public ShowSolutionFileStatusToolWindowCommand([NotNull] IToolWindowContainer toolWindowContainer)
         {
             ThrowIf.Null(toolWindowContainer, nameof(toolWindowContainer));
             _toolWindowContainer = toolWindowContainer;

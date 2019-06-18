@@ -19,12 +19,12 @@
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowToolWindowCommandId" priority="0x0100" type="Button">
         <Parent guid="guidStudioIntegrationPackageCmdSet" id="MercurialVSMenuGroup" />
-        <Icon guid="ImageCatalogGuid" id="GoToNext"/>
+        <Icon guid="ImageCatalogGuid" id="WriteToHistory"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
-          <ButtonText>Invoke ShowToolWindowCommand</ButtonText>
+          <ButtonText>VCS status</ButtonText>
         </Strings>
       </Button>
     </Buttons>
