@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using EnvDTE;
 using JetBrains.Annotations;
 using Mercurial;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -11,12 +12,14 @@ using Saltukkos.Container;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices.Implementation;
+using Saltukkos.MercurialVS.Package.VsServicesWrappers;
 using Saltukkos.MercurialVS.SourceControl.Implementation;
 using Saltukkos.MercurialVS.StudioIntegration;
 using Saltukkos.MercurialVS.StudioIntegration.FileHistory;
 using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
 using Saltukkos.Utils;
 using Constants = Saltukkos.MercurialVS.StudioIntegration.Constants;
+using Debugger = System.Diagnostics.Debugger;
 
 namespace Saltukkos.MercurialVS.Package
 {
@@ -83,6 +86,8 @@ namespace Saltukkos.MercurialVS.Package
         private ILifetimeScopeResolver<PackageScope, None> BuildContainer()
         {
             var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterGlobalComponent(new DteWrapper(GetService<DTE>()));
+            containerBuilder.RegisterGlobalComponent(new PackageWrapper(this));
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
             containerBuilder.RegisterGlobalComponent(GetService<IVsRegisterScciProvider>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsSolution>());
@@ -92,7 +97,6 @@ namespace Saltukkos.MercurialVS.Package
             containerBuilder.RegisterGlobalComponent(GetService<SVsDifferenceService, IVsDifferenceService>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsFileMergeService, IVsFileMergeService>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsUIShellOpenDocument, IVsUIShellOpenDocument>());
-            containerBuilder.RegisterGlobalComponent<IToolWindowContainer>(this);
             var lifetimeScopeResolver = containerBuilder.Build<PackageScope>();
             return lifetimeScopeResolver;
         }
