@@ -31,6 +31,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull]
         public const string SourceControlProviderName = "MercurialVS";
 
-        public const int ShowToolWindowCommandId = 0x0100;
+        public const int ShowSolutionFileStatusToolWindowCommandId = 0x0100;
+
+        public const int ShowCurrentFileLogCommandId = 0x0101;
     }
 }

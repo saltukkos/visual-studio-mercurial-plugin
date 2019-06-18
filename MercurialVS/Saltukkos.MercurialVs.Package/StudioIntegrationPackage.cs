@@ -17,6 +17,7 @@ using Saltukkos.MercurialVS.SourceControl.Implementation;
 using Saltukkos.MercurialVS.StudioIntegration;
 using Saltukkos.MercurialVS.StudioIntegration.FileHistory;
 using Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus;
+using Saltukkos.MercurialVS.StudioIntegration.VsServicesWrappers;
 using Saltukkos.Utils;
 using Constants = Saltukkos.MercurialVS.StudioIntegration.Constants;
 using Debugger = System.Diagnostics.Debugger;
@@ -86,8 +87,8 @@ namespace Saltukkos.MercurialVS.Package
         private ILifetimeScopeResolver<PackageScope, None> BuildContainer()
         {
             var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterGlobalComponent(new DteWrapper(GetService<DTE>()));
-            containerBuilder.RegisterGlobalComponent(new PackageWrapper(this));
+            containerBuilder.RegisterGlobalComponent(new DteWrapper(GetService<DTE>()) as IDte);
+            containerBuilder.RegisterGlobalComponent(new PackageWrapper(this) as IToolWindowContainer);
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
             containerBuilder.RegisterGlobalComponent(GetService<IVsRegisterScciProvider>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsSolution>());
