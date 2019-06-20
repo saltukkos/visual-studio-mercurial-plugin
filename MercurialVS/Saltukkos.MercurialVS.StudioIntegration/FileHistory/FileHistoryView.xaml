@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="../Styles/ListViewStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <local:MultilineToSingleLineStringConverter x:Key="StringConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -21,7 +22,7 @@
                 <GridView>
                     <GridViewColumn Width="Auto" Header="Revision" DisplayMemberBinding="{Binding RevisionNumber}"/>
                     <GridViewColumn Width="Auto" Header="Branch" DisplayMemberBinding="{Binding Branch}"/>
-                    <GridViewColumn Width="Auto" Header="Message" DisplayMemberBinding="{Binding CommitMessage}"/>
+                    <GridViewColumn Width="Auto" Header="Message" DisplayMemberBinding="{Binding CommitMessage, Converter={StaticResource StringConverter}}"/>
                     <GridViewColumn Width="Auto" Header="Author" DisplayMemberBinding="{Binding Author}"/>
                     <GridViewColumn Width="Auto" Header="Date" DisplayMemberBinding="{Binding Timestamp}"/>
                 </GridView>

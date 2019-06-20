@@ -51,7 +51,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
             }
 
             var fileHistoryToolWindow = (FileHistoryToolWindow)_toolWindowContainer.FindToolWindow(typeof(FileHistoryToolWindow), id, create: true);
-            fileHistoryToolWindow?.SetViewModel(new FileHistoryViewModel(fileChangesHistory));
+            fileHistoryToolWindow?.SetFileViewModel(filePath, new FileHistoryViewModel(fileChangesHistory));
             fileHistoryToolWindow?.Show();
             return true;
         }

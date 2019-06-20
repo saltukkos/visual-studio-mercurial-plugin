@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
@@ -15,7 +16,6 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
 
         public FileHistoryToolWindow()
         {
-            //TODO dynamic name
             Caption = "File history";
 
             _elementHost = new ElementHost
@@ -26,9 +26,12 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
 
         public override IWin32Window Window => _elementHost;
 
-        public void SetViewModel([NotNull] FileHistoryViewModel fileHistoryViewModel)
+        public void SetFileViewModel([NotNull] string fullName, [NotNull] FileHistoryViewModel fileHistoryViewModel)
         {
+            ThrowIf.Null(fullName, nameof(fullName));
             ThrowIf.Null(fileHistoryViewModel, nameof(fileHistoryViewModel));
+
+            Caption = $"History - {Path.GetFileName(fullName)}";
             _elementHost.Child = new FileHistoryView(fileHistoryViewModel);
         }
 
