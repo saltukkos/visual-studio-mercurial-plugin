@@ -16,10 +16,14 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
         [NotNull]
         private readonly string _rootPath;
 
+        [NotNull]
+        private readonly IClient _client;
+
         public SourceControlClient([NotNull] SolutionUnderSourceControlInfo solutionUnderSourceControlInfo)
         {
             ThrowIf.Null(solutionUnderSourceControlInfo, nameof(solutionUnderSourceControlInfo));
             _rootPath = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
+            _client = new PersistentClient(_rootPath);
         }
 
         public IReadOnlyList<ChangeSet> GetFileHistoryLog(string filename)
@@ -27,7 +31,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             ThrowIf.Null(filename, nameof(filename));
             var logCommand = new LogCommand()
                 .WithPath(filename);
-            Client.Execute(_rootPath, logCommand);
+            _client.Execute(logCommand);
             var logCommandResult = logCommand.Result;
             ThrowIf.Null(logCommandResult, nameof(logCommandResult));
             return logCommandResult.Select(c => c.ToChangeSet()).ToList();
@@ -42,7 +46,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                 .WithFile(filename)
                 .WithOutputFormat(tempFile)
                 .WithRevision(revision.ToRevSpec());
-            Client.Execute(_rootPath, catCommand);
+            _client.Execute(catCommand);
             return tempFile;
         }
 
@@ -60,7 +64,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
         private IReadOnlyList<FileState> GetFilesStatesInternal(FileStatusIncludes includeStates)
         {
             var statusCommand = new StatusCommand {Include = includeStates};
-            Client.Execute(_rootPath, statusCommand);
+            _client.Execute(statusCommand);
 
             return (statusCommand.Result ?? throw new InvalidOperationException("Command result is null"))
                 .Where(x => x?.Path != null)

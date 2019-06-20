@@ -13,12 +13,12 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
     {
         public SourceControlBasePathProvider()
         {
-            if (!Client.CouldLocateClient)
+            if (!ClientExecutable.CouldLocateClient)
             {
                 throw new NotSupportedException("Could not locate hg client");
             }
 
-            Trace.WriteLine($"Found hg client, path: {Client.ClientPath}");
+            Trace.WriteLine($"Found hg client, path: {ClientExecutable.ClientPath}");
         }
 
         public bool TryGetBasePath(string solutionPath, out string basePath)

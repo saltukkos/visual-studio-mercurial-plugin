@@ -53,9 +53,6 @@
     <Reference Include="JetBrains.Annotations, Version=2018.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2018.2.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="Mercurial.Net, Version=1.1.1.607, Culture=neutral, PublicKeyToken=9e2fabf3af85dba9, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mercurial.Net.1.1.1.607\lib\net35-Client\Mercurial.Net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -152,6 +149,10 @@
     <ProjectReference Include="..\Autofac\Autofac.csproj">
       <Project>{366a1251-f0e3-41d4-8fd1-8da3e2becae7}</Project>
       <Name>Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mercurial.Net\Mercurial.Net.csproj">
+      <Project>{536b722b-de28-48fc-abaf-12b4b9ffb44a}</Project>
+      <Name>Mercurial.Net</Name>
     </ProjectReference>
     <ProjectReference Include="..\Saltukkos.Container.Meta\Saltukkos.Container.Meta.csproj">
       <Project>{0a1eec5b-35b2-48b3-86f3-6c68b0c366d0}</Project>

@@ -130,7 +130,7 @@ namespace Saltukkos.MercurialVS.Package
         {
             Trace.WriteLine(typeof(IRegistryStorage).Assembly.FullName);
             Trace.WriteLine(typeof(SourceControlBasePathProvider).Assembly.FullName);
-            Trace.WriteLine(typeof(Client).Assembly.FullName);
+            Trace.WriteLine(typeof(IClient).Assembly.FullName);
         }
 
         #endregion
