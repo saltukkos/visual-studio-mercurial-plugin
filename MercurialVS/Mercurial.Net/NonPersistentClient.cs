@@ -94,10 +94,12 @@ namespace Mercurial
             var specialArguments = (IEnumerable<string>)new[]
             {
                 "--noninteractive", "--encoding", "UTF-8",
+                //"--noninteractive", "--encoding", "cp1252",
             };
             var environmentVariables = new[]
             {
                 new KeyValuePair<string, string>("LANGUAGE", "EN"), new KeyValuePair<string, string>("HGENCODING", "UTF-8"),
+                //new KeyValuePair<string, string>("LANGUAGE", "EN"), new KeyValuePair<string, string>("HGENCODING", "cp1252"),
             };
 
             CommandProcessor.Execute(repositoryPath, ClientExecutable.ClientPath, command, environmentVariables, specialArguments);

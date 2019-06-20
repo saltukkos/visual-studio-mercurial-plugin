@@ -100,6 +100,7 @@ namespace Mercurial
                  "--noninteractive",
                  "--encoding",
                  "UTF-8",
+                 //"cp1252",
             };
             arguments = arguments.Concat(command.Arguments.Where(a => !StringEx.IsNullOrWhiteSpace(a)));
             arguments = arguments.Concat(command.AdditionalArguments.Where(a => !StringEx.IsNullOrWhiteSpace(a)));
@@ -219,10 +220,10 @@ namespace Mercurial
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false,
                 ErrorDialog = false,
-                Arguments = "serve --cmdserver pipe --noninteractive --encoding UTF-8",
+                Arguments = "serve --cmdserver pipe --noninteractive --encoding cp1252",
             };
             psi.EnvironmentVariables.Add("LANGUAGE", "EN");
-            psi.EnvironmentVariables.Add("HGENCODING", "UTF-8");
+            psi.EnvironmentVariables.Add("HGENCODING", "cp1252");
 
             psi.StandardOutputEncoding = Encoding.GetEncoding("iso-8859-1");
             psi.StandardErrorEncoding = Encoding.GetEncoding("iso-8859-1");

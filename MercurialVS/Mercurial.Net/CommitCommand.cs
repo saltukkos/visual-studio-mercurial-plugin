@@ -21,6 +21,7 @@ namespace Mercurial
         /// This field is used to specify the encoding of the commit message.
         /// </summary>
         private static readonly Encoding _Encoding = Encoding.GetEncoding("UTF-8");
+        //private static readonly Encoding _Encoding = Encoding.GetEncoding("Windows-1252");
 
         /// <summary>
         /// This is the backing field for the <see cref="Paths"/> property.

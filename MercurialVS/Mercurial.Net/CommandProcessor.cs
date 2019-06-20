@@ -19,6 +19,7 @@ namespace Mercurial
         /// This field is used to specify the encoding of input/output streams for processes.
         /// </summary>
         private static readonly Encoding _Encoding = Encoding.GetEncoding("UTF-8");
+        //private static readonly Encoding _Encoding = Encoding.GetEncoding("Windows-1252");
 
         /// <summary>
         /// Executes the given executable to process the given command asynchronously.

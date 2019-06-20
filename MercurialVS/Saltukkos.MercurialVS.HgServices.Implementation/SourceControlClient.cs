@@ -23,7 +23,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
         {
             ThrowIf.Null(solutionUnderSourceControlInfo, nameof(solutionUnderSourceControlInfo));
             _rootPath = solutionUnderSourceControlInfo.SourceControlDirectoryPath;
-            _client = new PersistentClient(_rootPath);
+            _client = new NonPersistentClient(_rootPath);
         }
 
         public IReadOnlyList<ChangeSet> GetFileHistoryLog(string filename)

@@ -21,7 +21,7 @@ namespace Mercurial
         /// <summary>
         /// This field is used by the <see cref="GetArguments"/> method.
         /// </summary>
-        private static readonly Encoding _ListFileEncoding = Encoding.GetEncoding("UTF-8");
+        private static readonly Encoding _ListFileEncoding = Encoding.GetEncoding("Windows-1252");
 
         /// <summary>
         /// This is the backing field for the <see cref="Collection"/> property.

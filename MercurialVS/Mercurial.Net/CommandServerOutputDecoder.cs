@@ -15,6 +15,7 @@ namespace Mercurial
         /// The encoding used by the standard output from the Mercurial persistent client.
         /// </summary>
         private static readonly Encoding _Encoding = Encoding.GetEncoding("UTF-8");
+        //private static readonly Encoding _Encoding = Encoding.GetEncoding("Windows-1252");
 
         /// <summary>
         /// Retrieve the complete output from executing a command, as
