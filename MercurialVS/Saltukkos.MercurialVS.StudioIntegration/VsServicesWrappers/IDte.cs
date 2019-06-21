@@ -7,5 +7,11 @@ namespace Saltukkos.MercurialVS.StudioIntegration.VsServicesWrappers
     {
         [CanBeNull] 
         Document ActiveDocument { get; }
+
+        [CanBeNull]
+        SelectedItems SelectedItems { get; }
+
+        [CanBeNull]
+        Solution Solution { get; }
     }
 }

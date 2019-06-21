@@ -3,17 +3,17 @@
   <Extern href="stdidcmd.h"/>
   <Extern href="vsshlids.h"/>
   <Include href="KnownImageIds.vsct"/>
+
   <Commands package="guidStudioIntegrationPackage">
     <Groups>
       <Group guid="guidStudioIntegrationPackageCmdSet" id="MercurialVSViewMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW"/>
       </Group>
-      <Group guid="guidStudioIntegrationPackageCmdSet" id="MercurialVSToolsMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
-      </Group>
+      <Group guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0600" />
+      <Group guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerSlnMenuGroup" priority="0x0600" />
     </Groups>
+    
     <Buttons>
-      
       <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowSolutionFileStatusToolWindowCommandId" priority="0x0100" type="Button">
         <Parent guid="guidStudioIntegrationPackageCmdSet" id="MercurialVSViewMenuGroup" />
         <Icon guid="ImageCatalogGuid" id="WriteToHistory"/>
@@ -25,29 +25,76 @@
         </Strings>
       </Button>
       
-      <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowCurrentFileLogCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidStudioIntegrationPackageCmdSet" id="MercurialVSToolsMenuGroup" />
+      <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowSelectedFileLogCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup"/>
         <Icon guid="ImageCatalogGuid" id="ShowFullHistory"/>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
-          <ButtonText>Show current file VCS history</ButtonText>
+          <ButtonText>Show file VCS history</ButtonText>
         </Strings>
       </Button>
 
+      <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowSolutionFileLogCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerSlnMenuGroup"/>
+        <Icon guid="ImageCatalogGuid" id="ShowFullHistory"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>Show solution file VCS history</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
   </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerSlnMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBITEMNODE"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_PROJITEM"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_MULTIITEM"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBPROJECT"/>
+    </CommandPlacement>
+
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_MULTIPROJ"/>
+    </CommandPlacement>
+  </CommandPlacements>
+
   <Symbols>
     <GuidSymbol name="guidStudioIntegrationPackage" value="{FCA36CF1-C45C-4C36-A5D1-A74B0011B175}" />
+    
     <GuidSymbol name="guidStudioIntegrationPackageCmdSet" value="{3D262A98-C1C0-429D-A418-2A3DBC3425EA}">
-
       <IDSymbol name="MercurialVSViewMenuGroup" value="0x1020" />
-      <IDSymbol name="MercurialVSToolsMenuGroup" value="0x1021" />
+      <IDSymbol name="SolutionExplorerItemMenuGroup" value="0x1021" />
+      <IDSymbol name="SolutionExplorerSlnMenuGroup" value="0x1022" />
 
       <IDSymbol name="ShowSolutionFileStatusToolWindowCommandId" value="0x0100" />
-      <IDSymbol name="ShowCurrentFileLogCommandId" value="0x0101" />
-
+      <IDSymbol name="ShowSelectedFileLogCommandId" value="0x0101" />
+      <IDSymbol name="ShowSolutionFileLogCommandId" value="0x0102" />
     </GuidSymbol>
   </Symbols>
+
 </CommandTable>

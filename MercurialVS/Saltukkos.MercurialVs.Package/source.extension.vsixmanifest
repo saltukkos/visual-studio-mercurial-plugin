@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" ?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="StudioIntegrationPackage.97ee7105-a189-486c-8b19-b4cb308068ed" Version="0.2" Language="en-US" Publisher="saltukkos" />
+        <Identity Id="StudioIntegrationPackage.97ee7105-a189-486c-8b19-b4cb308068ed" Version="0.2.2" Language="en-US" Publisher="saltukkos" />
         <DisplayName>MercurialVS</DisplayName>
         <Description xml:space="preserve">Mercurial source control integration for Visual Studio</Description>
         <Icon>mercurial.png</Icon>

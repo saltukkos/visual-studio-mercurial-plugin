@@ -7,9 +7,8 @@ using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
-    //TODO make solution-under-source-control-scoped
     [Component(typeof(PackageScope))]
-    public class ShowCurrentFileHistoryCommand : ICommand
+    public class ShowSolutionFileHistoryCommand : ICommand
     {
         [NotNull]
         private readonly IDte _dte;
@@ -17,7 +16,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
         [NotNull]
         private readonly IFileHistoryViewService _fileHistoryViewService;
 
-        public ShowCurrentFileHistoryCommand([NotNull] IDte dte, [NotNull] IFileHistoryViewService fileHistoryViewService)
+        public ShowSolutionFileHistoryCommand(
+            [NotNull] IDte dte,
+            [NotNull] IFileHistoryViewService fileHistoryViewService)
         {
             ThrowIf.Null(fileHistoryViewService, nameof(fileHistoryViewService));
             ThrowIf.Null(dte, nameof(dte));
@@ -25,18 +26,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
             _fileHistoryViewService = fileHistoryViewService;
         }
 
-        public int CommandId => Constants.ShowCurrentFileLogCommandId;
+        public int CommandId => Constants.ShowSolutionFileLogCommandId;
 
         public void Invoke()
         {
-            var document = _dte.ActiveDocument;
-            if (document is null)
-            {
-                return;
-            }
+            var solution = _dte.Solution;
+            var fileName = solution?.FullName;
 
-            var documentFullName = document.FullName;
-            _fileHistoryViewService.ShowHistoryFor(Ensure.NotNull(documentFullName));
+            if (fileName != null)
+            {
+                _fileHistoryViewService.ShowHistoryFor(Ensure.NotNull(fileName));
+            }
         }
     }
 }

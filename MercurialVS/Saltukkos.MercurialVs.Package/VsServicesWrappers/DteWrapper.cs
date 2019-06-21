@@ -32,6 +32,10 @@ namespace Saltukkos.MercurialVS.Package.VsServicesWrappers
                 }
             }
         }
+
+        public SelectedItems SelectedItems => _dte.SelectedItems;
+
+        public Solution Solution => _dte.Solution;
     }
 
 }
