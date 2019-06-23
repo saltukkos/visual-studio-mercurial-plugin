@@ -36,5 +36,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public const int ShowSelectedFileLogCommandId = 0x0101;
 
         public const int ShowSolutionFileLogCommandId = 0x0102;
+
+        public const int ShowTabFileLogCommandId = 0x0103;
     }
 }

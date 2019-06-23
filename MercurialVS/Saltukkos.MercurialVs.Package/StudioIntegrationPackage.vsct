@@ -11,6 +11,7 @@
       </Group>
       <Group guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0600" />
       <Group guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerSlnMenuGroup" priority="0x0600" />
+      <Group guid="guidStudioIntegrationPackageCmdSet" id="TabMenuGroup" priority="0x0600" />
     </Groups>
     
     <Buttons>
@@ -36,6 +37,17 @@
         </Strings>
       </Button>
 
+      <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowSelectedFileLogCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidStudioIntegrationPackageCmdSet" id="TabMenuGroup"/>
+        <Icon guid="ImageCatalogGuid" id="ShowFullHistory"/>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>Show file VCS history</ButtonText>
+        </Strings>
+      </Button>
+
       <Button guid="guidStudioIntegrationPackageCmdSet" id="ShowSolutionFileLogCommandId" priority="0x0100" type="Button">
         <Parent guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerSlnMenuGroup"/>
         <Icon guid="ImageCatalogGuid" id="ShowFullHistory"/>
@@ -52,6 +64,10 @@
   <CommandPlacements>
     <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerSlnMenuGroup" priority="0x0100">
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
+    </CommandPlacement>
+    
+    <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="TabMenuGroup" priority="0x0100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB"/>
     </CommandPlacement>
 
     <CommandPlacement guid="guidStudioIntegrationPackageCmdSet" id="SolutionExplorerItemMenuGroup" priority="0x0100">
@@ -90,10 +106,12 @@
       <IDSymbol name="MercurialVSViewMenuGroup" value="0x1020" />
       <IDSymbol name="SolutionExplorerItemMenuGroup" value="0x1021" />
       <IDSymbol name="SolutionExplorerSlnMenuGroup" value="0x1022" />
+      <IDSymbol name="TabMenuGroup" value="0x1023" />
 
       <IDSymbol name="ShowSolutionFileStatusToolWindowCommandId" value="0x0100" />
       <IDSymbol name="ShowSelectedFileLogCommandId" value="0x0101" />
       <IDSymbol name="ShowSolutionFileLogCommandId" value="0x0102" />
+      <IDSymbol name="ShowTabFileLogCommandId" value="0x0103" />
     </GuidSymbol>
   </Symbols>
 

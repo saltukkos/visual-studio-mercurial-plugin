@@ -58,6 +58,4 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
             }
         }
     }
-
-    //TODO make solution-under-source-control-scoped
 }

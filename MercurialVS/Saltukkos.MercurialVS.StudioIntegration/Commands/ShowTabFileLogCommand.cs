@@ -9,7 +9,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
     //TODO make solution-under-source-control-scoped}
     [Component(typeof(PackageScope))]
-    public class ShowSolutionFileHistoryCommand : ICommand
+    public class ShowTabFileLogCommand : ICommand
     {
         [NotNull]
         private readonly IDte _dte;
@@ -17,7 +17,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
         [NotNull]
         private readonly IFileHistoryViewService _fileHistoryViewService;
 
-        public ShowSolutionFileHistoryCommand(
+        public ShowTabFileLogCommand(
             [NotNull] IDte dte,
             [NotNull] IFileHistoryViewService fileHistoryViewService)
         {
@@ -27,16 +27,14 @@ namespace Saltukkos.MercurialVS.StudioIntegration.Commands
             _fileHistoryViewService = fileHistoryViewService;
         }
 
-        public int CommandId => Constants.ShowSolutionFileLogCommandId;
+        public int CommandId => Constants.ShowTabFileLogCommandId;
 
         public void Invoke()
         {
-            var solution = _dte.Solution;
-            var fileName = solution?.FullName;
-
+            var fileName = _dte.ActiveDocument?.FullName;
             if (fileName != null)
             {
-                _fileHistoryViewService.ShowHistoryFor(Ensure.NotNull(fileName));
+                _fileHistoryViewService.ShowHistoryFor(fileName);
             }
         }
     }

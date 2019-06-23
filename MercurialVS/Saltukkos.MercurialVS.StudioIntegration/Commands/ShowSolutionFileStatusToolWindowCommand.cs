@@ -7,6 +7,7 @@ using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.Commands
 {
+    //TODO make solution-under-source-control-scoped}
     [Component(typeof(PackageScope))]
     public class ShowSolutionFileStatusToolWindowCommand : ICommand
     {
