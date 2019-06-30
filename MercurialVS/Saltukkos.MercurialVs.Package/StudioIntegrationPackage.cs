@@ -48,7 +48,7 @@ namespace Saltukkos.MercurialVS.Package
     public sealed class StudioIntegrationPackage : Microsoft.VisualStudio.Shell.Package, IToolWindowContainer
     {
         [CanBeNull]
-        private ILifetimeScopeResolver<PackageScope, None> _rootLifetimeManager;
+        private ILifetimeScopeManager<PackageScope, None> _rootLifetimeManager;
 
         protected override void Initialize()
         {
@@ -59,7 +59,6 @@ namespace Saltukkos.MercurialVS.Package
                 _rootLifetimeManager = BuildContainer();
                 _rootLifetimeManager.StartScopeLifetime(new None());
 
-                AddService(_rootLifetimeManager.Resolve<IMercurialSccProviderService>());
                 GetService<IVsRegisterScciProvider>()
                     .RegisterSourceControlProvider(Guid.Parse(Constants.SourceControlGuid));
             }
@@ -84,11 +83,12 @@ namespace Saltukkos.MercurialVS.Package
         }
 
         [NotNull]
-        private ILifetimeScopeResolver<PackageScope, None> BuildContainer()
+        private ILifetimeScopeManager<PackageScope, None> BuildContainer()
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterGlobalComponent(new DteWrapper(GetService<DTE>()) as IDte);
             containerBuilder.RegisterGlobalComponent(new PackageWrapper(this) as IToolWindowContainer);
+            containerBuilder.RegisterGlobalComponent(new PackageWrapper(this) as IServiceRegister);
             containerBuilder.RegisterGlobalComponent(GetService<IMenuCommandService>());
             containerBuilder.RegisterGlobalComponent(GetService<IVsRegisterScciProvider>());
             containerBuilder.RegisterGlobalComponent(GetService<SVsSolution, IVsSolution>());
@@ -116,12 +116,6 @@ namespace Saltukkos.MercurialVS.Package
         private T GetService<T>()
         {
             return GetService<T, T>();
-        }
-
-        private void AddService<T>([NotNull] T service)
-        {
-            IServiceContainer container = this;
-            container.AddService(typeof(T), service, true);
         }
 
         #region ReferenceHacks

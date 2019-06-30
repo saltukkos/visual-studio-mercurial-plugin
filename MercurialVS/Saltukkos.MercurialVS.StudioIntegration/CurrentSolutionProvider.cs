@@ -29,7 +29,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
 
         public CurrentSolutionProvider(
             [NotNull] IVsSolution vsSolution,
-            [NotNull] ILifetimeScopeManager<SolutionUnderSourceControlScope, SolutionUnderSourceControlInfo> solutionLifetimeScopeManager,
+            [NotNull] ILifetimeScopeManager<SolutionUnderSourceControlScope, SolutionUnderSourceControlInfo>
+                solutionLifetimeScopeManager,
             [NotNull] ISourceControlBasePathProvider sourceControlBasePathProvider)
         {
             ThrowIf.Null(vsSolution, nameof(vsSolution));
@@ -41,6 +42,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             _sourceControlBasePathProvider = sourceControlBasePathProvider;
 
             _vsSolution.AdviseSolutionEvents(this, out _solutionEventsSubscriberId);
+            TryStartSolutionLifetimeScope();
         }
 
         public void Dispose()
@@ -48,6 +50,58 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             _vsSolution.UnadviseSolutionEvents(_solutionEventsSubscriberId);
         }
 
+        public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
+        {
+            TryStartSolutionLifetimeScope();
+            return VSConstants.S_OK;
+        }
+
+        public int OnBeforeCloseSolution(object pUnkReserved)
+        {
+            TryCloseSolutionLifetimeScope();
+            return VSConstants.S_OK;
+        }
+
+        private void TryStartSolutionLifetimeScope()
+        {
+            if (_sourceControlScopeStarted)
+            {
+                Debugger.Break();
+                _solutionLifetimeScopeManager.EndScopeLifetime();
+            }
+
+            if (_vsSolution.GetSolutionInfo(out var solutionDirectory, out _, out _) != VSConstants.S_OK ||
+                solutionDirectory is null)
+            {
+                return;
+            }
+
+            if (!_sourceControlBasePathProvider.TryGetBasePath(solutionDirectory, out var sourceControlBasePath))
+            {
+                return;
+            }
+
+            var solutionInfo = new SolutionUnderSourceControlInfo(
+                solutionDirectoryPath: solutionDirectory,
+                sourceControlDirectoryPath: sourceControlBasePath);
+
+            _solutionLifetimeScopeManager.StartScopeLifetime(solutionInfo);
+            _sourceControlScopeStarted = true;
+        }
+
+        private void TryCloseSolutionLifetimeScope()
+        {
+            if (!_sourceControlScopeStarted)
+            {
+                Debugger.Break();
+                return;
+            }
+
+            _solutionLifetimeScopeManager.EndScopeLifetime();
+            _sourceControlScopeStarted = false;
+        }
+
+        #region #region Unused methods
         public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
             return VSConstants.S_OK;
@@ -78,46 +132,8 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             return VSConstants.S_OK;
         }
 
-        public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
-        {
-            if (_sourceControlScopeStarted)
-            {
-                Debugger.Break();
-                _solutionLifetimeScopeManager.EndScopeLifetime();
-            }
-
-            if (_vsSolution.GetSolutionInfo(out var solutionDirectory, out _, out _) != VSConstants.S_OK)
-            {
-                return VSConstants.S_OK;
-            }
-
-            if (!_sourceControlBasePathProvider.TryGetBasePath(solutionDirectory, out var sourceControlBasePath))
-            {
-                return VSConstants.S_OK;
-            }
-
-            var solutionInfo = new SolutionUnderSourceControlInfo(
-                solutionDirectoryPath: solutionDirectory,
-                sourceControlDirectoryPath: sourceControlBasePath);
-
-            _solutionLifetimeScopeManager.StartScopeLifetime(solutionInfo);
-            _sourceControlScopeStarted = true;
-            return VSConstants.S_OK;
-        }
-
         public int OnQueryCloseSolution(object pUnkReserved, ref int pfCancel)
         {
-            return VSConstants.S_OK;
-        }
-
-        public int OnBeforeCloseSolution(object pUnkReserved)
-        {
-            if (_sourceControlScopeStarted)
-            {
-                _solutionLifetimeScopeManager.EndScopeLifetime();
-                _sourceControlScopeStarted = false;
-            }
-
             return VSConstants.S_OK;
         }
 
@@ -125,5 +141,6 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         {
             return VSConstants.S_OK;
         }
+        #endregion
     }
 }

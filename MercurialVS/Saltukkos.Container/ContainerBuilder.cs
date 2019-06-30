@@ -22,6 +22,8 @@ namespace Saltukkos.Container
         [NotNull]
         private readonly ScopeComponentsMap _scopeComponentsMap;
 
+        private readonly LifetimeExpandingController _lifetimeExpandingController = new LifetimeExpandingController();
+
         public ContainerBuilder()
         {
             var scopeComponentsMapBuilder = new ScopeComponentsMapBuilder();
@@ -73,7 +75,8 @@ namespace Saltukkos.Container
                 .AsImplementedInterfaces()
                 .SingleInstance()
                 .InstancePerMatchingLifetimeScope(_scopesHierarchy.GetBaseScope(scopeType))
-                .WithParameter("scopedTypes", currentScopeTypes);
+                .WithParameter("scopedTypes", currentScopeTypes)
+                .WithParameter("lifetimeExpandingController", _lifetimeExpandingController);
 
             foreach (var nestedScope in _scopesHierarchy.GetNestedScopes(scopeType))
             {
@@ -100,12 +103,12 @@ namespace Saltukkos.Container
         }
 
         [NotNull]
-        public ILifetimeScopeResolver<TRootScope, None> Build<TRootScope>()
+        public ILifetimeScopeManager<TRootScope, None> Build<TRootScope>()
             where TRootScope : ILifeTimeScope<None>
         {
             RegisterScopeComponents<TRootScope, None>();
             var container = _containerBuilder.Build(rootTag: typeof(object));
-            return container.Resolve<ILifetimeScopeResolver<TRootScope, None>>();
+            return container.Resolve<ILifetimeScopeManager<TRootScope, None>>();
         }
     }
 }

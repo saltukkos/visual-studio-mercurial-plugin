@@ -7,7 +7,7 @@ using Saltukkos.Utils;
 
 namespace Saltukkos.Container
 {
-    internal sealed class LifetimeScopeManager<TScope, TInitializer> : ILifetimeScopeResolver<TScope, TInitializer>
+    internal sealed class LifetimeScopeManager<TScope, TInitializer> : ILifetimeScopeManager<TScope, TInitializer>
         where TScope : ILifeTimeScope<TInitializer>
     {
         [NotNull]
@@ -17,66 +17,66 @@ namespace Saltukkos.Container
         [ItemNotNull]
         private readonly IReadOnlyList<Type> _scopedTypes;
 
-        [CanBeNull]
-        private ILifetimeScope _nestedScope;
+        [NotNull]
+        private readonly ILifetimeExpandingController _lifetimeExpandingController;
 
-        public LifetimeScopeManager([NotNull] ILifetimeScope parentLifetimeScope,
-            [NotNull] [ItemNotNull] IReadOnlyList<Type> scopedTypes)
+        [CanBeNull]
+        private LifetimeDisposer _nestedLifetimeScopeDisposer;
+
+        public LifetimeScopeManager(
+            [NotNull] ILifetimeScope parentLifetimeScope,
+            [NotNull] [ItemNotNull] IReadOnlyList<Type> scopedTypes,
+            [NotNull] ILifetimeExpandingController lifetimeExpandingController)
         {
+            ThrowIf.Null(lifetimeExpandingController, nameof(lifetimeExpandingController));
             ThrowIf.Null(parentLifetimeScope, nameof(parentLifetimeScope));
             ThrowIf.Null(scopedTypes, nameof(scopedTypes));
             _parentLifetimeScope = parentLifetimeScope;
             _scopedTypes = scopedTypes;
+            _lifetimeExpandingController = lifetimeExpandingController;
         }
 
         public void StartScopeLifetime(TInitializer scopeInitializer)
         {
             ThrowIf.Null(scopeInitializer, nameof(scopeInitializer));
-            if (_nestedScope != null)
+
+            if (_nestedLifetimeScopeDisposer != null)
             {
                 throw new InvalidOperationException($"Lifetime scope {typeof(TScope)} is already created");
             }
 
-            _nestedScope = _parentLifetimeScope.BeginLifetimeScope(typeof(TScope), builder =>
-            {
-                foreach (var scopedType in _scopedTypes)
+            _nestedLifetimeScopeDisposer = _lifetimeExpandingController.StartNestedLifetime<TScope>(
+                _parentLifetimeScope,
+                builder =>
                 {
-                    builder
-                        .RegisterType(scopedType)
-                        .AsImplementedInterfaces()
-                        .SingleInstance()
-                        .AutoActivate();
-                }
+                    foreach (var scopedType in _scopedTypes)
+                    {
+                        builder
+                            .RegisterType(scopedType)
+                            .AsImplementedInterfaces()
+                            .SingleInstance()
+                            .AutoActivate();
+                    }
 
-                if (typeof(TInitializer) != typeof(None))
-                {
-                    builder
-                        .RegisterInstance(scopeInitializer)
-                        .AsSelf()
-                        .AsImplementedInterfaces();
-                }
-            });
+                    if (typeof(TInitializer) != typeof(None))
+                    {
+                        builder
+                            .RegisterInstance(scopeInitializer)
+                            .AsSelf()
+                            .AsImplementedInterfaces();
+                    }
+                });
         }
 
         public void EndScopeLifetime()
         {
-            if (_nestedScope == null)
+            if (_nestedLifetimeScopeDisposer is null)
             {
                 throw new InvalidOperationException($"Lifetime scope {typeof(TScope)} was not created");
             }
 
-            _nestedScope.Dispose();
-            _nestedScope = null;
-        }
-
-        public T Resolve<T>()
-        {
-            if (_nestedScope == null)
-            {
-                throw new InvalidOperationException($"Lifetime scope {typeof(TScope)} was not created");
-            }
-
-            return _nestedScope.Resolve<T>();
+            _nestedLifetimeScopeDisposer.Invoke();
+            _nestedLifetimeScopeDisposer = null;
         }
     }
 }
