@@ -115,6 +115,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             if (_sourceControlScopeStarted)
             {
                 _solutionLifetimeScopeManager.EndScopeLifetime();
+                _sourceControlScopeStarted = false;
             }
 
             return VSConstants.S_OK;
