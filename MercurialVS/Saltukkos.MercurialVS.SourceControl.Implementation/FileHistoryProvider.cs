@@ -29,7 +29,16 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
                 return true;
             }
 
-            var fileAtCurrentRevision = _client.GetFileAtRevision(path, revision.Value);
+            string fileAtCurrentRevision;
+            try
+            {
+                fileAtCurrentRevision = _client.GetFileAtRevision(path, revision.Value);
+            }
+            catch (VCSException)
+            {
+                return false;
+            }
+
             try
             {
                 action(fileAtCurrentRevision);

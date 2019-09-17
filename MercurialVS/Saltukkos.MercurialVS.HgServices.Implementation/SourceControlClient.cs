@@ -31,7 +31,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             ThrowIf.Null(filename, nameof(filename));
             var logCommand = new LogCommand()
                 .WithPath(filename);
-            _client.Execute(logCommand);
+            ExecuteCommand(logCommand);
             var logCommandResult = logCommand.Result;
             ThrowIf.Null(logCommandResult, nameof(logCommandResult));
             return logCommandResult.Select(c => c.ToChangeSet()).ToList();
@@ -46,7 +46,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                 .WithFile(filename)
                 .WithOutputFormat(tempFile)
                 .WithRevision(revision.ToRevSpec());
-            _client.Execute(catCommand);
+            ExecuteCommand(catCommand);
             return tempFile;
         }
 
@@ -64,7 +64,7 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
         private IReadOnlyList<FileState> GetFilesStatesInternal(FileStatusIncludes includeStates)
         {
             var statusCommand = new StatusCommand {Include = includeStates};
-            _client.Execute(statusCommand);
+            ExecuteCommand(statusCommand);
 
             return (statusCommand.Result ?? throw new InvalidOperationException("Command result is null"))
                 .Where(x => x?.Path != null)
@@ -73,6 +73,18 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
                     x.State.ToFileStatus(),
                     x.Path))
                 .ToList();
+        }
+
+        private void ExecuteCommand([NotNull] IMercurialCommand logCommand)
+        {
+            try
+            {
+                _client.Execute(logCommand);
+            }
+            catch (MercurialException exception)
+            {
+                throw new VCSException(exception.Message);
+            }
         }
     }
 }
