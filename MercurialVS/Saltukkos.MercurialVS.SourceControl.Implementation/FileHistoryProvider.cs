@@ -57,6 +57,12 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             return _client?.GetFileHistoryLog(path);
         }
 
+        public IReadOnlyList<DiffLine> GetDiffToParent(string path, Revision revision)
+        {
+            ThrowIf.Null(path, nameof(path));
+            return _client?.GetDiffToParent(path, revision);
+        }
+
         public void SetCurrentSourceControlClientProvider(ISourceControlClient client)
         {
             _client = client;

@@ -11,5 +11,8 @@ namespace Saltukkos.MercurialVS.SourceControl
 
         [CanBeNull]
         IReadOnlyList<ChangeSet> GetFileChangesHistory([NotNull] string path);
+
+        [CanBeNull]
+        IReadOnlyList<DiffLine> GetDiffToParent([NotNull] string path, Revision revision);
     }
 }

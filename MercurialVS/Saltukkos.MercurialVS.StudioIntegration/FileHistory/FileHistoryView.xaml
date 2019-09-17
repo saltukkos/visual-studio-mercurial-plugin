@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Saltukkos.MercurialVS.StudioIntegration.FileHistory"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance local:FileHistoryViewModel}">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,16 +14,25 @@
                 <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="../Styles/ListViewStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
+            <ContextMenu x:Key="ListViewItemContextMenu">
                 <MenuItem Header="Diff to parent" Click="DiffToParent" />
                 <MenuItem Header="Diff to local" Click="DiffToLocal" />
                 <MenuItem Header="View at revision" Click="ViewAtRevision" />
             </ContextMenu>
-            <local:MultilineToSingleLineStringConverter x:Key="StringConverter"/>
+            <local:MultilineToSingleLineStringConverter x:Key="StringConverter" />
+            <local:DiffLineTypeToColorConverter x:Key="DiffColorConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
+
     <Grid>
-        <ListView ItemsSource="{Binding ChangeSets}" SelectedItem="{Binding SelectedChangeSet}" TextElement.FontSize="14">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="100" />
+        </Grid.RowDefinitions>
+
+        <ListView ItemsSource="{Binding ChangeSets}" SelectedItem="{Binding SelectedChangeSet}">
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}" />
@@ -30,13 +40,34 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto" Header="Revision" DisplayMemberBinding="{Binding RevisionNumber}"/>
-                    <GridViewColumn Width="Auto" Header="Branch" DisplayMemberBinding="{Binding Branch}"/>
-                    <GridViewColumn Width="Auto" Header="Message" DisplayMemberBinding="{Binding CommitMessage, Converter={StaticResource StringConverter}}"/>
-                    <GridViewColumn Width="Auto" Header="Author" DisplayMemberBinding="{Binding Author}"/>
-                    <GridViewColumn Width="Auto" Header="Date" DisplayMemberBinding="{Binding Timestamp}"/>
+                    <GridViewColumn Width="Auto" Header="Revision" DisplayMemberBinding="{Binding RevisionNumber}" />
+                    <GridViewColumn Width="Auto" Header="Branch" DisplayMemberBinding="{Binding Branch}" />
+                    <GridViewColumn Width="Auto" Header="Message" DisplayMemberBinding="{Binding CommitMessage, Converter={StaticResource StringConverter}}" />
+                    <GridViewColumn Width="Auto" Header="Author" DisplayMemberBinding="{Binding Author}" />
+                    <GridViewColumn Width="Auto" Header="Date" DisplayMemberBinding="{Binding Timestamp}" />
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <GridSplitter Height="5" HorizontalAlignment="Stretch" Grid.Row="1" Background="{StaticResource HeaderBorderBrush}" />
+
+        <ListView Grid.Row="2" ItemsSource="{Binding DiffLines}" SelectionMode="Single">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        Text="{Binding Line}"
+                        Background="{Binding DiffLineType, Converter={StaticResource DiffColorConverter}}"
+                        Margin="-5, -2, -5, -2"
+                        Padding="5, 2, 5, 2" 
+                        FontFamily="Courier New" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
     </Grid>
 </UserControl>

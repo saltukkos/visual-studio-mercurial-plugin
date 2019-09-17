@@ -50,6 +50,22 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             return tempFile;
         }
 
+        public IReadOnlyList<DiffLine> GetDiffToParent(string filename, Revision revision)
+        {
+            var command = new DiffCommand
+            {
+                ChangeIntroducedByRevision = revision.ToRevSpec(),
+                Names = {filename}
+            };
+            ExecuteCommand(command);
+            if (command.Result is null)
+            {
+                throw new VCSException("Empty result");
+            }
+
+            return ParseDiffLines(command.Result);
+        }
+
         public IReadOnlyList<FileState> GetNotCleanFiles()
         {
             return GetFilesStatesInternal(FileStatusIncludes.Default);
@@ -85,6 +101,39 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             {
                 throw new VCSException(exception.Message);
             }
+        }
+
+        [NotNull]
+        private IReadOnlyList<DiffLine> ParseDiffLines([NotNull] string diff)
+        {
+            return diff.Split('\r', '\n')
+                .Skip(3) //skip diff description
+                // ReSharper disable once PossibleNullReferenceException <-- loose nullability on Skip()
+                .Where(l => l.Length > 0)
+                .Select(l => new DiffLine(l, GetDiffLineType(l[0])))
+                .ToList();
+        }
+
+        private static DiffLineType GetDiffLineType(char firstChar)
+        {
+            DiffLineType diffLineType;
+            switch (firstChar)
+            {
+                case '+':
+                    diffLineType = DiffLineType.AddLine;
+                    break;
+                case '-':
+                    diffLineType = DiffLineType.RemoveLine;
+                    break;
+                case '@':
+                    diffLineType = DiffLineType.MetaInfoLine;
+                    break;
+                default:
+                    diffLineType = DiffLineType.ContextLine;
+                    break;
+            }
+
+            return diffLineType;
         }
     }
 }

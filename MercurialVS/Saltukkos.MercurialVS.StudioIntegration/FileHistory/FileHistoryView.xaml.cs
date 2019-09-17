@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using JetBrains.Annotations;
 using Saltukkos.Utils;
 
@@ -19,11 +18,6 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
             InitializeComponent();
             DataContext = viewModel;
             _viewModel = viewModel;
-        }
-
-        private void OnContextMenuLoaded([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            ((ContextMenu)sender).DataContext = _viewModel;
         }
 
         private void DiffToParent(object sender, RoutedEventArgs e)

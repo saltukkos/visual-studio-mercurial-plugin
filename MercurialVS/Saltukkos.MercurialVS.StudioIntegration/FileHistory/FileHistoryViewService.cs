@@ -31,6 +31,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
             [NotNull] IFileHistoryProvider fileHistoryProvider,
             [NotNull] IOpenFileService openFileService)
         {
+            ThrowIf.Null(openFileService, nameof(openFileService));
             ThrowIf.Null(fileHistoryProvider, nameof(fileHistoryProvider));
             ThrowIf.Null(toolWindowContainer, nameof(toolWindowContainer));
             _toolWindowContainer = toolWindowContainer;
@@ -57,7 +58,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
 
             var fileHistoryToolWindow = (FileHistoryToolWindow)_toolWindowContainer.FindToolWindow(typeof(FileHistoryToolWindow), id, create: true);
             fileHistoryToolWindow?.SetFileViewModel(filePath,
-                new FileHistoryViewModel(new FileHistoryInfo(filePath, fileChangesHistory), _openFileService));
+                new FileHistoryViewModel(new FileHistoryInfo(filePath, fileChangesHistory), _openFileService, _fileHistoryProvider));
             fileHistoryToolWindow?.Show();
             return true;
         }
