@@ -140,7 +140,7 @@ namespace Mercurial
         /// <summary>
         /// Gets or sets the <see cref="RevSpec"/> from which to retrieve the file contents.
         /// </summary>
-        [NullableArgument]
+        [NullableArgument(NonNullOption = "--rev")]
         [DefaultValue(null)]
         public RevSpec Revision
         {
