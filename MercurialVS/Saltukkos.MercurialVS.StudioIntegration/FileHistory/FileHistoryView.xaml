@@ -13,11 +13,21 @@
                 <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="../Styles/ListViewStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <ContextMenu x:Key="ListViewItemContextMenu" Loaded="OnContextMenuLoaded">
+                <MenuItem Header="Diff to parent" Click="DiffToParent" />
+                <MenuItem Header="Diff to local" Click="DiffToLocal" />
+                <MenuItem Header="View at revision" Click="ViewAtRevision" />
+            </ContextMenu>
             <local:MultilineToSingleLineStringConverter x:Key="StringConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ListView ItemsSource="{Binding ChangeSets}">
+        <ListView ItemsSource="{Binding ChangeSets}" SelectedItem="{Binding SelectedChangeSet}" TextElement.FontSize="14">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}" />
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="Auto" Header="Revision" DisplayMemberBinding="{Binding RevisionNumber}"/>

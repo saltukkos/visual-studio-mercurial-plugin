@@ -8,6 +8,12 @@ namespace Saltukkos.MercurialVS.HgServices
         //TODO is it mercurial.net bug that just "." not works
         public static Revision Current { get; } = new Revision(".^0");
 
+        //TODO VCS-independent way to describe RevSpec
+        public Revision(int revision)
+        {
+            RevSpec = $"rev({revision})";
+        }
+
         public Revision([NotNull] string revSpec)
         {
             ThrowIf.Null(revSpec, nameof(revSpec));
@@ -15,5 +21,7 @@ namespace Saltukkos.MercurialVS.HgServices
         }
 
         [NotNull] public string RevSpec { get; }
+
+        public Revision Parent => new Revision($"{RevSpec}^1");
     }
 }
