@@ -9,6 +9,7 @@ using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
 using Saltukkos.MercurialVS.HgServices;
 using Saltukkos.MercurialVS.SourceControl;
+using Saltukkos.MercurialVS.StudioIntegration.Glyphs;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
@@ -25,6 +26,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull]
         private readonly IVsSolution _solution;
 
+        [NotNull]
+        private readonly ICustomGlyphsProvider _glyphsProvider;
+
         [CanBeNull]
         private Dictionary<string, FileStatus> _fileStatuses;
 
@@ -33,8 +37,10 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public GlyphController(
             [NotNull] IDirectoryStateProvider directoryStateProvider,
             [NotNull] IVsIdleNotifier idleNotifier,
-            [NotNull] IVsSolution solution)
+            [NotNull] IVsSolution solution,
+            [NotNull] ICustomGlyphsProvider glyphsProvider)
         {
+            ThrowIf.Null(glyphsProvider, nameof(glyphsProvider));
             ThrowIf.Null(directoryStateProvider, nameof(directoryStateProvider));
             ThrowIf.Null(idleNotifier, nameof(idleNotifier));
             ThrowIf.Null(solution, nameof(solution));
@@ -42,6 +48,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             _directoryStateProvider = directoryStateProvider;
             _idleNotifier = idleNotifier;
             _solution = solution;
+            _glyphsProvider = glyphsProvider;
 
             _directoryStateProvider.DirectoryStateChanged += OnDirectoryChanged;
             _idleNotifier.IdlingStarted += UpdateGlyphsState;
@@ -88,15 +95,16 @@ namespace Saltukkos.MercurialVS.StudioIntegration
             switch (fileStatus)
             {
                 case FileStatus.Unknown:
+                    return _glyphsProvider.GetGlyphIcon(Glyph.Unknown);
                 case FileStatus.Added:
-                    return VsStateIcon.STATEICON_ORPHANED;
+                    return _glyphsProvider.GetGlyphIcon(Glyph.Added);
                 case FileStatus.Removed:
                 case FileStatus.Missing:
-                    return VsStateIcon.STATEICON_CHECKEDOUT;
+                    return _glyphsProvider.GetGlyphIcon(Glyph.Removed);
                 case FileStatus.Modified:
-                    return VsStateIcon.STATEICON_EDITABLE;
+                    return _glyphsProvider.GetGlyphIcon(Glyph.Edited);
                 case FileStatus.Clean:
-                    return VsStateIcon.STATEICON_CHECKEDIN;
+                    return _glyphsProvider.GetGlyphIcon(Glyph.Clean);
                 case FileStatus.Ignored:
                     return VsStateIcon.STATEICON_DISABLED;
                 default:

@@ -40,6 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Resources\Images.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="SccProviderOptionsControl.resx">
       <DependentUpon>SccProviderOptionsControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -52,6 +56,11 @@
     </Compile>
     <Compile Update="FileHistory\FileHistoryView.xaml.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Resources\Images.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Images.resx</DependentUpon>
     </Compile>
     <Compile Update="SccProviderOptionsControl.cs">
       <SubType>Form</SubType>

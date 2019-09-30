@@ -3,6 +3,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Saltukkos.Container.Meta;
 using Saltukkos.MercurialVS.Architecture;
+using Saltukkos.MercurialVS.StudioIntegration.Glyphs;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration
@@ -10,6 +11,7 @@ namespace Saltukkos.MercurialVS.StudioIntegration
     [Component(typeof(PackageScope))]
     public sealed class MercurialSccProviderService : IMercurialSccProviderService,
         IVsSccProvider,
+        IVsSccGlyphs,
         IVsSccManager2
     {
         [NotNull] 
@@ -18,14 +20,20 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         [NotNull] 
         private readonly IGlyphController _glyphController;
 
+        [NotNull]
+        private readonly ICustomGlyphsProviderInitializer _customGlyphsProviderInitializer;
+        
         public MercurialSccProviderService(
             [NotNull] ILifetimeScopeManager<SourceControlScope, None> sourceControlLifetimeManager,
-            [NotNull] IGlyphController glyphController)
+            [NotNull] IGlyphController glyphController,
+            [NotNull] ICustomGlyphsProviderInitializer customGlyphsProviderInitializer)
         {
+            ThrowIf.Null(customGlyphsProviderInitializer, nameof(customGlyphsProviderInitializer));
             ThrowIf.Null(sourceControlLifetimeManager, nameof(sourceControlLifetimeManager));
             ThrowIf.Null(glyphController, nameof(glyphController));
             _sourceControlLifetimeManager = sourceControlLifetimeManager;
             _glyphController = glyphController;
+            _customGlyphsProviderInitializer = customGlyphsProviderInitializer;
         }
 
         public int SetActive()
@@ -71,6 +79,11 @@ namespace Saltukkos.MercurialVS.StudioIntegration
         public int GetSccGlyphFromStatus(uint dwSccStatus, VsStateIcon[] psiGlyph)
         {
             return VSConstants.S_OK;
+        }
+
+        public int GetCustomGlyphList(uint baseIndex, out uint pdwImageListHandle)
+        {
+            return _customGlyphsProviderInitializer.GetCustomGlyphList(baseIndex, out pdwImageListHandle);
         }
 
         public int IsInstalled(out int pbInstalled)
