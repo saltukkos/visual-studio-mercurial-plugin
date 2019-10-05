@@ -19,6 +19,10 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
         private static readonly string[] IgnoredPaths = {".hg", ".vs"};
 
         [NotNull]
+        [ItemNotNull]
+        private static readonly string[] ExclusionsFromIgnoredPaths = {"dirstate"};
+
+        [NotNull]
         private readonly IDirectoryWatcherWithPending _directoryWatcherWithPending;
 
         [NotNull]
@@ -48,8 +52,9 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             _directoryWatcherWithPending.IncludeFilter = path =>
             {
                 ThrowIf.Null(path, nameof(path));
-                return !IgnoredPaths.Any(
-                    ignored => path.Split(Path.DirectorySeparatorChar).Contains(ignored));
+                var pathFragments = path.Split(Path.DirectorySeparatorChar);
+                return ExclusionsFromIgnoredPaths.Any(pathFragments.Contains) ||
+                       !IgnoredPaths.Any(ignored => pathFragments.Contains(ignored));
             };
             _directoryWatcherWithPending.RaiseEvents = true;
 
