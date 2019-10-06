@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus"
              xmlns:controls="clr-namespace:Saltukkos.MercurialVS.StudioIntegration.Controls"
+             xmlns:hg="clr-namespace:Saltukkos.MercurialVS.HgServices;assembly=Saltukkos.MercurialVS.HgServices"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="610"
              d:DataContext="{d:DesignInstance Type=local:SolutionFilesStatusViewModel, IsDesignTimeCreatable=True}"
@@ -21,6 +22,7 @@
                 <MenuItem Header="Open" Click="OpenFile" />
                 <MenuItem Header="Diff" Click="ShowDiff" IsEnabled="{Binding CanDiff}" />
             </ContextMenu>
+            <local:FileStateToTextConverter x:Key="FileStateToTextConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -38,11 +40,25 @@
                 <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Setter Property="ContextMenu" Value="{StaticResource ListViewItemContextMenu}" />
                     <EventSetter Event="MouseDoubleClick" Handler="OnItemClicked" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding (local:FileStateView.Status)}" Value="{x:Static hg:FileStatus.Added}">
+                            <Setter Property="Foreground" Value="ForestGreen"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding (local:FileStateView.Status)}" Value="{x:Static hg:FileStatus.Unknown}">
+                            <Setter Property="Foreground" Value="Magenta"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding (local:FileStateView.Status)}" Value="{x:Static hg:FileStatus.Removed}">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding (local:FileStateView.Status)}" Value="{x:Static hg:FileStatus.Missing}">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding (local:FileStateView.Status)}" />
+                    <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding (local:FileStateView.Status), Converter={StaticResource FileStateToTextConverter}}" />
                     <GridViewColumn Width="Auto" Header="File Name" DisplayMemberBinding="{Binding (local:FileStateView.FileName)}" />
                     <GridViewColumn Width="Auto" Header="Path" DisplayMemberBinding="{Binding (local:FileStateView.RelativePath)}" />
                 </GridView>
