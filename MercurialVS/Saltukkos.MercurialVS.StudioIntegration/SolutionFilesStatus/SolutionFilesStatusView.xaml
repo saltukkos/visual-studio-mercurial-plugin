@@ -58,9 +58,27 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="Auto" Header="Status" DisplayMemberBinding="{Binding (local:FileStateView.Status), Converter={StaticResource FileStateToTextConverter}}" />
-                    <GridViewColumn Width="Auto" Header="File Name" DisplayMemberBinding="{Binding (local:FileStateView.FileName)}" />
-                    <GridViewColumn Width="Auto" Header="Path" DisplayMemberBinding="{Binding (local:FileStateView.RelativePath)}" />
+                    <GridViewColumn Width="Auto" Header="Status">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding (local:FileStateView.Status), Converter={StaticResource FileStateToTextConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="File Name">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding (local:FileStateView.FileName)}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="Path">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding (local:FileStateView.RelativePath)}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
