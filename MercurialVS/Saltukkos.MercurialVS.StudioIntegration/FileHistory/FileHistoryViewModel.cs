@@ -24,6 +24,9 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
         [NotNull]
         private IReadOnlyList<DiffLine> _diffLines = new DiffLine[0];
 
+        [NotNull]
+        private IReadOnlyList<AnnotationLine> _annotationLines = new AnnotationLine[0];
+
         public FileHistoryViewModel(
             [NotNull] FileHistoryInfo fileHistoryInfo,
             [NotNull] IOpenFileService openFileService,
@@ -58,6 +61,17 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
             private set
             {
                 _diffLines = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [NotNull]
+        public IReadOnlyList<AnnotationLine> AnnotationLines
+        {
+            get => _annotationLines;
+            private set
+            {
+                _annotationLines = value;
                 OnPropertyChanged();
             }
         }
@@ -105,11 +119,14 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
             if (changeSet is null)
             {
                 DiffLines = new DiffLine[0];
+                AnnotationLines = new AnnotationLine[0];
             }
             else
             {
-                DiffLines = _fileHistoryProvider.GetDiffToParent(_fileHistoryInfo.FilePath,
-                    new Revision(changeSet.Value.RevisionNumber)) ?? new DiffLine[0];
+                var revision = new Revision(changeSet.Value.RevisionNumber);
+                var path = _fileHistoryInfo.FilePath;
+                DiffLines = _fileHistoryProvider.GetDiffToParent(path, revision) ?? new DiffLine[0];
+                AnnotationLines = _fileHistoryProvider.AnnotateAtRevision(path, revision) ?? new AnnotationLine[0];
             }
         }
 

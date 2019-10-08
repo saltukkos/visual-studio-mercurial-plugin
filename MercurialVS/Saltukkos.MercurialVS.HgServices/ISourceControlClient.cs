@@ -19,5 +19,8 @@ namespace Saltukkos.MercurialVS.HgServices
 
         [NotNull]
         IReadOnlyList<DiffLine> GetDiffToParent([NotNull] string filename, Revision revision);
+
+        [NotNull] 
+        IReadOnlyList<AnnotationLine> AnnotateAtRevision([NotNull] string filename, Revision revision);
     }
 }

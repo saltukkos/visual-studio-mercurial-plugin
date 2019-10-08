@@ -37,6 +37,25 @@ namespace Saltukkos.MercurialVS.HgServices.Implementation
             return logCommandResult.Select(c => c.ToChangeSet()).ToList();
         }
 
+        public IReadOnlyList<AnnotationLine> AnnotateAtRevision(string filename, Revision revision)
+        {
+            ThrowIf.Null(filename, nameof(filename));
+            var command = new AnnotateCommand()
+            {
+                Path = filename,
+                Revision = revision.ToRevSpec()
+            };
+            ExecuteCommand(command);
+            var result = command.Result;
+            ThrowIf.Null(result, nameof(result));
+            return result.Select(annotation => new AnnotationLine(
+                    // ReSharper disable once AssignNullToNotNullAttribute <-- Can't process Select on [ItemNotNul]
+                    line: annotation.Line,
+                    lineNumber: annotation.LineNumber,
+                    revision: annotation.RevisionNumber))
+                .ToList();
+        }
+
         public string GetFileAtRevision(string filename, Revision revision)
         {
             ThrowIf.Null(filename, nameof(filename));

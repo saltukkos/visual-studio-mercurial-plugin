@@ -63,6 +63,12 @@ namespace Saltukkos.MercurialVS.SourceControl.Implementation
             return _client?.GetDiffToParent(path, revision);
         }
 
+        public IReadOnlyList<AnnotationLine> AnnotateAtRevision(string filename, Revision revision)
+        {
+            ThrowIf.Null(filename, nameof(filename));
+            return _client?.AnnotateAtRevision(filename, revision);
+        }
+
         public void SetCurrentSourceControlClientProvider(ISourceControlClient client)
         {
             _client = client;
