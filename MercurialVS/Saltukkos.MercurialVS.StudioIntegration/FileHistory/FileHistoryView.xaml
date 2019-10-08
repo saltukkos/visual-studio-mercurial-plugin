@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="../Styles/ContextMenuStyle.xaml" />
                 <ResourceDictionary Source="../Styles/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="../Styles/ListViewStyle.xaml" />
+                <ResourceDictionary Source="../Styles/TabControlStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <ContextMenu x:Key="ListViewItemContextMenu">
                 <MenuItem Header="Diff to parent" Click="DiffToParent" />
@@ -24,7 +25,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource HeaderBorderBrush}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*" MinHeight="100" />

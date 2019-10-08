@@ -37,6 +37,7 @@
     <None Remove="FileHistory\FileHistoryView.xaml" />
     <None Remove="Styles\ContextMenuStyle.xaml" />
     <None Remove="Styles\ListViewStyle.xaml" />
+    <None Remove="Styles\TabControlStyle.xaml" />
   </ItemGroup>
 
   <ItemGroup>
