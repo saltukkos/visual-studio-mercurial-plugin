@@ -48,7 +48,7 @@ namespace Mercurial
         /// </exception>
         public Annotation(int lineNumber, int revisionNumber, string line)
         {
-            if (StringEx.IsNullOrWhiteSpace(line))
+            if (line is null)
                 throw new ArgumentNullException("line");
             if (lineNumber < 0)
                 throw new ArgumentOutOfRangeException("lineNumber", lineNumber, "lineNumber cannot be negative");
