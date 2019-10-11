@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Utilities;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
@@ -18,10 +19,13 @@ namespace Saltukkos.MercurialVS.StudioIntegration.FileHistory
         {
             Caption = "File history";
 
-            _elementHost = new ElementHost
+            using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
             {
-                Dock = DockStyle.Fill
-            };
+                _elementHost = new ElementHost
+                {
+                    Dock = DockStyle.Fill
+                };
+            }
         }
 
         public override IWin32Window Window => _elementHost;

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Utilities;
 using Saltukkos.Utils;
 
 namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
@@ -23,11 +24,14 @@ namespace Saltukkos.MercurialVS.StudioIntegration.SolutionFilesStatus
             var dependenciesProvider = ToolWindowsDependenciesProvider.GetInstance();
             _solutionFilesStatusViewModel = Ensure.NotNull(dependenciesProvider.SolutionFilesStatusViewModelFactoryFunc.Invoke());
 
-            _elementHost = new ElementHost
+            using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
             {
-                Child = new PendingChangesView(_solutionFilesStatusViewModel),
-                Dock = DockStyle.Fill
-            };
+                _elementHost = new ElementHost
+                {
+                    Child = new PendingChangesView(_solutionFilesStatusViewModel),
+                    Dock = DockStyle.Fill
+                };
+            }
         }
 
         public override IWin32Window Window => _elementHost;
